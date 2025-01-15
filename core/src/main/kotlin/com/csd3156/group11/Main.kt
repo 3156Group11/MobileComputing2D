@@ -14,15 +14,17 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.csd3156.group11.components.ColliderComponent
+import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
 import com.csd3156.group11.systems.AssetSystem
 import com.csd3156.group11.systems.CollisionSystem
+import com.csd3156.group11.systems.EnemySystem
+import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
 import com.csd3156.group11.systems.RenderSystem
-import com.csd3156.group11.systems.SpriteRenderSystem
 import ktx.assets.Asset
 import org.w3c.dom.Text
 
@@ -54,9 +56,11 @@ class Main : ApplicationAdapter()
 
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()
-            .with(RenderSystem(spriteBatch, camera))
             .with(PlayerInputSystem())
+            .with(EnemySystem())
+            .with(PhysicsSystem())
             .with(CollisionSystem())
+            .with(RenderSystem(spriteBatch, camera))
             .build()
 
 
@@ -100,14 +104,15 @@ class Main : ApplicationAdapter()
     // Test Functions
     private fun createEntities() {
         // Example: Create an entity with a position and velocity component
-        val player = world.create()
+        val enemy = world.create()
 
-        world.edit(player)
+        world.edit(enemy)
             .add(TransformComponent(Vector2(400f, 240f)))
-            .add(VelocityComponent())
-            .add(PlayerInputComponent())
+            .add(VelocityComponent(Vector2(0f,0f)))
             .add(ColliderComponent(radius = 16f))
             .add(SpriteComponent("textures/ic_launcher.png"))
+            .add(EnemyComponent())
+
         // Add components to entity (define these components first)
     }
 }
