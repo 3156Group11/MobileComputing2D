@@ -1,4 +1,4 @@
-package com.csd3156.group6
+package com.csd3156.group11
 
 import com.badlogic.gdx.ApplicationAdapter
 
