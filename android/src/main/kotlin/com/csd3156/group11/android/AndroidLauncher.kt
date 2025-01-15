@@ -13,6 +13,8 @@ class AndroidLauncher : AndroidApplication() {
         initialize(Main(), AndroidApplicationConfiguration().apply {
             // Configure your application here.
             useImmersiveMode = true // Recommended, but not required.
+            useCompass = true
+            useAccelerometer = true
         })
     }
 }
