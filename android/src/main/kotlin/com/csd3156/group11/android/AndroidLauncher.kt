@@ -15,6 +15,7 @@ class AndroidLauncher : AndroidApplication() {
             useImmersiveMode = true // Recommended, but not required.
             useCompass = true
             useAccelerometer = true
+            useGyroscope = true
         })
     }
 }

@@ -19,6 +19,7 @@ import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.prefabs.Enemy
 import com.csd3156.group11.systems.AssetSystem
 import com.csd3156.group11.systems.CollisionSystem
 import com.csd3156.group11.systems.EnemySystem
@@ -104,15 +105,15 @@ class Main : ApplicationAdapter()
     // Test Functions
     private fun createEntities() {
         // Example: Create an entity with a position and velocity component
-        val enemy = world.create()
-
-        world.edit(enemy)
-            .add(TransformComponent(Vector2(400f, 240f)))
-            .add(VelocityComponent(Vector2(0f,0f)))
-            .add(ColliderComponent(radius = 16f))
-            .add(SpriteComponent("textures/ic_launcher.png"))
-            .add(EnemyComponent())
+        val enemy = Enemy()
+        enemy.Create(world)
 
         // Add components to entity (define these components first)
     }
+
+    private fun gameLevelInit()
+    {
+
+    }
+
 }

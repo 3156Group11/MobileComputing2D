@@ -6,6 +6,8 @@ import com.artemis.ComponentMapper
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.MathUtils
 import com.csd3156.group11.components.ColliderComponent
+import com.csd3156.group11.components.EnemyComponent
+import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.TransformComponent
 
 class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.java, TransformComponent::class.java)) {
@@ -45,8 +47,43 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
     }
 
     private fun handleCollision(entityA: Int, entityB: Int) {
-        // Example: Damage the player if one of the entities is an enemy
-        // Other collision responses can go here
-        println("Collision detected between Entity $entityA and Entity $entityB")
+
+        // Player and Powerup
+        // Player and Enemy
+        // Enemy and Destructive objects
+        // Player
+        if (world.getEntity(entityA).getComponent(PlayerInputComponent::class.java) != null)
+        {
+            if (world.getEntity(entityB).getComponent(EnemyComponent::class.java) != null)
+            {
+                // player dies
+                return
+            }
+            // else if powerup, TODO: Add powerup component
+            else if (world.getEntity(entityB).getComponent(EnemyComponent::class.java) != null)
+            {
+                // Activate Powerup
+                return
+            }
+        }
+
+        // Player
+        else if (world.getEntity(entityB).getComponent(PlayerInputComponent::class.java) != null)
+        {
+            if (world.getEntity(entityA).getComponent(EnemyComponent::class.java) != null)
+            {
+                // player dies
+                return
+            }
+            // else if powerup, TODO: Add powerup component
+            else if (world.getEntity(entityA).getComponent(EnemyComponent::class.java) != null)
+            {
+                // Activate Powerup
+                return
+            }
+        }
+
+
+
     }
 }
