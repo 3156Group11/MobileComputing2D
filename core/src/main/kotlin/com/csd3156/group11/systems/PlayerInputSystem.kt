@@ -11,27 +11,44 @@ class PlayerInputSystem : IteratingSystem(Aspect.all(PlayerInputComponent::class
 
     private lateinit var inputMapper: ComponentMapper<PlayerInputComponent>
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
-    private val speed = 0.1f
+    private val accelerationFactor = 5f // Determines how fast acceleration builds up
     private val velocityCap = 100f
+    private val dampingFactor = 0.95f // For deceleration when no input is given
 
     override fun process(entityId: Int) {
         val input = inputMapper[entityId]
         val velocity = velocityMapper[entityId]
 
         // Read accelerometer values
-        velocity.acceleration.x += (-Gdx.input.accelerometerX)
-        velocity.acceleration.y += (-Gdx.input.accelerometerY)
+        val accelX = -Gdx.input.accelerometerX
+        val accelY = -Gdx.input.accelerometerY
 
-        // Adjust direction based on tilt (you may need to tweak these multipliers for your game)
-        input.tiltDirection.set(-velocity.acceleration.x , velocity.acceleration.y) // Normalize for consistent speed
+        // Apply dead zone to filter out small values
+        val deadZone = 0.2f
+        val adjustedX = if (kotlin.math.abs(accelX) > deadZone) accelX else 0f
+        val adjustedY = if (kotlin.math.abs(accelY) > deadZone) accelY else 0f
 
-        // Update velocity based on tilt direction
-        val speed = 200f // Adjust speed as needed
-        velocity.velocity.set(input.tiltDirection.x, input.tiltDirection.y)
-        if (velocity.velocity.len() > velocityCap)
-        {
-            velocity.velocity.x *= velocityCap/velocity.velocity.len()
-            velocity.velocity.y *= velocityCap/velocity.velocity.len()
+        // Set tilt direction based on accelerometer
+        input.tiltDirection.set(adjustedX, adjustedY)
+
+        // Normalize tilt direction for consistent acceleration application
+        if (input.tiltDirection.len() > 1f) {
+            input.tiltDirection.nor()
         }
+
+        // Update acceleration based on tilt direction
+        velocity.acceleration.set(input.tiltDirection.x * accelerationFactor, input.tiltDirection.y * accelerationFactor)
+
+        // Update velocity by integrating acceleration
+        velocity.velocity.x += velocity.acceleration.x * world.delta
+        velocity.velocity.y += velocity.acceleration.y * world.delta
+
+        // Cap velocity to prevent it from exceeding the maximum
+        if (velocity.velocity.len() > velocityCap) {
+            velocity.velocity.nor().scl(velocityCap)
+        }
+
+        // Apply damping to velocity for smoother deceleration
+        velocity.velocity.scl(dampingFactor)
     }
 }

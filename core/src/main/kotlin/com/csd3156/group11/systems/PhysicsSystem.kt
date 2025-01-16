@@ -13,7 +13,8 @@ class PhysicsSystem : IteratingSystem(Aspect.all(TransformComponent::class.java,
         val velocity = world.getMapper(VelocityComponent::class.java)[entityId]
 
         // Update the entity's position based on its velocity and the delta time
-        transform.position.add(velocity.velocity.cpy().scl(world.delta))  // Scale by deltaTime for frame-rate independence
+        velocity.velocity.add(velocity.acceleration.cpy().scl(world.delta))
+        transform.position.add(velocity.velocity.cpy().scl(world.delta))
     }
 }
 
