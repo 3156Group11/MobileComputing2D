@@ -14,8 +14,7 @@ class PhysicsSystem : IteratingSystem(Aspect.all(TransformComponent::class.java,
 
         // Update the entity's position based on its velocity and the delta time
         velocity.velocity.add(velocity.acceleration.cpy().scl(world.delta))
-        transform.position.add(velocity.velocity.cpy().scl(world.delta))
-    }
+        transform.position.add(velocity.velocity.cpy().scl(world.delta * 10f))    }
 }
 
 
