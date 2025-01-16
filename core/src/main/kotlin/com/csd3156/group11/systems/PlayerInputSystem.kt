@@ -11,20 +11,27 @@ class PlayerInputSystem : IteratingSystem(Aspect.all(PlayerInputComponent::class
 
     private lateinit var inputMapper: ComponentMapper<PlayerInputComponent>
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
+    private val speed = 0.1f
+    private val velocityCap = 100f
 
     override fun process(entityId: Int) {
         val input = inputMapper[entityId]
         val velocity = velocityMapper[entityId]
 
         // Read accelerometer values
-        val accelX = Gdx.input.accelerometerX
-        val accelY = Gdx.input.accelerometerY
+        velocity.acceleration.x += (-Gdx.input.accelerometerX)
+        velocity.acceleration.y += (-Gdx.input.accelerometerY)
 
         // Adjust direction based on tilt (you may need to tweak these multipliers for your game)
-        input.tiltDirection.set(-accelY, accelX).nor() // Normalize for consistent speed
+        input.tiltDirection.set(-velocity.acceleration.x , velocity.acceleration.y) // Normalize for consistent speed
 
         // Update velocity based on tilt direction
         val speed = 200f // Adjust speed as needed
-        velocity.velocity.set(input.tiltDirection.x * speed, input.tiltDirection.y * speed)
+        velocity.velocity.set(input.tiltDirection.x, input.tiltDirection.y)
+        if (velocity.velocity.len() > velocityCap)
+        {
+            velocity.velocity.x *= velocityCap/velocity.velocity.len()
+            velocity.velocity.y *= velocityCap/velocity.velocity.len()
+        }
     }
 }
