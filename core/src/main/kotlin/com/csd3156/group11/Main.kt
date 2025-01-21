@@ -1,5 +1,6 @@
 package com.csd3156.group11
 
+import UISystem
 import com.artemis.WorldConfigurationBuilder
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
@@ -56,17 +57,22 @@ class Main : ApplicationAdapter()
         spriteBatch = SpriteBatch()
         font = BitmapFont()
 
+        val uiSystem = UISystem(spriteBatch, viewport)
+
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()
             .with(PlayerInputSystem())
             .with(EnemySystem())
             .with(PhysicsSystem())
             .with(CollisionSystem())
+            .with(uiSystem)
             .with(RenderSystem(spriteBatch, camera))
             .build()
 
 
        world = com.artemis.World(worldConfiguration)
+
+        Gdx.input.inputProcessor = uiSystem.stage
 
         // Add your entity creation logic here
         createEntities()
@@ -84,6 +90,7 @@ class Main : ApplicationAdapter()
     override fun resize(width: Int, height: Int) {
         viewport.update(width, height)
         camera.position.set(viewport.worldWidth / 2, viewport.worldHeight / 2, 0f)
+        (world.getSystem(UISystem::class.java) as UISystem).resize(width, height)
     }
 
     override fun dispose() {
