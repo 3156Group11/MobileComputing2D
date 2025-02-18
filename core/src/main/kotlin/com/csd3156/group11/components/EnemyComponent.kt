@@ -2,7 +2,7 @@ package com.csd3156.group11.components
 
 import com.artemis.Component
 
-class EnemyComponent : Component(){
+open class EnemyComponent : Component(){
     public val InFormation = false
 
     public var isImmune = true
@@ -12,4 +12,8 @@ class EnemyComponent : Component(){
     public var DyingTime = 2f
 
     public var isLive = false
+}
+
+class EnemyBasicComponent : EnemyComponent() {
+
 }

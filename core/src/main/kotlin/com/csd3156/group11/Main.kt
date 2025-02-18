@@ -21,6 +21,7 @@ import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
 import com.csd3156.group11.prefabs.Enemy
+import com.csd3156.group11.prefabs.EnemyBasic
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.systems.AssetSystem
 import com.csd3156.group11.systems.CollisionSystem
@@ -117,6 +118,8 @@ class Main : ApplicationAdapter()
         enemy.Create(world)
 
         // Add components to entity (define these components first)
+        val homingEnemy = EnemyBasic()
+        homingEnemy.Create(world)
     }
 
     private fun gameLevelInit()
