@@ -113,8 +113,8 @@ class Main : ApplicationAdapter()
     // Test Functions
     private fun createEntities() {
         // Example: Create an entity with a position and velocity component
-        val enemy = Player()
-        enemy.Create(world)
+        val player = Player()
+        player.Create(world)
 
         // Add components to entity (define these components first)
     }

@@ -11,8 +11,8 @@ class PlayerInputSystem : IteratingSystem(Aspect.all(PlayerInputComponent::class
 
     private lateinit var inputMapper: ComponentMapper<PlayerInputComponent>
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
-    private val accelerationFactor = 5f // Determines how fast acceleration builds up
-    private val velocityCap = 100f
+    private val accelerationFactor = 500f // Determines how fast acceleration builds up
+    private val velocityCap = 1000f
     private val dampingFactor = 0.95f // For deceleration when no input is given
 
     override fun process(entityId: Int) {
@@ -20,26 +20,26 @@ class PlayerInputSystem : IteratingSystem(Aspect.all(PlayerInputComponent::class
         val velocity = velocityMapper[entityId]
 
         // Read accelerometer values
-        val accelX = -Gdx.input.accelerometerX
-        val accelY = -Gdx.input.accelerometerY
+        val accelX = Gdx.input.accelerometerX  // Left (-), Right (+) → Controls Y movement
+        val accelY = -Gdx.input.accelerometerY  // Forward (-), Backward (+) → Controls X movement
 
         // Apply dead zone to filter out small values
-        val deadZone = 0.2f
+        val deadZone = 0.5f
         val adjustedX = if (kotlin.math.abs(accelX) > deadZone) accelX else 0f
         val adjustedY = if (kotlin.math.abs(accelY) > deadZone) accelY else 0f
 
-        // Set tilt direction based on accelerometer
-        input.tiltDirection.set(adjustedX, adjustedY)
+        // Set tilt direction based on new mapping
+        input.tiltDirection.set(-adjustedY, -adjustedX) // Invert signs to match desired movement
 
-        // Normalize tilt direction for consistent acceleration application
+        // Normalize tilt direction for consistent acceleration
         if (input.tiltDirection.len() > 1f) {
             input.tiltDirection.nor()
         }
 
-        // Update acceleration based on tilt direction
+        // Apply acceleration based on tilt direction
         velocity.acceleration.set(input.tiltDirection.x * accelerationFactor, input.tiltDirection.y * accelerationFactor)
 
-        // Update velocity by integrating acceleration
+        // Integrate acceleration into velocity
         velocity.velocity.x += velocity.acceleration.x * world.delta
         velocity.velocity.y += velocity.acceleration.y * world.delta
 
@@ -51,4 +51,5 @@ class PlayerInputSystem : IteratingSystem(Aspect.all(PlayerInputComponent::class
         // Apply damping to velocity for smoother deceleration
         velocity.velocity.scl(dampingFactor)
     }
+
 }
