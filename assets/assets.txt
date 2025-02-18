@@ -1,6 +1,13 @@
 .gitkeep
 com/badlogic/gdx/utils/lsans-15.fnt
 com/badlogic/gdx/utils/lsans-15.png
+textures/Bomb.png
+textures/Enemy.png
+textures/Laser.png
+textures/Lightning.png
+textures/Player.png
+textures/Shield.png
+textures/Time.png
 textures/ic_launcher.png
 ui/font-list.fnt
 ui/font-subtitle.fnt
