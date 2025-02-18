@@ -18,7 +18,7 @@ public class Enemy : Prefab()
             .add(TransformComponent(Vector2(400f, 240f)))
             .add(VelocityComponent(Vector2(0f,0f)))
             .add(ColliderComponent(radius = 16f))
-            .add(SpriteComponent("textures/ic_launcher.png"))
+            .add(SpriteComponent("textures/Enemy.png"))
             .add(EnemyComponent())
     }
 }

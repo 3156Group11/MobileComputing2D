@@ -19,7 +19,7 @@ public class Player : Prefab()
         world.edit(ID)
             .add(TransformComponent(Vector2(400f, 240f)))
             .add(VelocityComponent(Vector2(0f,0f)))
-            .add(SpriteComponent("textures/ic_launcher.png"))
+            .add(SpriteComponent("textures/Player.png"))
             .add(PlayerInputComponent())
             .add(PowerUpComponent())
     }
