@@ -12,12 +12,14 @@ public class Enemy : Prefab()
 {
     public override fun Create(world: World)
     {
-        // Default values
         ID = world.create()
         world.edit(ID)
-            .add(TransformComponent(Vector2(400f, 240f)))
-            .add(VelocityComponent(Vector2(0f,0f)))
-            .add(ColliderComponent(radius = 16f))
+            .add(TransformComponent(
+                position = Vector2(400f, 240f),
+                scale = Vector2(0.5f, 0.5f)
+            ))
+            .add(VelocityComponent(Vector2(0f, 0f)))
+            .add(ColliderComponent(radius = 8f))
             .add(SpriteComponent("textures/Enemy.png"))
             .add(EnemyComponent())
     }
