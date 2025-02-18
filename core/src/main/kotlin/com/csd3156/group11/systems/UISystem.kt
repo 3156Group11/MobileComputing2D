@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.prefabs.Player
+import com.csd3156.group11.prefabs.ShieldPowerUp
 
 class UISystem(
     private val batch: SpriteBatch,
@@ -36,6 +37,21 @@ class UISystem(
             }
         })
         stage.addActor(button)
+
+        //Button for testing shield below
+        val shieldButton = TextButton("Spawn Shield", TextButton.TextButtonStyle().apply {
+            font = BitmapFont()
+        })
+        shieldButton.setPosition(10f, viewport.worldHeight - 110f) // Adjusted position below enemy button
+        shieldButton.addListener(object : ClickListener() {
+            override fun clicked(event: InputEvent?, x: Float, y: Float) {
+                val powerUp = ShieldPowerUp()
+                powerUp.Create(world) // Spawns Shield Power-Up in the ECS world
+            }
+        })
+        stage.addActor(shieldButton)
+        //Button for testing shield abv
+
 
         // Add more UI elements here
     }

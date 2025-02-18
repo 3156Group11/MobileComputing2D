@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.csd3156.group11.components.ColliderComponent
 import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.PlayerInputComponent
+import com.csd3156.group11.components.PowerUpComponent
 import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
@@ -16,9 +17,12 @@ public class Player : Prefab()
         // Default values
         ID = world.create()
         world.edit(ID)
-            .add(TransformComponent(Vector2(400f, 240f)))
-            .add(VelocityComponent(Vector2(0f,0f)))
-            .add(SpriteComponent("textures/ic_launcher.png"))
+            .add(TransformComponent(
+                position = Vector2(400f, 240f),
+                scale = Vector2(0.5f, 0.5f)
+            ))
+            .add(VelocityComponent(Vector2(0f, 0f)))
+            .add(SpriteComponent("textures/Player.png"))
             .add(PlayerInputComponent())
     }
 }

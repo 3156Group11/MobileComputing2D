@@ -4,16 +4,18 @@ import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
 import com.artemis.ComponentMapper
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.MathUtils
 import com.csd3156.group11.components.ColliderComponent
 import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.PlayerInputComponent
+import com.csd3156.group11.components.PowerUpComponent
 import com.csd3156.group11.components.TransformComponent
 
 class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.java, TransformComponent::class.java)) {
 
     private lateinit var transformMapper: ComponentMapper<TransformComponent>
     private lateinit var colliderMapper: ComponentMapper<ColliderComponent>
+    private lateinit var playerMapper: ComponentMapper<PlayerInputComponent>
+    private lateinit var powerUpMapper: ComponentMapper<PowerUpComponent>
 
     override fun processSystem() {
         val entities = subscription.entities
@@ -56,12 +58,32 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
         {
             if (world.getEntity(entityB).getComponent(EnemyComponent::class.java) != null)
             {
+                val powerUp = world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
+
+                if (powerUp != null && powerUp.hasShield)
+                {
+                    powerUp.hasShield = false
+                    powerUp.shieldBreakEffect = true  // Trigger shield break effect
+                    return
+                }
+
                 // player dies
                 return
             }
             // else if powerup, TODO: Add powerup component
-            else if (world.getEntity(entityB).getComponent(EnemyComponent::class.java) != null)
+            else if (world.getEntity(entityB).getComponent(PowerUpComponent::class.java) != null)
             {
+                val powerUp = world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
+
+                if (powerUp != null && powerUp.hasShield)
+                {
+                    val playerPowerUp = world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
+                    if (playerPowerUp != null) {
+                        playerPowerUp.hasShield = true
+                    }
+                    world.delete(entityB) // Remove the power-up after collection
+                }
+
                 // Activate Powerup
                 return
             }
@@ -72,18 +94,35 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
         {
             if (world.getEntity(entityA).getComponent(EnemyComponent::class.java) != null)
             {
+                val powerUp = world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
+
+                if (powerUp != null && powerUp.hasShield)
+                {
+                    powerUp.hasShield = false
+                    powerUp.shieldBreakEffect = true  // Trigger shield break effect
+                    return
+                }
+
                 // player dies
                 return
             }
             // else if powerup, TODO: Add powerup component
-            else if (world.getEntity(entityA).getComponent(EnemyComponent::class.java) != null)
+            else if (world.getEntity(entityA).getComponent(PowerUpComponent::class.java) != null)
             {
+                val powerUp = world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
+
+                if (powerUp != null && powerUp.hasShield)
+                {
+                    val playerPowerUp = world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
+                    if (playerPowerUp != null) {
+                        playerPowerUp.hasShield = true
+                    }
+                    world.delete(entityA) // Remove the power-up after collection
+                }
+
                 // Activate Powerup
                 return
             }
         }
-
-
-
     }
 }

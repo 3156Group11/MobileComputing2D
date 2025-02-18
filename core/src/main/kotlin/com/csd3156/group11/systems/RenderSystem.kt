@@ -25,8 +25,14 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
         val sprite = spriteMapper[entityId]
         val transform = transformMapper[entityId]
 
-        // Draw the sprite at the position from the TransformComponent
-        spriteBatch.draw(sprite.region, transform.position.x, transform.position.y)
+        if (sprite != null) {
+            spriteBatch.draw(
+                sprite.region,
+                transform.position.x, transform.position.y, // Position
+                sprite.width * transform.scale.x, // Apply scaling to width
+                sprite.height * transform.scale.y // Apply scaling to height
+            )
+        }
     }
 
     override fun end() {
