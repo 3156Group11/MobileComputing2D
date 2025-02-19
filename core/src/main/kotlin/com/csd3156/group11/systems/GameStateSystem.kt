@@ -1,10 +1,16 @@
 import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.csd3156.group11.GameState
-import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.TransformComponent
-import com.csd3156.group11.components.VelocityComponent
 import com.csd3156.group11.prefabs.Player
+import com.csd3156.group11.prefabs.ShieldPowerUp
+import com.csd3156.group11.prefabs.Text_Button
+import com.csd3156.group11.prefabs.Text_Label
 
 class GameStateSystem() : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
     var currentState: GameState = GameState.MAIN_MENU
@@ -53,6 +59,24 @@ class GameStateSystem() : BaseEntitySystem(Aspect.all(TransformComponent::class.
         val player = Player()
         player.Create(world)
         // Example: Create UI entities for Main Menu
+        val lab = Text_Label(
+            "Test", Label.LabelStyle(BitmapFont(), Color.WHITE),
+            Position = Vector2(100f,100f),
+            Scale = Vector2(1f,1f),
+        )
+
+        val but = Text_Button(
+            "Create Shield", TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(200f,300f),
+            Scale = Vector2(1f,1f),
+            Action = {
+                val enemy = ShieldPowerUp()
+                enemy.Create(world)
+            }
+        )
+
+        lab.Create(world)
+        but.Create(world)
     }
 
     private fun createGameEntities() {
