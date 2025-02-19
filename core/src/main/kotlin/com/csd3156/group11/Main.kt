@@ -1,5 +1,6 @@
 package com.csd3156.group11
 
+import GameStateSystem
 import UISystem
 import com.artemis.WorldConfigurationBuilder
 import com.badlogic.gdx.ApplicationAdapter
@@ -33,6 +34,10 @@ import org.w3c.dom.Text
 
 var assetManager:AssetSystem = AssetSystem()
 
+enum class GameState {
+    MAIN_MENU, GAME_STAGE, HIGH_SCORE
+}
+
 
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class Main : ApplicationAdapter()
@@ -65,6 +70,7 @@ class Main : ApplicationAdapter()
 
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()
+            .with(GameStateSystem())
             .with(PlayerInputSystem(isDebugMode))
             .with(EnemySystem())
             .with(PhysicsSystem())
@@ -78,8 +84,6 @@ class Main : ApplicationAdapter()
 
         Gdx.input.inputProcessor = uiSystem.stage
 
-        // Add your entity creation logic here
-        createEntities()
     }
 
     override fun render() {
@@ -114,18 +118,6 @@ class Main : ApplicationAdapter()
         }
     }
 
-    // Test Functions
-    private fun createEntities() {
-        // Example: Create an entity with a position and velocity component
-        val player = Player()
-        player.Create(world)
 
-        // Add components to entity (define these components first)
-    }
-
-    private fun gameLevelInit()
-    {
-
-    }
 
 }
