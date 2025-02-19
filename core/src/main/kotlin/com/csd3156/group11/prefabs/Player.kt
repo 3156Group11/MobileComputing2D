@@ -25,6 +25,7 @@ public class Player : Prefab()
                 scale = Vector2(0.5f, 0.5f)
             ))
             .add(VelocityComponent(Vector2(0f, 0f)))
+            .add(ColliderComponent(radius = 8f)) // Adjust collider size accordingly
             .add(SpriteComponent("textures/Player.png"))
             .add(PlayerInputComponent())
             .add(TagComponent(Tag.PLAYER))
