@@ -4,8 +4,11 @@ import com.artemis.Aspect
 import com.artemis.ComponentMapper
 import com.artemis.annotations.Wire
 import com.artemis.systems.IteratingSystem
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.csd3156.group11.components.PowerUpComponent
 import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TransformComponent
 
@@ -15,6 +18,10 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
 
     private lateinit var spriteMapper: ComponentMapper<SpriteComponent>
     private lateinit var transformMapper: ComponentMapper<TransformComponent>
+    private lateinit var powerUpMapper: ComponentMapper<PowerUpComponent>
+
+    //for shield
+    private val shapeRenderer = ShapeRenderer()
 
     override fun begin() {
         spriteBatch.projectionMatrix = camera.combined
@@ -37,5 +44,31 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
 
     override fun end() {
         spriteBatch.end()
+
+        //shape for shield
+        shapeRenderer.projectionMatrix = camera.combined
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line)// line circle
+        shapeRenderer.color = Color(0f, 1f, 1f, 1f) // Light blue
+
+        val shieldEntities = world.aspectSubscriptionManager
+            .get(Aspect.all(TransformComponent::class.java, PowerUpComponent::class.java))
+            .entities
+
+        for (i in 0 until shieldEntities.size()) {
+            val eId = shieldEntities[i]
+            val powerUpComp = powerUpMapper[eId]
+            if (powerUpComp != null && powerUpComp.hasShield) {
+                val transform = transformMapper[eId]
+
+                // draw shield around player entity
+                val shieldRadius = 25f
+                shapeRenderer.circle(
+                    transform.position.x + 16f,  // offset if your sprite’s origin is top-left
+                    transform.position.y + 16f,  // or pick offsets that center the circle properly
+                    shieldRadius
+                )
+            }
+        }
+        shapeRenderer.end()
     }
 }
