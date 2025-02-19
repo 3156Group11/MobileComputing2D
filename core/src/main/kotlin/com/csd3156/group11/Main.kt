@@ -59,9 +59,13 @@ class Main : ApplicationAdapter()
 
         val uiSystem = UISystem(spriteBatch, viewport)
 
+        //True for WASD
+        //False for Tilt
+        val isDebugMode = false
+
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()
-            .with(PlayerInputSystem())
+            .with(PlayerInputSystem(isDebugMode))
             .with(EnemySystem())
             .with(PhysicsSystem())
             .with(CollisionSystem())

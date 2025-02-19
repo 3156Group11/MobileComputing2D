@@ -5,8 +5,10 @@ import com.badlogic.gdx.math.Vector2
 import com.csd3156.group11.components.ColliderComponent
 import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.SpriteComponent
+import com.csd3156.group11.components.TagComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.enums.Tag
 
 public class Enemy : Prefab()
 {
@@ -22,5 +24,6 @@ public class Enemy : Prefab()
             .add(ColliderComponent(radius = 8f))
             .add(SpriteComponent("textures/Enemy.png"))
             .add(EnemyComponent())
+            .add(TagComponent(Tag.ENEMY))
     }
 }

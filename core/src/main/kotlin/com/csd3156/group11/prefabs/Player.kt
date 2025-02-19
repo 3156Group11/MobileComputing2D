@@ -6,9 +6,11 @@ import com.csd3156.group11.components.ColliderComponent
 import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.PowerUpComponent
+import com.csd3156.group11.components.TagComponent
 import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.enums.Tag
 
 public class Player : Prefab()
 {
@@ -24,5 +26,6 @@ public class Player : Prefab()
             .add(VelocityComponent(Vector2(0f, 0f)))
             .add(SpriteComponent("textures/Player.png"))
             .add(PlayerInputComponent())
+            .add(TagComponent(Tag.PLAYER))
     }
 }
