@@ -4,18 +4,15 @@ import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
 import com.artemis.ComponentMapper
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.MathUtils
-import com.csd3156.group11.components.ColliderComponent
 import com.csd3156.group11.components.EnemyBasicComponent
 import com.csd3156.group11.components.EnemyComponent
+import com.csd3156.group11.components.EnemyLineComponent
 import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
-import javax.xml.crypto.dsig.Transform
 
-class EnemySystem : BaseEntitySystem(Aspect.all(VelocityComponent::class.java, TransformComponent::class.java)
-    .one(EnemyComponent::class.java, EnemyBasicComponent::class.java)) {
-
+class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, EnemyBasicComponent::class.java, VelocityComponent::class.java, TransformComponent::class.java)
+) {
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
     private lateinit var enemyMapper: ComponentMapper<EnemyComponent>
     private lateinit var transformMapper: ComponentMapper<TransformComponent>
@@ -38,7 +35,7 @@ class EnemySystem : BaseEntitySystem(Aspect.all(VelocityComponent::class.java, T
             val velocity = velocityMapper.get(entity)
             val transform = transformMapper.get(entity)
             // Retrieve the enemy component from one of the mappers.
-            val enemy = enemyMapper.get(entity) ?: enemyBasicMapper.get(entity) ?: continue
+            val enemy = enemyMapper.get(entity)
 
             // Handle enemy immunity on spawn.
             if (enemy.isImmune) {
@@ -81,3 +78,76 @@ class EnemySystem : BaseEntitySystem(Aspect.all(VelocityComponent::class.java, T
         entitiesToDelete.clear()
     }
 }
+
+class EnemyLineSystem : BaseEntitySystem(
+    Aspect.all(EnemyLineComponent::class.java, EnemyComponent::class.java, VelocityComponent::class.java, TransformComponent::class.java)
+) {
+    private lateinit var lineMapper: ComponentMapper<EnemyLineComponent>
+    private lateinit var enemyMapper: ComponentMapper<EnemyComponent>
+    private lateinit var transformMapper: ComponentMapper<TransformComponent>
+    private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
+
+    private val entitiesToDelete = mutableListOf<Int>()
+
+    private val screenWidth = 800f
+    private val screenHeight = 400f
+
+    override fun processSystem() {
+        val entities = subscription.entities
+        for (i in 0 until entities.size()) {
+            val entity = entities[i]
+            val line = lineMapper.get(entity)
+            val enemy = enemyMapper.get(entity)
+            val transform = transformMapper.get(entity)
+            val velocity = velocityMapper.get(entity)
+
+            if (enemy.isImmune) {
+                enemy.ImmuneTime -= world.delta
+                if (enemy.ImmuneTime < 0) {
+                    enemy.isImmune = false
+                    enemy.isLive = true
+                }
+                continue
+            } else if (enemy.isDying) {
+                enemy.DyingTime -= world.delta
+                if (enemy.DyingTime < 0) {
+                    entitiesToDelete.add(entity)
+                }
+                continue
+            }
+            // The enemy should already be moving with a fixed velocity.
+            // Check if it has reached (or passed) the opposite side.
+            else {
+                when (line.spawnEdge) {
+                    0 -> { // Spawned on left; moving right. If x > screenWidth, mark as dying.
+                        if (transform.position.x > screenWidth) {
+                            enemy.isDying = true
+                        }
+                    }
+                    1 -> { // Spawned on right; moving left. If x < 0, mark as dying.
+                        if (transform.position.x < 0f) {
+                            enemy.isDying = true
+                        }
+                    }
+                    2 -> { // Spawned on top; moving down. If y < 0, mark as dying.
+                        if (transform.position.y < 0f) {
+                            enemy.isDying = true
+                        }
+                    }
+                    3 -> { // Spawned on bottom; moving up. If y > screenHeight, mark as dying.
+                        if (transform.position.y > screenHeight) {
+                            enemy.isDying = true
+                        }
+                    }
+                }
+            }
+        }
+
+        // Remove entities that have finished dying.
+        for (entity in entitiesToDelete) {
+            world.delete(entity)
+        }
+        entitiesToDelete.clear()
+    }
+}
+

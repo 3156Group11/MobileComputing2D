@@ -5,32 +5,22 @@ import com.artemis.WorldConfigurationBuilder
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
-import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.csd3156.group11.components.ColliderComponent
-import com.csd3156.group11.components.EnemyComponent
-import com.csd3156.group11.components.PlayerInputComponent
-import com.csd3156.group11.components.SpriteComponent
-import com.csd3156.group11.components.TransformComponent
-import com.csd3156.group11.components.VelocityComponent
-import com.csd3156.group11.prefabs.Enemy
 import com.csd3156.group11.prefabs.EnemyBasic
+import com.csd3156.group11.prefabs.EnemyLine
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.systems.AssetSystem
 import com.csd3156.group11.systems.CollisionSystem
+import com.csd3156.group11.systems.EnemyLineSystem
 import com.csd3156.group11.systems.EnemySystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
 import com.csd3156.group11.systems.RenderSystem
-import ktx.assets.Asset
-import org.w3c.dom.Text
 
 var assetManager:AssetSystem = AssetSystem()
 
@@ -64,6 +54,7 @@ class Main : ApplicationAdapter()
         val worldConfiguration = WorldConfigurationBuilder()
             .with(PlayerInputSystem())
             .with(EnemySystem())
+            .with(EnemyLineSystem())
             .with(PhysicsSystem())
             .with(CollisionSystem())
             .with(uiSystem)
@@ -118,8 +109,8 @@ class Main : ApplicationAdapter()
         enemy.Create(world)
 
         // Add components to entity (define these components first)
-        val homingEnemy = EnemyBasic()
-        homingEnemy.Create(world)
+        val basicEnemy = EnemyBasic()
+        basicEnemy.Create(world)
     }
 
     private fun gameLevelInit()

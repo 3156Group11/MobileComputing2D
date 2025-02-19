@@ -14,6 +14,10 @@ open class EnemyComponent : Component(){
     public var isLive = false
 }
 
-class EnemyBasicComponent : EnemyComponent() {
+class EnemyBasicComponent : Component() {
+
+}
+
+class EnemyLineComponent(val spawnEdge: Int = 0) : Component() {
 
 }
