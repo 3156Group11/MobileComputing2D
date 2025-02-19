@@ -61,7 +61,7 @@ class Main : ApplicationAdapter()
 
         //True for WASD
         //False for Tilt
-        val isDebugMode = false
+        val isDebugMode = true
 
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()

@@ -15,6 +15,7 @@ public class Enemy : Prefab()
     public override fun Create(world: World)
     {
         ID = world.create()
+        //println("Enemy Created! Entity ID: $ID")
         world.edit(ID)
             .add(TransformComponent(
                 position = Vector2(400f, 240f),

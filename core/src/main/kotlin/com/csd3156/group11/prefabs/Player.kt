@@ -18,6 +18,7 @@ public class Player : Prefab()
     {
         // Default values
         ID = world.create()
+        println("Player Created! Entity ID: $ID")
         world.edit(ID)
             .add(TransformComponent(
                 position = Vector2(400f, 240f),
