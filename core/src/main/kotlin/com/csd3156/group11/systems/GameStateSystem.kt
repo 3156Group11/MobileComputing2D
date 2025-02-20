@@ -3,6 +3,8 @@ import com.artemis.BaseEntitySystem
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.csd3156.group11.GameState
@@ -20,24 +22,29 @@ class GameStateSystem() : BaseEntitySystem(Aspect.all(TransformComponent::class.
     private var initialized = false
     fun changeState(newState: GameState) {
         if (newState != currentState) {
+            println("Changing state to: $newState")
             pendingState = newState
         }
     }
 
     override fun processSystem() {
-
-        if (initialized == false)
-        {
+        if (!initialized) {
             enterState(currentState)
             initialized = true
         }
-        pendingState?.let {
-            exitState(currentState)
-            currentState = it
-            enterState(currentState)
+
+        if (pendingState != null) {
+            val newState = pendingState
             pendingState = null
+
+            world.process()
+
+            exitState(currentState)
+            currentState = newState!!
+            enterState(currentState)
         }
     }
+
 
     private fun enterState(state: GameState) {
         when (state) {
@@ -56,14 +63,42 @@ class GameStateSystem() : BaseEntitySystem(Aspect.all(TransformComponent::class.
     }
 
     private fun createMainMenuEntities() {
-        val player = Player()
-        player.Create(world)
         // Example: Create UI entities for Main Menu
-        val lab = Text_Label(
-            "Test", Label.LabelStyle(BitmapFont(), Color.WHITE),
-            Position = Vector2(100f,100f),
+        val gameName = Text_Label(
+            "2D Mobile Game", Label.LabelStyle(BitmapFont(), Color.YELLOW),
+            Position = Vector2(340f,250f),
             Scale = Vector2(1f,1f),
         )
+        gameName.Create(world)
+
+        val startGameButton = Text_Button(
+            "Start Game",
+            TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(350f, 200f),
+            Scale = Vector2(1f, 1f),
+            Action = {
+                println("Start Game button clicked!")
+                changeState(GameState.GAME_STAGE)
+            }
+        )
+        startGameButton.Create(world)
+
+        val highScore = Text_Button(
+            "High Score",
+            TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(350f, 150f),
+            Scale = Vector2(1f, 1f),
+            Action = {
+                changeState(GameState.HIGH_SCORE)
+            }
+        )
+        highScore.Create(world)
+    }
+
+    private fun createGameEntities() {
+        // Example: Create player, enemies, and other game entities
+        val player = Player()
+        player.Create(world)
 
         val but = Text_Button(
             "Create Shield", TextButton.TextButtonStyle().apply { font = BitmapFont() },
@@ -74,17 +109,100 @@ class GameStateSystem() : BaseEntitySystem(Aspect.all(TransformComponent::class.
                 enemy.Create(world)
             }
         )
-
-        lab.Create(world)
         but.Create(world)
-    }
 
-    private fun createGameEntities() {
-        // Example: Create player, enemies, and other game entities
+        val backButton = Text_Button(
+            "Back", TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(750f, 10f),
+            Scale = Vector2(1f, 1f),
+            Action = {
+                changeState(GameState.MAIN_MENU) // Return to main menu
+            }
+        )
+        backButton.Create(world)
 
+        //to save score into highscore, create variable to store score
+        //on game end, call onGameEnd(variable)
     }
 
     private fun createHighScoreEntities() {
         // Example: Create high score UI elements
+        loadScores() // Load saved scores before displaying
+
+        val titleLabel = Text_Label(
+            "High Scores", Label.LabelStyle(BitmapFont(), Color.YELLOW),
+            Position = Vector2(330f, 350f),
+            Scale = Vector2(1.2f, 1.2f)
+        )
+        titleLabel.Create(world)
+
+        for (i in highScores.indices) {
+            val scoreLabel = Text_Label(
+                "${i + 1}. ${highScores[i]}", Label.LabelStyle(BitmapFont(), Color.WHITE),
+                Position = Vector2(350f, 320f - (i * 30)), //spacing of scores
+                Scale = Vector2(1f, 1f)
+            )
+            scoreLabel.Create(world)
+        }
+
+        val backButton = Text_Button(
+            "Back", TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(325f, 50f),
+            Scale = Vector2(1f, 1f),
+            Action = {
+                changeState(GameState.MAIN_MENU) // Return to main menu
+            }
+        )
+        backButton.Create(world)
+
+        val clearButton = Text_Button(
+            "Clear",
+            TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(375f, 50f), // Position below the back button
+            Scale = Vector2(1f, 1f),
+            Action = {
+                clearHighScores()
+                changeState(GameState.HIGH_SCORE) // Refresh high score screen
+            }
+        )
+        clearButton.Create(world)
+    }
+
+    private val highScores: MutableList<Int> = mutableListOf()
+    private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
+
+    private fun addScore(newScore: Int) {
+        highScores.add(newScore)
+        highScores.sortDescending()
+        if (highScores.size > 9) {
+            highScores.removeAt(9)
+        }
+    }
+
+    private fun saveScores() {
+        for (i in highScores.indices) {
+            prefs.putInteger("score_$i", highScores[i])
+        }
+        prefs.flush() // Save changes
+    }
+
+    private fun loadScores() {
+        highScores.clear()
+        for (i in 0 until 9) {
+            val score = prefs.getInteger("score_$i", 0)
+            if (score > 0) {
+                highScores.add(score)
+            }
+        }
+    }
+    private fun onGameEnd(finalScore: Int) {
+        addScore(finalScore)
+        saveScores() // Save new high scores
+    }
+
+    private fun clearHighScores() {
+        highScores.clear() // Clear the list in memory
+        prefs.clear() // Clear stored scores in SharedPreferences
+        prefs.flush() // Save changes to persist clearing
     }
 }
