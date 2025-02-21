@@ -35,7 +35,7 @@ class UISystem(
             val uiComponent = mUI[entityId]
             val transform = mTransform[entityId]
 
-            uiComponent.actor?.setPosition(transform.position.x, transform.position.y)
+            uiComponent.actor?.setPosition(transform.position.x , transform.position.y)
             uiComponent.actor?.setScale(transform.scale.x, transform.scale.y)
         }
 

@@ -22,7 +22,7 @@ public class Player : Prefab()
         println("Player Created! Entity ID: $ID")
         world.edit(ID)
             .add(TransformComponent(
-                position = Vector2(400f, 240f),
+                position = Vector2(17.5f, 3f),
                 scale = Vector2(1f, 1f)
             ))
             .add(VelocityComponent(Vector2(0f, 0f)))

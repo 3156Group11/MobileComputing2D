@@ -107,7 +107,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val entity = world.create()
         val emitter = world.edit(entity).create(EmitterComponent::class.java)
-        emitter.position.set(400f, 300f) // Spawn location
+        emitter.position.set(4f, 4f) // Spawn location
         emitter.emissionRate = 5f
         emitter.particleLifeTime = 30f
         emitter.particleSpeed = 20f

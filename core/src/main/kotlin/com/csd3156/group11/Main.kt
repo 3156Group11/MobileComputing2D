@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.csd3156.group11.prefabs.EnemyBasic
 import com.csd3156.group11.prefabs.EnemyLine
 import com.csd3156.group11.prefabs.Player
+import com.csd3156.group11.resources.Globals
 import com.csd3156.group11.systems.AssetSystem
 import com.csd3156.group11.systems.BombSystem
 import com.csd3156.group11.systems.CollisionSystem
@@ -62,7 +63,8 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
     private var scrHeight : Float = heightPix.toFloat()
 
     override fun create() {
-
+        Globals.scrWidth = scrWidth
+        Globals.UnitSize = scrWidth/35
         camera = OrthographicCamera()
         viewport = FitViewport(scrWidth, scrHeight, camera)
         viewport.apply()
