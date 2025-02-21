@@ -1,6 +1,7 @@
 package com.csd3156.group11
 
 import EmitterSystem
+import EnemyManagerSystem
 import GameStateSystem
 import ParticleSystem
 import UISystem
@@ -89,6 +90,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EnemySystem())
             .with(EnemyLineSystem())
             .with(EnemySpawnerSystem())
+            .with(EnemyManagerSystem(threshold = 20, interval = 5f))
             .with(PhysicsSystem())
             .with(BombSystem())
             .with(CollisionSystem())
