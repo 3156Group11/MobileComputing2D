@@ -87,7 +87,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
         val particleTexture = createCircleTexture(360)
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()
-            .with(GameStateSystem())
+            .with(GameStateSystem(viewport))
             .with(PlayerInputSystem(isDebugMode))
             .with(EnemySystem())
             .with(PhysicsSystem())

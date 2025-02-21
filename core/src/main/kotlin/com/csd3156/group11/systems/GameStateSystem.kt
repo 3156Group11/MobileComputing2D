@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.utils.viewport.Viewport
 import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.prefabs.Player
@@ -15,10 +16,11 @@ import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
 import com.csd3156.group11.resources.Globals
 
-class GameStateSystem() : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
+class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
     var currentState: GameState
         get() = Globals.currentState
         set(value) { Globals.currentState = value }
+    var viewport: Viewport = inViewport
 
     private var pendingState: GameState? = null
     private var initialized = false
@@ -121,8 +123,8 @@ class GameStateSystem() : BaseEntitySystem(Aspect.all(TransformComponent::class.
                 enemy.Create(world)
             }
         )
-        but.Create(world)
 
+        but.Create(world)
         val backButton = Text_Button(
             "Back", TextButton.TextButtonStyle().apply { font = BitmapFont() },
             Position = Vector2(750f, 10f),
