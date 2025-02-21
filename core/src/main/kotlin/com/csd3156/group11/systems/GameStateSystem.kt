@@ -7,16 +7,18 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.csd3156.group11.GameState
+import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.prefabs.ShieldPowerUp
 import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
+import com.csd3156.group11.resources.Globals
 
 class GameStateSystem() : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
-    var currentState: GameState = GameState.MAIN_MENU
-        private set
+    var currentState: GameState
+        get() = Globals.currentState
+        set(value) { Globals.currentState = value }
 
     private var pendingState: GameState? = null
     private var initialized = false
@@ -93,6 +95,16 @@ class GameStateSystem() : BaseEntitySystem(Aspect.all(TransformComponent::class.
             }
         )
         highScore.Create(world)
+
+        val entity = world.create()
+        val emitter = world.edit(entity).create(EmitterComponent::class.java)
+        emitter.position.set(400f, 300f) // Spawn location
+        emitter.emissionRate = 5f
+        emitter.particleLifeTime = 30f
+        emitter.particleSpeed = 20f
+
+
+
     }
 
     private fun createGameEntities() {

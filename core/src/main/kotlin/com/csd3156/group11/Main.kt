@@ -1,17 +1,22 @@
 package com.csd3156.group11
 
+import EmitterSystem
 import GameStateSystem
+import ParticleSystem
 import UISystem
 import com.artemis.WorldConfigurationBuilder
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.Viewport
@@ -34,8 +39,17 @@ import org.w3c.dom.Text
 
 var assetManager:AssetSystem = AssetSystem()
 
-enum class GameState {
-    MAIN_MENU, GAME_STAGE, HIGH_SCORE
+
+
+fun createCircleTexture(diameter: Int, color: Color = Color.WHITE): TextureRegion {
+    val pixmap = Pixmap(diameter, diameter, Pixmap.Format.RGBA8888)
+    pixmap.setColor(color)
+    pixmap.fillCircle(diameter / 2, diameter / 2, diameter / 2)
+
+    val texture = Texture(pixmap)
+    pixmap.dispose() // Free memory
+
+    return TextureRegion(texture)
 }
 
 
@@ -67,7 +81,7 @@ class Main : ApplicationAdapter()
         //True for WASD
         //False for Tilt
         val isDebugMode = true
-
+        val particleTexture = createCircleTexture(360)
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()
             .with(GameStateSystem())
@@ -75,12 +89,14 @@ class Main : ApplicationAdapter()
             .with(EnemySystem())
             .with(PhysicsSystem())
             .with(CollisionSystem())
+            .with(EmitterSystem(viewport.worldWidth, viewport.worldHeight))
+            .with(ParticleSystem(spriteBatch, particleTexture))
             .with(uiSystem)
             .with(RenderSystem(spriteBatch, camera))
             .build()
 
 
-       world = com.artemis.World(worldConfiguration)
+        world = com.artemis.World(worldConfiguration)
 
         Gdx.input.inputProcessor = uiSystem.stage
 
