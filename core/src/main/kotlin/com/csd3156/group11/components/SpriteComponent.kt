@@ -7,14 +7,12 @@ import com.csd3156.group11.assetManager
 
 class SpriteComponent() : Component() {
     var region: TextureRegion = TextureRegion()  // Empty region as default
-    var width: Float = 0f
-    var height: Float = 0f
+    var width: Float = 15f
+    var height: Float = 15f
 
     // Custom constructor to initialize with a texture
     constructor(filepath : String) : this() {
         val texture = assetManager.system().get(filepath, Texture::class.java)
         region = TextureRegion(texture)
-        width = region.regionWidth.toFloat()
-        height = region.regionHeight.toFloat()
     }
 }

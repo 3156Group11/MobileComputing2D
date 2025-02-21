@@ -30,7 +30,6 @@ class AssetSystem {
                     while (!assetManager.update())
                     {
                         val progress = assetManager.progress
-                        println("Loading: " + progress * 100 + "%")
                     }
                 }
             }
@@ -55,7 +54,6 @@ class AssetSystem {
                     while (!assetManager.update())
                     {
                         val progress = assetManager.progress
-                        println("Loading: " + progress * 100 + "%")
                     }
                 }
             }
@@ -80,7 +78,6 @@ class AssetSystem {
                     while (!assetManager.update())
                     {
                         val progress = assetManager.progress
-                        println("Loading: " + progress * 100 + "%")
                     }
                 }
             }

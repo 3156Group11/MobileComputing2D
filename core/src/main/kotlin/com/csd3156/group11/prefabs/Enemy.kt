@@ -8,8 +8,10 @@ import com.csd3156.group11.components.EnemyBasicComponent
 import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.EnemyLineComponent
 import com.csd3156.group11.components.SpriteComponent
+import com.csd3156.group11.components.TagComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.enums.Tag
 
 open class Enemy : Prefab()
 {
@@ -18,17 +20,17 @@ open class Enemy : Prefab()
     open override fun Create(world: World)
     {
         ID = world.create()
-        transform = TransformComponent(
-            position = Vector2(400f, 240f),
-            scale = Vector2(0.5f, 0.5f)
-        )
-        world.edit(ID).add(transform)
-
-        velocity = VelocityComponent(Vector2(0f, 0f))
-        world.edit(ID).add(velocity)
-        world.edit(ID).add(ColliderComponent(radius = 8f))
-        world.edit(ID).add(SpriteComponent("textures/Enemy.png"))
-        world.edit(ID).add(EnemyComponent())
+        //println("Enemy Created! Entity ID: $ID")
+        world.edit(ID)
+            .add(TransformComponent(
+                position = Vector2(400f, 240f),
+                scale = Vector2(1f, 1f)
+            ))
+            .add(VelocityComponent(Vector2(0f, 0f)))
+            .add(ColliderComponent(radius = 8f))
+            .add(SpriteComponent("textures/Enemy.png"))
+            .add(EnemyComponent())
+            .add(TagComponent(Tag.ENEMY))
     }
 }
 

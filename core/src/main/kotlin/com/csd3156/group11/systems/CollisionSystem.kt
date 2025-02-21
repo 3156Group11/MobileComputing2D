@@ -9,6 +9,10 @@ import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.PowerUpComponent
 import com.csd3156.group11.components.TransformComponent
+import com.csd3156.group11.components.TagComponent
+import com.csd3156.group11.enums.PowerUpType
+import com.csd3156.group11.enums.Tag
+
 
 class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.java, TransformComponent::class.java)) {
 
@@ -51,6 +55,17 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
     private fun handleCollision(entityA: Int, entityB: Int) {
 
         // Player and Powerup
+        // 1) Grab each entity's tag (default to NONE if TagComponent is missing)
+        val tagA = world.getEntity(entityA).getComponent(TagComponent::class.java)?.tag ?: Tag.NONE
+        val tagB = world.getEntity(entityB).getComponent(TagComponent::class.java)?.tag ?: Tag.NONE
+
+        // 2) If one is PLAYER and the other is POWERUP, handle powerup pickup
+        if (tagA == Tag.PLAYER && tagB == Tag.POWERUP) {
+            pickupPowerUp(entityA, entityB)
+        } else if (tagB == Tag.PLAYER && tagA == Tag.POWERUP) {
+            pickupPowerUp(entityB, entityA)
+        }
+
         // Player and Enemy
         // Enemy and Destructive objects
         // Player
@@ -123,6 +138,34 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                 // Activate Powerup
                 return
             }
+        }
+    } // end of handle collision func
+
+    // Helper function:
+    private fun pickupPowerUp(playerEntityId: Int, powerUpEntityId: Int) {
+        // Get the PowerUpComponent from the collided powerup
+        val powerUpComp = world.getEntity(powerUpEntityId).getComponent(PowerUpComponent::class.java)
+        if (powerUpComp != null) {
+            when (powerUpComp.type) {
+                PowerUpType.SHIELD -> {
+                    println("Player picked up SHIELD powerup!")
+                    // If the player has a PowerUpComponent, mark hasShield = true (or do your own logic)
+                    val playerPowerComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
+                    if (playerPowerComp != null) {
+                        playerPowerComp.hasShield = true
+                    } else {
+                        // If the player doesn't have a PowerUpComponent, you can add one:
+                        world.edit(playerEntityId).add(PowerUpComponent().apply { hasShield = true })
+                    }
+                }
+                else -> {
+                    println("Player picked up some other powerup: ${powerUpComp.type}")
+                    // For now, do nothing. Later, handle other types (CHAIN_LIGHTNING, BOMB, etc.)
+                }
+            }
+
+            // Remove the powerup entity from the world
+            world.delete(powerUpEntityId)
         }
     }
 }
