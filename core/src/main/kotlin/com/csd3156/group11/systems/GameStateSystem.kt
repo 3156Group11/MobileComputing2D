@@ -11,17 +11,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.csd3156.group11.components.BackgroundComponent
 import com.csd3156.group11.components.EnemySpawnerComponent
-import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.enums.EnemyFormation
 import com.csd3156.group11.prefabs.EnemyBasic
+import com.csd3156.group11.components.SpriteComponent
+import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.prefabs.ShieldPowerUp
+import com.csd3156.group11.prefabs.BombPowerUp
 import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
 import com.csd3156.group11.resources.Globals
-import com.csd3156.group11.systems.BackgroundSystem
 
 class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
     var currentState: GameState
@@ -115,12 +116,12 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val background = world.create()
         world.edit(background)
-            .add(BackgroundComponent("textures/Background.png"))
+            .add(SpriteComponent("textures/Background.png", RenderLayers.Background))
             .add(TransformComponent(scale = Vector2(35f,35f * viewport.worldHeight/viewport.worldWidth )))
 
         val backgroundBox = world.create()
         world.edit(backgroundBox)
-            .add(BackgroundComponent("textures/BackgroundBorder.png"))
+            .add(SpriteComponent("textures/BackgroundBorder.png",RenderLayers.BackgroundBorder))
             .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
                 position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
     }
@@ -130,6 +131,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         val player = Player()
         player.Create(world)
 
+        // -----------------------------
+        //  Shield button
+        // -----------------------------
         val but = Text_Button(
             "Create Shield", TextButton.TextButtonStyle().apply { font = BitmapFont() },
             Position = Vector2(200f,300f),
@@ -142,6 +146,22 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val spawnEntityNone = world.create()
         world.edit(spawnEntityNone).add(EnemySpawnerComponent(EnemyFormation.CIRCLE, 10, Vector2(400f, 240f)))
+        // -----------------------------
+        // Bomb button
+        // -----------------------------
+        val spawnBombButton = Text_Button(
+            "Spawn Bomb",
+            TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(200f, 250f),
+            Scale = Vector2(1f, 1f),
+            Action = {
+                // Spawns the bomb power-up
+                val bombPowerUp = BombPowerUp()
+                bombPowerUp.Create(world)
+            }
+        )
+        spawnBombButton.Create(world)
+
         but.Create(world)
         val backButton = Text_Button(
             "Back", TextButton.TextButtonStyle().apply { font = BitmapFont() },
@@ -157,12 +177,12 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         //on game end, call onGameEnd(variable)
         val background = world.create()
         world.edit(background)
-            .add(BackgroundComponent("textures/Background.png"))
+            .add(SpriteComponent("textures/Background.png",RenderLayers.Background))
             .add(TransformComponent(scale = Vector2(35f,35f * viewport.worldHeight/viewport.worldWidth )))
 
         val backgroundBox = world.create()
         world.edit(backgroundBox)
-            .add(BackgroundComponent("textures/BackgroundBorder.png"))
+            .add(SpriteComponent("textures/BackgroundBorder.png",RenderLayers.BackgroundBorder))
             .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
                 position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
     }
@@ -211,12 +231,12 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val background = world.create()
         world.edit(background)
-            .add(BackgroundComponent("textures/Background.png"))
+            .add(SpriteComponent("textures/Background.png",RenderLayers.Background))
             .add(TransformComponent(scale = Vector2(35f,35f * viewport.worldHeight/viewport.worldWidth )))
 
         val backgroundBox = world.create()
         world.edit(backgroundBox)
-            .add(BackgroundComponent("textures/BackgroundBorder.png"))
+            .add(SpriteComponent("textures/BackgroundBorder.png",RenderLayers.BackgroundBorder))
             .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
                 position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
     }

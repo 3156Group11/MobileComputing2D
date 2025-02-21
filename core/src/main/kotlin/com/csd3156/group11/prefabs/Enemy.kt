@@ -11,6 +11,7 @@ import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TagComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 
 open class Enemy : Prefab()
