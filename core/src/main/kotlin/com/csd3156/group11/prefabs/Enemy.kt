@@ -13,6 +13,7 @@ import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
 import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
+import com.csd3156.group11.resources.Globals
 
 open class Enemy : Prefab()
 {
@@ -23,7 +24,7 @@ open class Enemy : Prefab()
         ID = world.create()
         //println("Enemy Created! Entity ID: $ID")
         transform = TransformComponent(
-            position = Vector2(400f, 240f),
+            position = Vector2(17.5f, 3f),
             scale = Vector2(1f, 1f)
         )
         world.edit(ID).add(transform)
@@ -32,7 +33,7 @@ open class Enemy : Prefab()
         world.edit(ID).add(velocity)
 
         world.edit(ID).add(ColliderComponent(radius = 8f))
-        world.edit(ID).add(SpriteComponent("textures/Enemy.png"))
+        world.edit(ID).add(SpriteComponent("textures/Enemy.png", RenderLayers.Enemy))
         world.edit(ID).add(EnemyComponent())
         world.edit(ID).add(TagComponent(Tag.ENEMY))
     }
@@ -43,7 +44,7 @@ class EnemyBasic : Enemy() {
         // Call the base enemy creation code
         super.Create(world)
 
-        transform.position.set(MathUtils.random(0f, 800f), MathUtils.random(0f, 400f))
+        transform.position.set(MathUtils.random(0f, 35f), MathUtils.random(0f, 35 * Globals.scrHeight / Globals.scrWidth))
 
         world.edit(ID).add(EnemyBasicComponent())
     }

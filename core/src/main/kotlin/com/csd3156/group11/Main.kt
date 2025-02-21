@@ -1,6 +1,7 @@
 package com.csd3156.group11
 
 import EmitterSystem
+import EnemyManagerSystem
 import GameStateSystem
 import ParticleSystem
 import UISystem
@@ -67,6 +68,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
 
     override fun create() {
         Globals.scrWidth = scrWidth
+        Globals.scrHeight = scrHeight
         Globals.UnitSize = scrWidth/35
         camera = OrthographicCamera()
         viewport = FitViewport(scrWidth, scrHeight, camera)
@@ -94,6 +96,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EnemySystem())
             .with(EnemyLineSystem())
             .with(EnemySpawnerSystem())
+            .with(EnemyManagerSystem(threshold = 20, interval = 2f))
             .with(PhysicsSystem())
             .with(BombSystem())
             .with(LightningSystem())

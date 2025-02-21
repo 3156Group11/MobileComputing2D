@@ -154,8 +154,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         but.Create(world)
 
-        val spawnEntityNone = world.create()
-        world.edit(spawnEntityNone).add(EnemySpawnerComponent(EnemyFormation.ALL_EDGES, 20, Vector2(400f, 240f)))
+       /* val spawnEntityNone = world.create()
+        world.edit(spawnEntityNone).add(EnemySpawnerComponent(EnemyFormation.ALL_EDGES, 20, Vector2(400f, 240f)))*/
 
         // -----------------------------
         // Bomb button
