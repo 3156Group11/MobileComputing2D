@@ -12,6 +12,8 @@ import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.TagComponent
 import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.Tag
+import com.csd3156.group11.prefabs.ShieldFX
+import com.csd3156.group11.prefabs.BombFX
 
 
 class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.java, TransformComponent::class.java)) {
@@ -69,14 +71,11 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
         // Player and Enemy
         // Enemy and Destructive objects
         // Player
-        if (world.getEntity(entityA).getComponent(PlayerInputComponent::class.java) != null)
-        {
-            if (world.getEntity(entityB).getComponent(EnemyComponent::class.java) != null)
-            {
+        if (world.getEntity(entityA).getComponent(PlayerInputComponent::class.java) != null) {
+            if (world.getEntity(entityB).getComponent(EnemyComponent::class.java) != null) {
                 val powerUp = world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
 
-                if (powerUp != null && powerUp.hasShield)
-                {
+                if (powerUp != null && powerUp.hasShield) {
                     powerUp.hasShield = false
                     powerUp.shieldBreakEffect = true  // Trigger shield break effect
                     return
@@ -86,13 +85,12 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                 return
             }
             // else if powerup, TODO: Add powerup component
-            else if (world.getEntity(entityB).getComponent(PowerUpComponent::class.java) != null)
-            {
+            else if (world.getEntity(entityB).getComponent(PowerUpComponent::class.java) != null) {
                 val powerUp = world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
 
-                if (powerUp != null && powerUp.hasShield)
-                {
-                    val playerPowerUp = world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
+                if (powerUp != null && powerUp.hasShield) {
+                    val playerPowerUp =
+                        world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
                     if (playerPowerUp != null) {
                         playerPowerUp.hasShield = true
                     }
@@ -105,14 +103,11 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
         }
 
         // Player
-        else if (world.getEntity(entityB).getComponent(PlayerInputComponent::class.java) != null)
-        {
-            if (world.getEntity(entityA).getComponent(EnemyComponent::class.java) != null)
-            {
+        else if (world.getEntity(entityB).getComponent(PlayerInputComponent::class.java) != null) {
+            if (world.getEntity(entityA).getComponent(EnemyComponent::class.java) != null) {
                 val powerUp = world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
 
-                if (powerUp != null && powerUp.hasShield)
-                {
+                if (powerUp != null && powerUp.hasShield) {
                     powerUp.hasShield = false
                     powerUp.shieldBreakEffect = true  // Trigger shield break effect
                     return
@@ -122,13 +117,12 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                 return
             }
             // else if powerup, TODO: Add powerup component
-            else if (world.getEntity(entityA).getComponent(PowerUpComponent::class.java) != null)
-            {
+            else if (world.getEntity(entityA).getComponent(PowerUpComponent::class.java) != null) {
                 val powerUp = world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
 
-                if (powerUp != null && powerUp.hasShield)
-                {
-                    val playerPowerUp = world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
+                if (powerUp != null && powerUp.hasShield) {
+                    val playerPowerUp =
+                        world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
                     if (playerPowerUp != null) {
                         playerPowerUp.hasShield = true
                     }
@@ -143,56 +137,36 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
 
     // Helper function:
     private fun pickupPowerUp(playerEntityId: Int, powerUpEntityId: Int) {
-        // Get the PowerUpComponent from the collided powerup
-        val powerUpComp = world.getEntity(powerUpEntityId).getComponent(PowerUpComponent::class.java)
+        val powerUpComp =
+            world.getEntity(powerUpEntityId).getComponent(PowerUpComponent::class.java)
         if (powerUpComp != null) {
             when (powerUpComp.type) {
                 PowerUpType.SHIELD -> {
                     println("Player picked up SHIELD powerup!")
-                    // If the player has a PowerUpComponent, mark hasShield = true
-                    val playerPowerComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
-                    if (playerPowerComp != null) {
-                        playerPowerComp.hasShield = true
-                    } else {
-                        // If the player doesn't have a PowerUpComponent
-                        world.edit(playerEntityId).add(PowerUpComponent().apply { hasShield = true })
-                    }
+                    // Remove the shield pickup entity
+                    world.delete(powerUpEntityId)
+                    // Create the ShieldFX entity so that it follows the player
+                    val shieldFX = ShieldFX(playerEntityId)
+                    shieldFX.Create(world)
                 }
 
                 PowerUpType.BOMB -> {
                     println("Player picked up BOMB powerup!")
-
-                    // Grab the pickup's position
+                    // Get the bomb pickup's position; that's where the bomb will detonate
                     val bombTransform = world.getEntity(powerUpEntityId)
                         .getComponent(TransformComponent::class.java)
                     val bombPickupPos = bombTransform.position.cpy()
-
-                    // Attach bomb data to the player's PowerUpComponent
-                    val playerPowerComp = world.getEntity(playerEntityId)
-                        .getComponent(PowerUpComponent::class.java)
-                        ?: PowerUpComponent().also { newComp ->
-                            world.edit(playerEntityId).add(newComp)
-                        }
-
-                    // Mark bomb active on the player, effect is at the pickup's position
-                    playerPowerComp.type = PowerUpType.BOMB
-                    playerPowerComp.bombActive = true
-                    playerPowerComp.bombTimer = 5f
-                    playerPowerComp.bombPos = bombPickupPos
-                    playerPowerComp.bombRadius = 50f
-
-                    //Remove the bomb pickup entity from the world
+                    // Remove the bomb pickup entity
                     world.delete(powerUpEntityId)
+                    // Create the BombFX entity at the pickup location
+                    val bombFX = BombFX(bombPickupPos)
+                    bombFX.Create(world)
                 }
 
                 else -> {
-                    println("Player picked up some other powerup: ${powerUpComp.type}")
-                    // For now, do nothing. Later, handle other types (CHAIN_LIGHTNING, BOMB, etc.)
+                    // Handle other powerups if needed
                 }
             }
-
-            // Remove the powerup entity from the world
-            world.delete(powerUpEntityId)
         }
     }
 }

@@ -13,12 +13,14 @@ class PowerUpComponent : Component() {
     var hasShield: Boolean = false //shield active
     var shieldBreakEffect: Boolean = false //shield effect.
 
-    // --------------------------------------
-    // BOMB data
-    // --------------------------------------
-    var bombActive: Boolean = false //bomb active
-    var bombTimer: Float = 0f   //bomb duration
-    var bombPos: Vector2 = Vector2() //bomb pos
-    var bombRadius: Float = 0f  //bomb rad
+    // ----------------------------------------
+    // BOMB DATA - store multiple bombs at once
+    // ----------------------------------------
+    data class BombEntry(
+        val center: Vector2,  // The position where the bomb was picked up
+        var timeLeft: Float,  // Duration the bomb effect stays active
+        val radius: Float     // AoE radius
+    )
+    val bombs = mutableListOf<BombEntry>()
 
 }
