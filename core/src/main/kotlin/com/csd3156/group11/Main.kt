@@ -29,6 +29,7 @@ import com.csd3156.group11.components.VelocityComponent
 import com.csd3156.group11.prefabs.Enemy
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.systems.AssetSystem
+import com.csd3156.group11.systems.BackgroundSystem
 import com.csd3156.group11.systems.CollisionSystem
 import com.csd3156.group11.systems.EnemySystem
 import com.csd3156.group11.systems.PhysicsSystem
@@ -92,6 +93,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EnemySystem())
             .with(PhysicsSystem())
             .with(CollisionSystem())
+            .with(BackgroundSystem(spriteBatch, camera))
             .with(EmitterSystem(viewport.worldWidth, viewport.worldHeight))
             .with(ParticleSystem(spriteBatch, particleTexture))
             .with(uiSystem)

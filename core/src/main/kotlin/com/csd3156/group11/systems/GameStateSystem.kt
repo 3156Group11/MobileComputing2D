@@ -5,9 +5,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.csd3156.group11.components.BackgroundComponent
+import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.prefabs.Player
@@ -15,6 +18,7 @@ import com.csd3156.group11.prefabs.ShieldPowerUp
 import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
 import com.csd3156.group11.resources.Globals
+import com.csd3156.group11.systems.BackgroundSystem
 
 class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
     var currentState: GameState
@@ -79,7 +83,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             "Start Game",
             TextButton.TextButtonStyle().apply { font = BitmapFont() },
             Position = Vector2(350f, 200f),
-            Scale = Vector2(1f, 1f),
+            Scale = Vector2(4f, 4f),
             Action = {
                 println("Start Game button clicked!")
                 changeState(GameState.GAME_STAGE)
@@ -91,7 +95,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             "High Score",
             TextButton.TextButtonStyle().apply { font = BitmapFont() },
             Position = Vector2(350f, 150f),
-            Scale = Vector2(1f, 1f),
+            Scale = Vector2(3f, 3f),
             Action = {
                 changeState(GameState.HIGH_SCORE)
             }
@@ -106,7 +110,16 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         emitter.particleSpeed = 20f
 
 
+        val background = world.create()
+        world.edit(background)
+            .add(BackgroundComponent("textures/Background.png"))
+            .add(TransformComponent(scale = Vector2(35f,35f * viewport.worldHeight/viewport.worldWidth )))
 
+        val backgroundBox = world.create()
+        world.edit(backgroundBox)
+            .add(BackgroundComponent("textures/BackgroundBorder.png"))
+            .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
+                position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
     }
 
     private fun createGameEntities() {
@@ -137,6 +150,16 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         //to save score into highscore, create variable to store score
         //on game end, call onGameEnd(variable)
+        val background = world.create()
+        world.edit(background)
+            .add(BackgroundComponent("textures/Background.png"))
+            .add(TransformComponent(scale = Vector2(35f,35f * viewport.worldHeight/viewport.worldWidth )))
+
+        val backgroundBox = world.create()
+        world.edit(backgroundBox)
+            .add(BackgroundComponent("textures/BackgroundBorder.png"))
+            .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
+                position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
     }
 
     private fun createHighScoreEntities() {
@@ -180,6 +203,17 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             }
         )
         clearButton.Create(world)
+
+        val background = world.create()
+        world.edit(background)
+            .add(BackgroundComponent("textures/Background.png"))
+            .add(TransformComponent(scale = Vector2(35f,35f * viewport.worldHeight/viewport.worldWidth )))
+
+        val backgroundBox = world.create()
+        world.edit(backgroundBox)
+            .add(BackgroundComponent("textures/BackgroundBorder.png"))
+            .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
+                position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
     }
 
     private val highScores: MutableList<Int> = mutableListOf()

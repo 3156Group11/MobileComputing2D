@@ -19,6 +19,7 @@ public class Text_Button(Text: String, Style: TextButton.TextButtonStyle, Positi
 
     public override fun Create(world: World)
     {
+        inStyle.font.data.setScale(inScale.x,inScale.y)
         val button = TextButton(inText, inStyle)
         button.setPosition(inPos.x, inPos.y)
         button.addListener(object : ClickListener()

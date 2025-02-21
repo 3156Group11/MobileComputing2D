@@ -1,6 +1,8 @@
 .gitkeep
 com/badlogic/gdx/utils/lsans-15.fnt
 com/badlogic/gdx/utils/lsans-15.png
+textures/Background.png
+textures/BackgroundBorder.png
 textures/Bomb.png
 textures/Enemy.png
 textures/Laser.png
