@@ -23,6 +23,7 @@ import com.csd3156.group11.prefabs.Image_Button
 import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
 import com.csd3156.group11.resources.Globals
+import com.csd3156.group11.soundSystem
 import ktx.assets.file
 
 class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
@@ -61,8 +62,14 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private fun enterState(state: GameState) {
         when (state) {
-            GameState.MAIN_MENU -> createMainMenuEntities()
-            GameState.GAME_STAGE -> createGameEntities()
+            GameState.MAIN_MENU -> {
+                createMainMenuEntities()
+                soundSystem.playBGM("audio/bgm/bgm_mainMenu.wav")
+            }
+            GameState.GAME_STAGE -> {
+                createGameEntities()
+                soundSystem.playBGM("audio/bgm/bgm_level.wav")
+            }
             GameState.HIGH_SCORE -> createHighScoreEntities()
         }
     }
