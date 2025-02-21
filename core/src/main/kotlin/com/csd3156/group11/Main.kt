@@ -27,6 +27,7 @@ import com.csd3156.group11.systems.AssetSystem
 import com.csd3156.group11.systems.BackgroundSystem
 import com.csd3156.group11.systems.CollisionSystem
 import com.csd3156.group11.systems.EnemyLineSystem
+import com.csd3156.group11.systems.EnemySpawnerSystem
 import com.csd3156.group11.systems.EnemySystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
@@ -86,6 +87,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(PlayerInputSystem(isDebugMode))
             .with(EnemySystem())
             .with(EnemyLineSystem())
+            .with(EnemySpawnerSystem())
             .with(PhysicsSystem())
             .with(CollisionSystem())
             .with(BackgroundSystem(spriteBatch, camera))

@@ -10,9 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.csd3156.group11.components.BackgroundComponent
+import com.csd3156.group11.components.EnemySpawnerComponent
 import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.components.TransformComponent
+import com.csd3156.group11.enums.EnemyFormation
+import com.csd3156.group11.prefabs.EnemyBasic
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.prefabs.ShieldPowerUp
 import com.csd3156.group11.prefabs.Text_Button
@@ -137,6 +140,10 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             }
         )
 
+        /*val homingEnemy = EnemyBasic()
+        homingEnemy.Create(world)*/
+        val spawnEntityNone = world.create()
+        world.edit(spawnEntityNone).add(EnemySpawnerComponent(EnemyFormation.NONE, 10, Vector2(400f, 240f)))
         but.Create(world)
         val backButton = Text_Button(
             "Back", TextButton.TextButtonStyle().apply { font = BitmapFont() },
