@@ -25,6 +25,9 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     private var calibratedAccelX = 0f
     private var calibratedAccelY = 0f
 
+    // Player rotation (in degrees)
+    var playerRotation = 0f
+
     /**
      * Sets the current accelerometer values as the "flat" reference.
      */
@@ -36,7 +39,7 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     override fun process(entityId: Int) {
         val input = inputMapper[entityId]
         val velocity = velocityMapper[entityId]
-        
+
         if (debugMode) {
             // DEBUG MODE: WASD Movement with Speed Boost
             val moveX = when {
@@ -94,6 +97,11 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
 
             // Apply damping for smooth deceleration
             velocity.velocity.scl(dampingFactor)
+        }
+        // 🔹 Calculate player rotation based on movement direction
+        if (velocity.velocity.len2() > 0.01f) { // Avoid random rotations when nearly stopped
+            playerRotation = Math.toDegrees(kotlin.math.atan2(velocity.velocity.y, velocity.velocity.x)
+                .toDouble()).toFloat()
         }
     }
 }
