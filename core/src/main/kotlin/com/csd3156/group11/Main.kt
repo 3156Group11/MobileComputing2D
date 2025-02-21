@@ -24,6 +24,7 @@ import com.csd3156.group11.prefabs.EnemyBasic
 import com.csd3156.group11.prefabs.EnemyLine
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.systems.AssetSystem
+import com.csd3156.group11.systems.BombSystem
 import com.csd3156.group11.systems.CollisionSystem
 import com.csd3156.group11.systems.EnemyLineSystem
 import com.csd3156.group11.systems.EnemySystem
@@ -91,6 +92,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EmitterSystem(viewport.worldWidth, viewport.worldHeight))
             .with(ParticleSystem(spriteBatch, particleTexture))
             .with(uiSystem)
+            .with(BombSystem())
             .build()
 
 

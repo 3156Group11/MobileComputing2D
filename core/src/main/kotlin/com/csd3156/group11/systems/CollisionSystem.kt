@@ -149,15 +149,42 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
             when (powerUpComp.type) {
                 PowerUpType.SHIELD -> {
                     println("Player picked up SHIELD powerup!")
-                    // If the player has a PowerUpComponent, mark hasShield = true (or do your own logic)
+                    // If the player has a PowerUpComponent, mark hasShield = true
                     val playerPowerComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
                     if (playerPowerComp != null) {
                         playerPowerComp.hasShield = true
                     } else {
-                        // If the player doesn't have a PowerUpComponent, you can add one:
+                        // If the player doesn't have a PowerUpComponent
                         world.edit(playerEntityId).add(PowerUpComponent().apply { hasShield = true })
                     }
                 }
+
+                PowerUpType.BOMB -> {
+                    println("Player picked up BOMB powerup!")
+
+                    // Grab the pickup's position
+                    val bombTransform = world.getEntity(powerUpEntityId)
+                        .getComponent(TransformComponent::class.java)
+                    val bombPickupPos = bombTransform.position.cpy()
+
+                    // Attach bomb data to the player's PowerUpComponent
+                    val playerPowerComp = world.getEntity(playerEntityId)
+                        .getComponent(PowerUpComponent::class.java)
+                        ?: PowerUpComponent().also { newComp ->
+                            world.edit(playerEntityId).add(newComp)
+                        }
+
+                    // Mark bomb active on the player, effect is at the pickup's position
+                    playerPowerComp.type = PowerUpType.BOMB
+                    playerPowerComp.bombActive = true
+                    playerPowerComp.bombTimer = 5f
+                    playerPowerComp.bombPos = bombPickupPos
+                    playerPowerComp.bombRadius = 50f
+
+                    //Remove the bomb pickup entity from the world
+                    world.delete(powerUpEntityId)
+                }
+
                 else -> {
                     println("Player picked up some other powerup: ${powerUpComp.type}")
                     // For now, do nothing. Later, handle other types (CHAIN_LIGHTNING, BOMB, etc.)
