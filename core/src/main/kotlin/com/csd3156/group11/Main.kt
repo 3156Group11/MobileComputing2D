@@ -87,12 +87,12 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EnemySystem())
             .with(EnemyLineSystem())
             .with(PhysicsSystem())
+            .with(BombSystem())
             .with(CollisionSystem())
             .with(RenderSystem(spriteBatch, camera))
             .with(EmitterSystem(viewport.worldWidth, viewport.worldHeight))
             .with(ParticleSystem(spriteBatch, particleTexture))
             .with(uiSystem)
-            .with(BombSystem())
             .build()
 
 
