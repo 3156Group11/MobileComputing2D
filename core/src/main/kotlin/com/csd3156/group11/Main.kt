@@ -29,6 +29,7 @@ import com.csd3156.group11.systems.CollisionSystem
 import com.csd3156.group11.systems.EnemyLineSystem
 import com.csd3156.group11.systems.EnemySpawnerSystem
 import com.csd3156.group11.systems.EnemySystem
+import com.csd3156.group11.systems.FXSystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
 import com.csd3156.group11.systems.RenderSystem
@@ -91,6 +92,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(PhysicsSystem())
             .with(BombSystem())
             .with(CollisionSystem())
+            .with(FXSystem())
             .with(RenderSystem(spriteBatch, camera))
             .with(EmitterSystem(viewport.worldWidth, viewport.worldHeight))
             .with(ParticleSystem(spriteBatch, particleTexture))
