@@ -13,7 +13,7 @@ class ShieldPowerUp : Prefab() {
         world.edit(ID)
             .add(TransformComponent(
                 position = Vector2(MathUtils.random(100f, 700f), MathUtils.random(100f, 300f)),
-                scale = Vector2(0.5f, 0.5f) // Reduce size to 50%
+                scale = Vector2(1.5f, 1.5f) // Reduce size to 50%
             ))
             .add(ColliderComponent(radius = 8f)) // Adjust collider size accordingly
             .add(SpriteComponent("textures/Shield.png"))

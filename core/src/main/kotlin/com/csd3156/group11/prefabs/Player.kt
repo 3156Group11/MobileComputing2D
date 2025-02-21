@@ -22,7 +22,7 @@ public class Player : Prefab()
         world.edit(ID)
             .add(TransformComponent(
                 position = Vector2(400f, 240f),
-                scale = Vector2(0.5f, 0.5f)
+                scale = Vector2(1f, 1f)
             ))
             .add(VelocityComponent(Vector2(0f, 0f)))
             .add(ColliderComponent(radius = 8f)) // Adjust collider size accordingly
