@@ -60,7 +60,7 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
             else {
                 // Move enemy toward the actual player's position.
                 val direction = playerPos.cpy().sub(transform.position).nor()
-                velocity.velocity.set(direction.scl(30f))
+                velocity.velocity.set(direction.scl(enemy.speed))
 
                 // Check if enemy has reached the player.
                 val collisionThreshold = 20f

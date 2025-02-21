@@ -9,30 +9,66 @@ import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.EnemySpawnerComponent
 import com.csd3156.group11.enums.EnemyFormation
 import com.artemis.annotations.Wire
+import com.csd3156.group11.components.PlayerInputComponent
+import com.csd3156.group11.components.TransformComponent
 
-@Wire
 class EnemyManagerSystem(
     private val threshold: Int = 20,
     interval: Float = 5f
 ) : IntervalEntitySystem(Aspect.all(EnemyComponent::class.java), interval) {
 
-    private lateinit var enemyMapper: ComponentMapper<EnemyComponent>
-
     override fun processSystem() {
-        // Use the subscription's entities as your set to process.
-        val entities = subscription.entities
-        if (entities.size() < threshold) {
-            // Randomize formation parameters
-            val formationTypes = EnemyFormation.values()
-            val randomFormation = formationTypes[MathUtils.random(formationTypes.size - 1)]
-            val count = MathUtils.random(10, 20)
-            val center = Vector2(MathUtils.random(200f, 600f), MathUtils.random(100f, 300f))
+        // Query for active enemy entities.
+        val enemyEntities: IntBag =
+            world.aspectSubscriptionManager.get(Aspect.all(EnemyComponent::class.java)).entities
+        val playerEntities = world.aspectSubscriptionManager
+            .get(
+                Aspect.all(
+                    PlayerInputComponent::class.java,
+                    TransformComponent::class.java
+                )
+            ).entities
+        val playerCenter: Vector2 = if (playerEntities.size() > 0) {
+            val playerTransform = world.getMapper(TransformComponent::class.java)
+                .get(playerEntities.get(0))
+            playerTransform.position.cpy()
+        } else {
+            Vector2(400f, 240f)
+        }
 
-            // Create spawn request
-            val spawnEntity = world.create()
-            world.edit(spawnEntity).add(EnemySpawnerComponent(randomFormation, count, center))
+        // If enemy count is below threshold, spawn a new formation.
+        if (enemyEntities.size() < threshold) {
+            val defaultRoll = MathUtils.random(0f, 1f)
+            val defaultFormation: EnemyFormation = when {
+                defaultRoll < 0.7f -> EnemyFormation.NONE
+                defaultRoll < 0.85f -> EnemyFormation.CIRCLE
+                else -> EnemyFormation.GRID
+            }
+            val defaultCount = MathUtils.random(10, 20)
+            val defaultCenter: Vector2 = if (defaultFormation == EnemyFormation.CIRCLE) {
+                playerCenter
+            } else {
+                Vector2(400f, 240f)
+            }
+            val defaultSpawnEntity = world.create()
+            world.edit(defaultSpawnEntity)
+                .add(EnemySpawnerComponent(defaultFormation, defaultCount, defaultCenter))
 
-            println("Spawn request: formation=$randomFormation, count=$count, center=$center")
+            val specialCandidates = listOf(
+                EnemyFormation.TOP_BOTTOM,
+                EnemyFormation.LEFT_RIGHT,
+                EnemyFormation.ALL_EDGES
+            )
+            val specialChance = 0.1f
+            val roll = MathUtils.random(0f, 1f)
+            if (roll < specialChance) {
+                val specialFormation = specialCandidates.random()
+                val specialCount = MathUtils.random(10, 20)
+                val specialCenter = Vector2(400f, 240f)
+                val specialSpawnEntity = world.create()
+                world.edit(specialSpawnEntity)
+                    .add(EnemySpawnerComponent(specialFormation, specialCount, specialCenter))
+            }
         }
     }
 }

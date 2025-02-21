@@ -38,6 +38,9 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                         println("Spawning enemy #$j in NONE formation")
                         val enemy = EnemyBasic()
                         enemy.Create(world)
+                        val enemyMapper = world.getMapper(EnemyComponent::class.java)
+                        val comp = enemyMapper.get(enemy.ID)
+                        comp.speed = 50f
                     }
                 }
                 EnemyFormation.GRID -> {
@@ -57,7 +60,9 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             enemy.transform.position.set(startX + c * spacingX, startY - r * spacingY)
                             // Mark enemy as in formation, if needed:
                             val enemyMapper = world.getMapper(EnemyComponent::class.java)
-                            enemyMapper.get(enemy.ID).inFormation = true
+                            val comp = enemyMapper.get(enemy.ID)
+                            comp.inFormation = true
+                            comp.speed = 50f
                             spawned++
                         }
                     }
@@ -74,7 +79,9 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                         enemy.Create(world)
                         enemy.transform.position.set(x, y)
                         val enemyMapper = world.getMapper(EnemyComponent::class.java)
-                        enemyMapper.get(enemy.ID).inFormation = true
+                        val comp = enemyMapper.get(enemy.ID)
+                        comp.inFormation = true
+                        comp.speed = 50f
                     }
                 }
                 EnemyFormation.TOP_BOTTOM -> {
