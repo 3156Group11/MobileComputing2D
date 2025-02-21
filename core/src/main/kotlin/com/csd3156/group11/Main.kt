@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport
 import com.csd3156.group11.prefabs.EnemyBasic
 import com.csd3156.group11.prefabs.EnemyLine
 import com.csd3156.group11.prefabs.Player
+import com.csd3156.group11.resources.Globals
 import com.csd3156.group11.systems.AssetSystem
 import com.csd3156.group11.systems.BombSystem
 import com.csd3156.group11.systems.CollisionSystem
@@ -34,9 +35,10 @@ import com.csd3156.group11.systems.FXSystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
 import com.csd3156.group11.systems.RenderSystem
+import com.csd3156.group11.systems.SoundSystem
 
 var assetManager:AssetSystem = AssetSystem()
-
+var soundSystem: SoundSystem = SoundSystem()
 
 
 fun createCircleTexture(diameter: Int, color: Color = Color.WHITE): TextureRegion {
@@ -63,7 +65,8 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
     private var scrHeight : Float = heightPix.toFloat()
 
     override fun create() {
-
+        Globals.scrWidth = scrWidth
+        Globals.UnitSize = scrWidth/35
         camera = OrthographicCamera()
         viewport = FitViewport(scrWidth, scrHeight, camera)
         viewport.apply()
@@ -99,6 +102,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EmitterSystem(viewport.worldWidth, viewport.worldHeight))
             .with(ParticleSystem(spriteBatch, particleTexture))
             .with(uiSystem)
+            .with(soundSystem)
             .build()
 
 

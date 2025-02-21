@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.UIComponent
+import com.csd3156.group11.resources.Globals
 
 class UISystem(
     private val batch: SpriteBatch,
@@ -35,8 +36,8 @@ class UISystem(
             val uiComponent = mUI[entityId]
             val transform = mTransform[entityId]
 
-            uiComponent.actor?.setPosition(transform.position.x, transform.position.y)
-            uiComponent.actor?.setScale(transform.scale.x, transform.scale.y)
+            val screenPosition = Globals.WorldToScreen(transform.position)
+            uiComponent.actor?.setPosition(screenPosition.x , screenPosition.y)
         }
 
         stage.act(world.delta)

@@ -23,4 +23,13 @@ class PowerUpComponent : Component() {
     )
     val bombs = mutableListOf<BombEntry>()
 
+    // ----------------------------------------
+    //  Lightning Data  - store multiple Lightning at once
+    // ----------------------------------------
+    data class LightningEntry(
+        val targetPosition: Vector2
+    )
+
+    val lightning = mutableListOf<LightningEntry>()
+
 }

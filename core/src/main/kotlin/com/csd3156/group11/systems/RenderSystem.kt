@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TransformComponent
+import com.csd3156.group11.resources.Globals
 
 @Wire
 class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: OrthographicCamera) : BaseEntitySystem(
@@ -26,8 +27,8 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
         for (i in 0 until entities.size()) {
             val spriteComp = spriteMapper[entities[i]]
             // example: scale sprite's displayed size
-            spriteComp.width = camera.viewportWidth / 35f
-            spriteComp.height = camera.viewportWidth / 35f
+            spriteComp.width = Globals.UnitSize
+            spriteComp.height = Globals.UnitSize
         }
 
         // Setup spriteBatch for drawing
@@ -53,7 +54,7 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
             if (sprite != null) {
                 spriteBatch.draw(
                     sprite.region,
-                    transform.position.x, transform.position.y, // Position
+                    transform.position.x * Globals.UnitSize, transform.position.y * Globals.UnitSize, // Position
                     sprite.width * transform.scale.x, // Apply scaling to width
                     sprite.height * transform.scale.y // Apply scaling to height
                 )

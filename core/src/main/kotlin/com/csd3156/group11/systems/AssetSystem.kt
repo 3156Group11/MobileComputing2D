@@ -49,8 +49,15 @@ class AssetSystem {
                 loadSFXFromFolder(folderPath + file.name() + "/")
             } else {
                 if (file.extension().lowercase(Locale.ROOT) in listOf("mp3", "ogg", "wav")) {
-                    val filePath = folderPath + file.name()
-                    assetManager.load(filePath, Sound::class.java) // For sound effects
+                    val filePath = folderPath + "/" + file.name()
+
+                    if (Gdx.files.internal(filePath).exists()) {
+                        assetManager.load(filePath, Sound::class.java)
+                        assetManager.finishLoading() // Ensure it's fully loaded
+                        println("Loaded SFX: $filePath")
+                    } else {
+                        println("SFX file not found: $filePath")
+                    }
                     while (!assetManager.update())
                     {
                         val progress = assetManager.progress
@@ -73,8 +80,14 @@ class AssetSystem {
                 loadBGMFromFolder(folderPath + file.name() + "/")
             } else {
                 if (file.extension().lowercase(Locale.ROOT) in listOf("mp3", "ogg", "wav")) {
-                    val filePath = folderPath + file.name()
-                    assetManager.load(filePath, Music::class.java) // For sound effects
+                    val filePath = folderPath + "/" + file.name()
+                    if (Gdx.files.internal(filePath).exists()) {
+                        assetManager.load(filePath, Music::class.java)
+                        assetManager.finishLoading() // Ensure it's fully loaded
+                        println("Loaded BGM: $filePath")
+                    } else {
+                        println("BGM file not found: $filePath")
+                    }
                     while (!assetManager.update())
                     {
                         val progress = assetManager.progress

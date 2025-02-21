@@ -14,6 +14,7 @@ import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.prefabs.ShieldFX
 import com.csd3156.group11.prefabs.BombFX
+import com.csd3156.group11.prefabs.LightningFX
 
 
 class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.java, TransformComponent::class.java)) {
@@ -162,6 +163,22 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     val bombFX = BombFX(bombPickupPos)
                     bombFX.Create(world)
                 }
+
+                PowerUpType.LIGHTNING -> {
+                    println("Player picked up LIGHTNING powerup!")
+                    // Remove the collectible from the world
+                    world.delete(powerUpEntityId)
+
+                    // Get the position where the pickup occurred
+                    val lightningTransform = world.getEntity(powerUpEntityId)
+                        .getComponent(TransformComponent::class.java)
+                    val lightningPickupPos = lightningTransform.position.cpy()
+
+                    // Trigger LightningFX and strikes instantly
+                    val lightningFX = LightningFX(lightningPickupPos)
+                    lightningFX.Create(world)
+                }
+
 
                 else -> {
                     // Handle other powerups if needed

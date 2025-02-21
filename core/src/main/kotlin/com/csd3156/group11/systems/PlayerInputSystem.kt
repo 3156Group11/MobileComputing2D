@@ -13,13 +13,13 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     private lateinit var inputMapper: ComponentMapper<PlayerInputComponent>
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
 
-    // 🔹 NORMAL (Accelerometer) Mode Variables
+    //  NORMAL (Accelerometer) Mode Variables
     private val accelerationFactor = 500f // Determines how fast acceleration builds up
     private val velocityCap = 1000f
     private val dampingFactor = 0.95f // For deceleration when no input is given
 
-    // 🔹 DEBUG MODE (WASD) Variables
-    private val debugSpeed = 600f // Speed boost for WASD movement
+    //  DEBUG MODE (WASD) Variables
+    private val debugSpeed = 50f // Speed boost for WASD movement
 
     override fun process(entityId: Int) {
         val input = inputMapper[entityId]

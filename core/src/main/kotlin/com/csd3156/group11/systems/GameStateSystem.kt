@@ -19,9 +19,12 @@ import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.prefabs.ShieldPowerUp
 import com.csd3156.group11.prefabs.BombPowerUp
+import com.csd3156.group11.prefabs.Image_Button
 import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
 import com.csd3156.group11.resources.Globals
+import com.csd3156.group11.soundSystem
+import ktx.assets.file
 
 class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
     var currentState: GameState
@@ -59,8 +62,14 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private fun enterState(state: GameState) {
         when (state) {
-            GameState.MAIN_MENU -> createMainMenuEntities()
-            GameState.GAME_STAGE -> createGameEntities()
+            GameState.MAIN_MENU -> {
+                createMainMenuEntities()
+                soundSystem.playBGM("audio/bgm/bgm_mainMenu.wav")
+            }
+            GameState.GAME_STAGE -> {
+                createGameEntities()
+                soundSystem.playBGM("audio/bgm/bgm_level.wav")
+            }
             GameState.HIGH_SCORE -> createHighScoreEntities()
         }
     }
@@ -77,16 +86,16 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         // Example: Create UI entities for Main Menu
         val gameName = Text_Label(
             "2D Mobile Game", Label.LabelStyle(BitmapFont(), Color.YELLOW),
-            Position = Vector2(340f,250f),
-            Scale = Vector2(1f,1f),
+            Position = Vector2(1f,1f),
+            Scale = Vector2(5f,5f),
         )
         gameName.Create(world)
 
         val startGameButton = Text_Button(
             "Start Game",
             TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(350f, 200f),
-            Scale = Vector2(4f, 4f),
+            Position = Vector2(4f, 4f),
+            Scale = Vector2(3f, 3f),
             Action = {
                 println("Start Game button clicked!")
                 changeState(GameState.GAME_STAGE)
@@ -94,10 +103,22 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         startGameButton.Create(world)
 
+        val testImageButton = Image_Button(
+            filepath = "textures/Enemy.png",
+            Position = Vector2(10f, 4f),
+            Scale = Vector2(1f, 1f),
+            Action = {
+                println("Start Game button clicked!")
+                changeState(GameState.GAME_STAGE)
+            }
+        )
+        testImageButton.Create(world)
+
+
         val highScore = Text_Button(
             "High Score",
             TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(350f, 150f),
+            Position = Vector2(6f, 6f),
             Scale = Vector2(3f, 3f),
             Action = {
                 changeState(GameState.HIGH_SCORE)
@@ -107,7 +128,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val entity = world.create()
         val emitter = world.edit(entity).create(EmitterComponent::class.java)
-        emitter.position.set(400f, 300f) // Spawn location
+        emitter.position.set(4f, 4f) // Spawn location
         emitter.emissionRate = 5f
         emitter.particleLifeTime = 30f
         emitter.particleSpeed = 20f

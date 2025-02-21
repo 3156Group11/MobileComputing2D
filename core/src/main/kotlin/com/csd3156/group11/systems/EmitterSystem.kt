@@ -1,6 +1,7 @@
 import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
 import com.artemis.ComponentMapper
+import com.csd3156.group11.resources.Globals
 import kotlin.random.Random
 
 class EmitterSystem(private val screenWidth: Float, private val screenHeight: Float) : BaseEntitySystem(Aspect.all(EmitterComponent::class.java)) {
@@ -38,11 +39,16 @@ class EmitterSystem(private val screenWidth: Float, private val screenHeight: Fl
         val particle = world.edit(entity).create(ParticleComponent::class.java)
 
         // Spawn at random positions
-        particle.position.set(
-            Random.nextFloat() * screenWidth,
-            Random.nextFloat() * screenHeight
-        )
-
+        if (emitter.point == false) {
+            particle.position.set(
+                Random.nextFloat() * screenWidth,
+                Random.nextFloat() * screenHeight
+            )
+        }
+        else
+        {
+            particle.position.set(Globals.WorldToScreen(emitter.position))
+        }
         // Move in random direction
         particle.velocity.set(
             Random.nextFloat() * 2 - 1, // -1 to 1
