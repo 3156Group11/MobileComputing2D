@@ -22,6 +22,7 @@ import com.csd3156.group11.prefabs.BombPowerUp
 import com.csd3156.group11.prefabs.LightningPowerUp
 import com.csd3156.group11.prefabs.SlowFieldPowerUp
 import com.csd3156.group11.prefabs.Image_Button
+import com.csd3156.group11.prefabs.Image_Label
 import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
 import com.csd3156.group11.resources.Globals
@@ -73,6 +74,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 soundSystem.playBGM("audio/bgm/bgm_level.wav")
             }
             GameState.HIGH_SCORE -> createHighScoreEntities()
+            GameState.PAUSE_SCREEN -> pauseScreen()
         }
     }
 
@@ -86,42 +88,28 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private fun createMainMenuEntities() {
         // Example: Create UI entities for Main Menu
-        val gameName = Text_Label(
-            "2D Mobile Game", Label.LabelStyle(BitmapFont(), Color.YELLOW),
-            Position = Vector2(1f,1f),
-            Scale = Vector2(5f,5f),
+        val gameName = Image_Label(
+            filepath = "textures/Title.png",
+            Position = Vector2(12f, 8f),
+            Scale = Vector2(13f, 7f),
+
         )
         gameName.Create(world)
 
-        val startGameButton = Text_Button(
-            "Start Game",
-            TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(4f, 4f),
-            Scale = Vector2(3f, 3f),
+        val startGameButton = Image_Button(
+            filepath = "textures/Start.png",
+            Position = Vector2(15f, 4f),
+            Scale = Vector2(6f, 6f),
             Action = {
-                println("Start Game button clicked!")
                 changeState(GameState.GAME_STAGE)
             }
         )
         startGameButton.Create(world)
 
-        val testImageButton = Image_Button(
-            filepath = "textures/Enemy.png",
-            Position = Vector2(10f, 4f),
-            Scale = Vector2(1f, 1f),
-            Action = {
-                println("Start Game button clicked!")
-                changeState(GameState.GAME_STAGE)
-            }
-        )
-        testImageButton.Create(world)
-
-
-        val highScore = Text_Button(
-            "High Score",
-            TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(6f, 6f),
-            Scale = Vector2(3f, 3f),
+        val highScore = Image_Button(
+            filepath = "textures/HighScore.png",
+            Position = Vector2(15f, 1f),
+            Scale = Vector2(6f,6f),
             Action = {
                 changeState(GameState.HIGH_SCORE)
             }
@@ -134,7 +122,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         emitter.emissionRate = 5f
         emitter.particleLifeTime = 30f
         emitter.particleSpeed = 20f
-
 
         val background = world.create()
         world.edit(background)
@@ -165,6 +152,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 enemy.Create(world)
             }
         )
+        but.Create(world)
 
         val spawnEntityNone = world.create()
         world.edit(spawnEntityNone).add(EnemySpawnerComponent(EnemyFormation.ALL_EDGES, 20, Vector2(400f, 240f)))
@@ -185,19 +173,20 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         spawnBombButton.Create(world)
 
-        but.Create(world)
-        val backButton = Text_Button(
-            "Back", TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(750f, 10f),
-            Scale = Vector2(1f, 1f),
+        val pauseButton = Image_Button(
+            filepath = "textures/Pause.png",
+            Position = Vector2(32f, 0f),
+            Scale = Vector2(3f,3f),
             Action = {
-                changeState(GameState.MAIN_MENU) // Return to main menu
+                clearHighScores()
+                changeState(GameState.PAUSE_SCREEN)
             }
         )
-        backButton.Create(world)
+        pauseButton.Create(world)
 
         //to save score into highscore, create variable to store score
         //on game end, call onGameEnd(variable)
+
         val background = world.create()
         world.edit(background)
             .add(SpriteComponent("textures/Background.png",RenderLayers.Background))
@@ -214,12 +203,13 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         // Example: Create high score UI elements
         loadScores() // Load saved scores before displaying
 
-        val titleLabel = Text_Label(
-            "High Scores", Label.LabelStyle(BitmapFont(), Color.YELLOW),
-            Position = Vector2(330f, 350f),
-            Scale = Vector2(1.2f, 1.2f)
-        )
-        titleLabel.Create(world)
+        val highScore = Image_Label(
+            filepath = "textures/HighScore.png",
+            Position = Vector2(15f, 12f),
+            Scale = Vector2(8f, 3f),
+
+            )
+        highScore.Create(world)
 
         for (i in highScores.indices) {
             val scoreLabel = Text_Label(
@@ -230,27 +220,28 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             scoreLabel.Create(world)
         }
 
-        val backButton = Text_Button(
-            "Back", TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(325f, 50f),
-            Scale = Vector2(1f, 1f),
+        val backButton = Image_Button(
+            filepath = "textures/Back.png",
+            Position = Vector2(14f, 0f),
+            Scale = Vector2(4f,4f),
             Action = {
-                changeState(GameState.MAIN_MENU) // Return to main menu
+                changeState(GameState.MAIN_MENU)
             }
         )
         backButton.Create(world)
 
-        val clearButton = Text_Button(
-            "Clear",
-            TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(375f, 50f), // Position below the back button
-            Scale = Vector2(1f, 1f),
+        /*
+        val clearButton = Image_Button(
+            filepath = "textures/Clear.png",
+            Position = Vector2(20f, 0f),
+            Scale = Vector2(4f,4f),
             Action = {
                 clearHighScores()
-                changeState(GameState.HIGH_SCORE) // Refresh high score screen
+                changeState(GameState.HIGH_SCORE)
             }
         )
         clearButton.Create(world)
+        */
 
         val background = world.create()
         world.edit(background)
@@ -264,14 +255,53 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
     }
 
+    private fun pauseScreen() {
+        val pauseScreenOverLay = Image_Label(
+            filepath = "textures/Overlay.png",
+            Position = Vector2(0f, 0f),
+            Scale = Vector2(35f, 15f),
+            )
+        pauseScreenOverLay.Create(world)
+
+        val resumeButton = Image_Button(
+            filepath = "textures/Resume.png",
+            Position = Vector2(15f, 8f),
+            Scale = Vector2(6f, 6f),
+            Action = {
+                changeState(GameState.GAME_STAGE)
+            }
+        )
+        resumeButton.Create(world)
+
+        val restartButton = Image_Button(
+            filepath = "textures/Restart.png",
+            Position = Vector2(15f, 4f),
+            Scale = Vector2(6f, 6f),
+            Action = {
+                changeState(GameState.GAME_STAGE)
+            }
+        )
+        restartButton.Create(world)
+
+        val quitButton = Image_Button(
+            filepath = "textures/Quit.png",
+            Position = Vector2(15f, 0f),
+            Scale = Vector2(6f, 6f),
+            Action = {
+                changeState(GameState.MAIN_MENU)
+            }
+        )
+        quitButton.Create(world)
+    }
+
     private val highScores: MutableList<Int> = mutableListOf()
     private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
 
     private fun addScore(newScore: Int) {
         highScores.add(newScore)
         highScores.sortDescending()
-        if (highScores.size > 9) {
-            highScores.removeAt(9)
+        if (highScores.size > 5) {
+            highScores.removeAt(5)
         }
     }
 
@@ -284,7 +314,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private fun loadScores() {
         highScores.clear()
-        for (i in 0 until 9) {
+        for (i in 0 until 5) {
             val score = prefs.getInteger("score_$i", 0)
             if (score > 0) {
                 highScores.add(score)
@@ -301,4 +331,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         prefs.clear() // Clear stored scores in SharedPreferences
         prefs.flush() // Save changes to persist clearing
     }
+
+
 }
