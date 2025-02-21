@@ -22,7 +22,7 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
     private val entitiesToDelete = mutableListOf<Int>()
 
     override fun processSystem() {
-        // Get player's position (assuming one player entity exists)
+        // Get player's position
         val playerEntities = world.aspectSubscriptionManager.get(
             Aspect.all(PlayerInputComponent::class.java, TransformComponent::class.java)
         ).entities
@@ -53,17 +53,17 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
                     enemy.isDying = false
                     enemy.isLive = false
                 }
-                // Optionally play dying animation here before deletion.
+
                 entitiesToDelete.add(entity)
                 continue
             }
             else {
                 // Move enemy toward the actual player's position.
                 val direction = playerPos.cpy().sub(transform.position).nor()
-                velocity.velocity.set(direction.scl(30f))  // Adjust speed as needed.
+                velocity.velocity.set(direction.scl(30f))
 
                 // Check if enemy has reached the player.
-                val collisionThreshold = 20f  // Adjust based on your game's scale.
+                val collisionThreshold = 20f
                 if (transform.position.dst(playerPos) < collisionThreshold) {
                     enemy.isDying = true
                     enemy.isLive = false
@@ -71,7 +71,6 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
             }
         }
 
-        // Delete enemies marked for removal.
         for (entity in entitiesToDelete) {
             world.delete(entity)
         }
@@ -86,6 +85,7 @@ class EnemyLineSystem : BaseEntitySystem(
     private lateinit var enemyMapper: ComponentMapper<EnemyComponent>
     private lateinit var transformMapper: ComponentMapper<TransformComponent>
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
+    private lateinit var playerInputMapper: ComponentMapper<PlayerInputComponent>
 
     private val entitiesToDelete = mutableListOf<Int>()
 
@@ -93,6 +93,12 @@ class EnemyLineSystem : BaseEntitySystem(
     private val screenHeight = 400f
 
     override fun processSystem() {
+        val playerEntities = world.aspectSubscriptionManager.get(
+            Aspect.all(PlayerInputComponent::class.java, TransformComponent::class.java)
+        ).entities
+        val playerPos: Vector2? = if (playerEntities.size() > 0)
+            transformMapper.get(playerEntities[0]).position else null
+
         val entities = subscription.entities
         for (i in 0 until entities.size()) {
             val entity = entities[i]
@@ -115,9 +121,18 @@ class EnemyLineSystem : BaseEntitySystem(
                 }
                 continue
             }
-            // The enemy should already be moving with a fixed velocity.
+
             // Check if it has reached (or passed) the opposite side.
             else {
+                // Check collision with player.
+                if (playerPos != null) {
+                    val collisionThreshold = 20f
+                    if (transform.position.dst(playerPos) < collisionThreshold) {
+                        enemy.isDying = true
+                        enemy.isLive = false
+                        continue
+                    }
+                }
                 when (line.spawnEdge) {
                     0 -> { // Spawned on left; moving right. If x > screenWidth, mark as dying.
                         if (transform.position.x > screenWidth) {

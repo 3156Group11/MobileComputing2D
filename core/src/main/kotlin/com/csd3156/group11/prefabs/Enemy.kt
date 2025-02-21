@@ -53,32 +53,6 @@ class EnemyLine : Enemy() {
     override fun Create(world: World) {
         super.Create(world)
 
-        val position = Vector2()
-        val velocityVector = Vector2()
-
-        val edge = MathUtils.random(0, 3)
-        when (edge) {
-            0 -> { // left edge: spawn at x = 0, random y; move right.
-                position.set(0f, MathUtils.random(0f, 400f))
-                velocityVector.set(30f, 0f)
-            }
-            1 -> { // right edge: spawn at x = 800, random y; move left.
-                position.set(800f, MathUtils.random(0f, 400f))
-                velocityVector.set(-30f, 0f)
-            }
-            2 -> { // top edge: spawn at y = 400, random x; move down.
-                position.set(MathUtils.random(0f, 800f), 400f)
-                velocityVector.set(0f, -30f)
-            }
-            3 -> { // bottom edge: spawn at y = 0, random x; move up.
-                position.set(MathUtils.random(0f, 800f), 0f)
-                velocityVector.set(0f, 30f)
-            }
-        }
-        // Update the transform position and velocity using the stored references
-        transform.position.set(position)
-        velocity.velocity.set(velocityVector)
-
-        world.edit(ID).add(EnemyLineComponent(edge))
+        world.edit(ID).add(EnemyLineComponent())
     }
 }

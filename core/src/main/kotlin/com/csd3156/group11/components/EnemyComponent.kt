@@ -15,6 +15,6 @@ class EnemyBasicComponent : Component() {
 
 }
 
-class EnemyLineComponent(val spawnEdge: Int = 0) : Component() {
-
+class EnemyLineComponent() : Component() {
+    public var spawnEdge = 0
 }
