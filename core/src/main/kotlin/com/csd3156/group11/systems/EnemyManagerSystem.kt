@@ -11,13 +11,17 @@ import com.csd3156.group11.enums.EnemyFormation
 import com.artemis.annotations.Wire
 import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.TransformComponent
+import com.csd3156.group11.enums.GameState
+import com.csd3156.group11.resources.Globals
 
 class EnemyManagerSystem(
     private val threshold: Int = 20,
-    interval: Float = 5f
+    interval: Float = 2f
 ) : IntervalEntitySystem(Aspect.all(EnemyComponent::class.java), interval) {
 
     override fun processSystem() {
+        if (Globals.currentState != GameState.GAME_STAGE) return
+
         // Query for active enemy entities.
         val enemyEntities: IntBag =
             world.aspectSubscriptionManager.get(Aspect.all(EnemyComponent::class.java)).entities
@@ -45,7 +49,7 @@ class EnemyManagerSystem(
                 else -> EnemyFormation.GRID
             }
             val defaultCount = MathUtils.random(10, 20)
-            val defaultCenter: Vector2 = if (defaultFormation == EnemyFormation.CIRCLE) {
+            val defaultCenter: Vector2 = if (defaultFormation == EnemyFormation.CIRCLE || defaultFormation == EnemyFormation.GRID) {
                 playerCenter
             } else {
                 Vector2(400f, 240f)
