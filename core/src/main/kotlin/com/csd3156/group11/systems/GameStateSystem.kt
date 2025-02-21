@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.viewport.Viewport
-import com.csd3156.group11.components.BackgroundComponent
 import com.csd3156.group11.components.EnemySpawnerComponent
 import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.components.TransformComponent
