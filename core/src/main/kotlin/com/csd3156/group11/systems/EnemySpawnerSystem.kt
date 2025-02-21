@@ -9,12 +9,13 @@ import com.csd3156.group11.components.EnemySpawnerComponent
 import com.csd3156.group11.enums.EnemyFormation
 import com.csd3156.group11.prefabs.EnemyBasic
 import com.csd3156.group11.prefabs.EnemyLine
+import com.csd3156.group11.resources.Globals
 
 class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::class.java)) {
 
     private lateinit var spawnMapper: ComponentMapper<EnemySpawnerComponent>
-    private val screenWidth = 800f
-    private val screenHeight = 400f
+    private val screenWidth = 35f
+    private val screenHeight = 35 * Globals.scrHeight / Globals.scrWidth
 
     override fun processSystem() {
         val entities = subscription.entities
@@ -38,8 +39,8 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                 EnemyFormation.GRID -> {
                     val rows = 5
                     val cols = 10
-                    val spacingX = 50f
-                    val spacingY = 50f
+                    val spacingX = 4f
+                    val spacingY = 4f
 
                     // Calculate total grid dimensions:
                     val gridWidth = (cols - 1) * spacingX
@@ -70,7 +71,7 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                 }
                 EnemyFormation.CIRCLE -> {
                     val center = spawner.center
-                    val radius = 100f
+                    val radius = 5f
                     for (j in 0 until spawner.count) {
                         val angle = j * (360f / spawner.count)
                         val rad = angle * com.badlogic.gdx.math.MathUtils.degreesToRadians

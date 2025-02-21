@@ -37,14 +37,14 @@ class EnemyManagerSystem(
                 .get(playerEntities.get(0))
             playerTransform.position.cpy()
         } else {
-            Vector2(400f, 240f)
+            Vector2(17.5f, 3f)
         }
 
         // If enemy count is below threshold, spawn a new formation.
         if (enemyEntities.size() < threshold) {
             val defaultRoll = MathUtils.random(0f, 1f)
             val defaultFormation: EnemyFormation = when {
-                defaultRoll < 0.7f -> EnemyFormation.NONE
+                defaultRoll < 0.65f -> EnemyFormation.NONE
                 defaultRoll < 0.85f -> EnemyFormation.CIRCLE
                 else -> EnemyFormation.GRID
             }
@@ -52,7 +52,7 @@ class EnemyManagerSystem(
             val defaultCenter: Vector2 = if (defaultFormation == EnemyFormation.CIRCLE || defaultFormation == EnemyFormation.GRID) {
                 playerCenter
             } else {
-                Vector2(400f, 240f)
+                Vector2(17.5f, 3f)
             }
             val defaultSpawnEntity = world.create()
             world.edit(defaultSpawnEntity)
@@ -63,12 +63,12 @@ class EnemyManagerSystem(
                 EnemyFormation.LEFT_RIGHT,
                 EnemyFormation.ALL_EDGES
             )
-            val specialChance = 0.1f
+            val specialChance = 0.2f
             val roll = MathUtils.random(0f, 1f)
             if (roll < specialChance) {
                 val specialFormation = specialCandidates.random()
                 val specialCount = MathUtils.random(10, 20)
-                val specialCenter = Vector2(400f, 240f)
+                val specialCenter = Vector2(17.5f, 3f)
                 val specialSpawnEntity = world.create()
                 world.edit(specialSpawnEntity)
                     .add(EnemySpawnerComponent(specialFormation, specialCount, specialCenter))
