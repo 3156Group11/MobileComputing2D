@@ -37,10 +37,41 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                     }
                 }
                 EnemyFormation.GRID -> {
-
+                    val rows = ceil(sqrt(spawner.count.toDouble())).toInt()
+                    val cols = ceil(spawner.count.toDouble() / rows).toInt()
+                    // Define starting position and spacing (you can adjust these values)
+                    val startX = 100f
+                    val startY = 300f
+                    val spacingX = 50f
+                    val spacingY = 50f
+                    var spawned = 0
+                    for (r in 0 until rows) {
+                        for (c in 0 until cols) {
+                            if (spawned >= spawner.count) break
+                            val enemy = EnemyBasic()
+                            enemy.Create(world)
+                            enemy.transform.position.set(startX + c * spacingX, startY - r * spacingY)
+                            // Mark enemy as in formation, if needed:
+                            val enemyMapper = world.getMapper(EnemyComponent::class.java)
+                            enemyMapper.get(enemy.ID).inFormation = true
+                            spawned++
+                        }
+                    }
                 }
                 EnemyFormation.CIRCLE -> {
-
+                    val center = spawner.center ?: Vector2(400f, 240f)
+                    val radius = 100f // adjust radius as needed
+                    for (j in 0 until spawner.count) {
+                        val angle = j * (360f / spawner.count)
+                        val rad = angle * com.badlogic.gdx.math.MathUtils.degreesToRadians
+                        val x = center.x + radius * com.badlogic.gdx.math.MathUtils.cos(rad)
+                        val y = center.y + radius * com.badlogic.gdx.math.MathUtils.sin(rad)
+                        val enemy = EnemyBasic()
+                        enemy.Create(world)
+                        enemy.transform.position.set(x, y)
+                        val enemyMapper = world.getMapper(EnemyComponent::class.java)
+                        enemyMapper.get(enemy.ID).inFormation = true
+                    }
                 }
             }
 

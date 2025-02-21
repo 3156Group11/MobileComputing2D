@@ -140,10 +140,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             }
         )
 
-        /*val homingEnemy = EnemyBasic()
-        homingEnemy.Create(world)*/
         val spawnEntityNone = world.create()
-        world.edit(spawnEntityNone).add(EnemySpawnerComponent(EnemyFormation.NONE, 10, Vector2(400f, 240f)))
+        world.edit(spawnEntityNone).add(EnemySpawnerComponent(EnemyFormation.CIRCLE, 10, Vector2(400f, 240f)))
         but.Create(world)
         val backButton = Text_Button(
             "Back", TextButton.TextButtonStyle().apply { font = BitmapFont() },
