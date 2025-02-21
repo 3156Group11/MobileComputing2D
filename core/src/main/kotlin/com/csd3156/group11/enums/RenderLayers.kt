@@ -5,5 +5,7 @@ enum class RenderLayers
     Background,
     BackgroundBorder,
     Enemy,
+    Powerup,
+    FX,
     Player
 }
