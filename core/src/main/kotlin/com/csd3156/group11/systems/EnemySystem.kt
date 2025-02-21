@@ -10,6 +10,7 @@ import com.csd3156.group11.components.EnemyLineComponent
 import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.resources.Globals
 
 class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, EnemyBasicComponent::class.java, VelocityComponent::class.java, TransformComponent::class.java)
 ) {
@@ -60,10 +61,10 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
             else {
                 // Move enemy toward the actual player's position.
                 val direction = playerPos.cpy().sub(transform.position).nor()
-                velocity.velocity.set(direction.scl(30f))
+                velocity.velocity.set(direction.scl(enemy.speed))
 
                 // Check if enemy has reached the player.
-                val collisionThreshold = 20f
+                val collisionThreshold = 2f
                 if (transform.position.dst(playerPos) < collisionThreshold) {
                     enemy.isDying = true
                     enemy.isLive = false
@@ -89,8 +90,8 @@ class EnemyLineSystem : BaseEntitySystem(
 
     private val entitiesToDelete = mutableListOf<Int>()
 
-    private val screenWidth = 800f
-    private val screenHeight = 400f
+    private val screenWidth = 35f
+    private val screenHeight = 35 * Globals.scrHeight / Globals.scrWidth
 
     override fun processSystem() {
         val playerEntities = world.aspectSubscriptionManager.get(
@@ -126,7 +127,7 @@ class EnemyLineSystem : BaseEntitySystem(
             else {
                 // Check collision with player.
                 if (playerPos != null) {
-                    val collisionThreshold = 20f
+                    val collisionThreshold = 2f
                     if (transform.position.dst(playerPos) < collisionThreshold) {
                         enemy.isDying = true
                         enemy.isLive = false
