@@ -34,9 +34,10 @@ import com.csd3156.group11.systems.FXSystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
 import com.csd3156.group11.systems.RenderSystem
+import com.csd3156.group11.systems.SoundSystem
 
 var assetManager:AssetSystem = AssetSystem()
-
+var soundSystem: SoundSystem = SoundSystem()
 
 
 fun createCircleTexture(diameter: Int, color: Color = Color.WHITE): TextureRegion {
@@ -99,6 +100,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EmitterSystem(viewport.worldWidth, viewport.worldHeight))
             .with(ParticleSystem(spriteBatch, particleTexture))
             .with(uiSystem)
+            .with(soundSystem)
             .build()
 
 

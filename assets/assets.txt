@@ -1,4 +1,18 @@
 .gitkeep
+audio/bgm/bgm_level.wav
+audio/bgm/bgm_mainMenu.wav
+audio/sfx/fx_Button_DefaultSelection.wav
+audio/sfx/fx_Button_GoBack.wav
+audio/sfx/fx_Button_PauseGame (2).wav
+audio/sfx/fx_Button_PauseGame.wav
+audio/sfx/fx_Button_StartGame.wav
+audio/sfx/fx_Button_UnpauseGame.wav
+audio/sfx/fx_EnemyDeath.wav
+audio/sfx/fx_Player_Death.wav
+audio/sfx/fx_Player_ObtainBomb.wav
+audio/sfx/fx_Player_ObtainLaser.wav
+audio/sfx/fx_Player_ObtainThunder.wav
+audio/sfx/fx_TimerTicking.wav
 com/badlogic/gdx/utils/lsans-15.fnt
 com/badlogic/gdx/utils/lsans-15.png
 textures/Background.png
