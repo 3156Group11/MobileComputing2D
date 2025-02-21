@@ -19,9 +19,11 @@ import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.prefabs.ShieldPowerUp
 import com.csd3156.group11.prefabs.BombPowerUp
+import com.csd3156.group11.prefabs.Image_Button
 import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
 import com.csd3156.group11.resources.Globals
+import ktx.assets.file
 
 class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
     var currentState: GameState
@@ -77,16 +79,16 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         // Example: Create UI entities for Main Menu
         val gameName = Text_Label(
             "2D Mobile Game", Label.LabelStyle(BitmapFont(), Color.YELLOW),
-            Position = Vector2(340f,250f),
-            Scale = Vector2(1f,1f),
+            Position = Vector2(1f,1f),
+            Scale = Vector2(5f,5f),
         )
         gameName.Create(world)
 
         val startGameButton = Text_Button(
             "Start Game",
             TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(350f, 200f),
-            Scale = Vector2(4f, 4f),
+            Position = Vector2(4f, 4f),
+            Scale = Vector2(3f, 3f),
             Action = {
                 println("Start Game button clicked!")
                 changeState(GameState.GAME_STAGE)
@@ -94,10 +96,22 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         startGameButton.Create(world)
 
+        val testImageButton = Image_Button(
+            filepath = "textures/Enemy.png",
+            Position = Vector2(10f, 4f),
+            Scale = Vector2(1f, 1f),
+            Action = {
+                println("Start Game button clicked!")
+                changeState(GameState.GAME_STAGE)
+            }
+        )
+        testImageButton.Create(world)
+
+
         val highScore = Text_Button(
             "High Score",
             TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(350f, 150f),
+            Position = Vector2(6f, 6f),
             Scale = Vector2(3f, 3f),
             Action = {
                 changeState(GameState.HIGH_SCORE)
