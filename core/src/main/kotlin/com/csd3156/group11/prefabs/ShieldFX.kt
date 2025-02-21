@@ -19,7 +19,6 @@ class ShieldFX(private val followId: Int) : Prefab() {
                 fxType = PowerUpType.SHIELD
                 followEntityId = followId
             })
-            .add(ColliderComponent(radius = 25f))
 
         println("ShieldFX created with ID: $ID following entity $followId")
     }
