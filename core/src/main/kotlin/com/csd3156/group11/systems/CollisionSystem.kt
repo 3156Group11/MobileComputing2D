@@ -163,6 +163,16 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     bombFX.Create(world)
                 }
 
+                PowerUpType.CHAIN_LIGHTNING -> {
+                    println("Player picked up CHAIN LIGHTNING powerup!")
+                    world.delete(powerUpEntityId)
+
+                    // Trigger a ChainLightningFX or directly run the chain lightning effect
+                    //val chainLightningFX = ChainLightningFX(playerEntityId)
+                    //chainLightningFX.Create(world)
+                }
+
+
                 else -> {
                     // Handle other powerups if needed
                 }

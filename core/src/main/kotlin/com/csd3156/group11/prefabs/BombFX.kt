@@ -10,11 +10,11 @@ class BombFX(private val detonationPos: Vector2) : Prefab() {
     override fun Create(world: World) {
         ID = world.create()
         world.edit(ID)
-            .add(TransformComponent(position = detonationPos.cpy()))
-            .add(SpriteComponent("textures/Circle.png", RenderLayers.FX).apply {
-                width = 100f
-                height = 100f
-            })
+            .add(TransformComponent(
+                position = detonationPos.cpy(),
+                scale = Vector2(2.5f, 2.5f))// Reduce size to 50%
+            )
+            .add(SpriteComponent("textures/Circle.png", RenderLayers.FX))
             .add(FXComponent().apply {
                 fxType = PowerUpType.BOMB
                 // Set a duration for how long the bomb FX stays visible (e.g., 3 seconds)

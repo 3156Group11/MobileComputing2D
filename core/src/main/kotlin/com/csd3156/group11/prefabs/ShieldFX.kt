@@ -10,12 +10,11 @@ class ShieldFX(private val followId: Int) : Prefab() {
     override fun Create(world: World) {
         ID = world.create()
         world.edit(ID)
-            .add(TransformComponent(position = Vector2(0f, 0f))) // will be updated by FXSystem
-            .add(SpriteComponent("textures/Circle.png", RenderLayers.FX).apply {
-                // Set appropriate size for your shield effect
-                width = 100f
-                height = 100f
-            })
+            .add(TransformComponent(
+                position = Vector2(0f, 0f), // updated by fxsystem
+                scale = Vector2(1.5f, 1.5f))// Reduce size to 50%
+                )
+            .add(SpriteComponent("textures/Circle.png", RenderLayers.FX))
             .add(FXComponent().apply {
                 fxType = PowerUpType.SHIELD
                 followEntityId = followId
