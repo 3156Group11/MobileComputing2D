@@ -31,9 +31,11 @@ import com.csd3156.group11.systems.EnemyLineSystem
 import com.csd3156.group11.systems.EnemySpawnerSystem
 import com.csd3156.group11.systems.EnemySystem
 import com.csd3156.group11.systems.FXSystem
+import com.csd3156.group11.systems.LightningSystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
 import com.csd3156.group11.systems.RenderSystem
+import com.csd3156.group11.systems.SlowFieldSystem
 import com.csd3156.group11.systems.SoundSystem
 
 var assetManager:AssetSystem = AssetSystem()
@@ -94,6 +96,8 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EnemySpawnerSystem())
             .with(PhysicsSystem())
             .with(BombSystem())
+            .with(LightningSystem())
+            .with(SlowFieldSystem())
             .with(CollisionSystem())
             .with(FXSystem())
             .with(RenderSystem(spriteBatch, camera))

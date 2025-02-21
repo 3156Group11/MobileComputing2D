@@ -19,6 +19,8 @@ import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.prefabs.ShieldPowerUp
 import com.csd3156.group11.prefabs.BombPowerUp
+import com.csd3156.group11.prefabs.LightningPowerUp
+import com.csd3156.group11.prefabs.SlowFieldPowerUp
 import com.csd3156.group11.prefabs.Image_Button
 import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
@@ -156,8 +158,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         // -----------------------------
         val but = Text_Button(
             "Create Shield", TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(200f,300f),
-            Scale = Vector2(1f,1f),
+            Position = Vector2(4f,4f),
+            Scale = Vector2(3f,3f),
             Action = {
                 val enemy = ShieldPowerUp()
                 enemy.Create(world)
@@ -173,8 +175,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         val spawnBombButton = Text_Button(
             "Spawn Bomb",
             TextButton.TextButtonStyle().apply { font = BitmapFont() },
-            Position = Vector2(200f, 250f),
-            Scale = Vector2(1f, 1f),
+            Position = Vector2(5f, 5f),
+            Scale = Vector2(3f, 3f),
             Action = {
                 // Spawns the bomb power-up
                 val bombPowerUp = BombPowerUp()
