@@ -173,6 +173,38 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         spawnBombButton.Create(world)
 
+        // -----------------------------
+        // Lightning button
+        // -----------------------------
+        val spawnLightningButton = Text_Button(
+            "Spawn Lightning",
+            TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(6f, 6f),
+            Scale = Vector2(3f, 3f),
+            Action = {
+                // Spawns the bomb power-up
+                val LightningPowerUp = LightningPowerUp()
+                LightningPowerUp.Create(world)
+            }
+        )
+        spawnLightningButton.Create(world)
+
+        // -----------------------------
+        // Slow button
+        // -----------------------------
+        val spawnSlowFieldButton = Text_Button(
+            "Spawn SlowField",
+            TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(7f, 7f),
+            Scale = Vector2(3f, 3f),
+            Action = {
+                // Spawns the bomb power-up
+                val SlowFieldPowerUp = SlowFieldPowerUp()
+                SlowFieldPowerUp.Create(world)
+            }
+        )
+        spawnSlowFieldButton.Create(world)
+
         val pauseButton = Image_Button(
             filepath = "textures/Pause.png",
             Position = Vector2(32f, 0f),
