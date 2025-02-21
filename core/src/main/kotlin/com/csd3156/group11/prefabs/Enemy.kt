@@ -11,6 +11,7 @@ import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TagComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 
 open class Enemy : Prefab()
@@ -28,7 +29,7 @@ open class Enemy : Prefab()
             ))
             .add(VelocityComponent(Vector2(0f, 0f)))
             .add(ColliderComponent(radius = 8f))
-            .add(SpriteComponent("textures/Enemy.png"))
+            .add(SpriteComponent("textures/Enemy.png", RenderLayers.Enemy))
             .add(EnemyComponent())
             .add(TagComponent(Tag.ENEMY))
     }

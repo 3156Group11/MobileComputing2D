@@ -10,6 +10,7 @@ import com.csd3156.group11.components.TagComponent
 import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 
 public class Player : Prefab()
@@ -26,7 +27,7 @@ public class Player : Prefab()
             ))
             .add(VelocityComponent(Vector2(0f, 0f)))
             .add(ColliderComponent(radius = 8f)) // Adjust collider size accordingly
-            .add(SpriteComponent("textures/Player.png"))
+            .add(SpriteComponent("textures/Player.png", RenderLayers.Player))
             .add(PlayerInputComponent())
             .add(TagComponent(Tag.PLAYER))
     }

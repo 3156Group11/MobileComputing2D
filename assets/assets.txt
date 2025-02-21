@@ -10,6 +10,7 @@ textures/Lightning.png
 textures/Player.png
 textures/Shield.png
 textures/Time.png
+textures/Title.png
 textures/ic_launcher.png
 ui/font-list.fnt
 ui/font-subtitle.fnt
