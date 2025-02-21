@@ -24,6 +24,12 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
     private val shapeRenderer = ShapeRenderer()
 
     override fun begin() {
+        val entities = subscription.entities
+        for (i in 0 until entities.size()) {
+            spriteMapper[entities[i]].width = camera.viewportWidth/35
+            spriteMapper[entities[i]].height = camera.viewportWidth/35
+        }
+
         spriteBatch.projectionMatrix = camera.combined
         spriteBatch.begin()
     }

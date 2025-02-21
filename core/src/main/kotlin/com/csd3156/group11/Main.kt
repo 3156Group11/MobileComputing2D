@@ -54,17 +54,20 @@ fun createCircleTexture(diameter: Int, color: Color = Color.WHITE): TextureRegio
 
 
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
-class Main : ApplicationAdapter()
+class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
 {
     private lateinit var world: com.artemis.World
     private lateinit var camera: OrthographicCamera
     private lateinit var viewport: Viewport
     private lateinit var spriteBatch: SpriteBatch
     private lateinit var font: BitmapFont
+    private var scrWidth : Float = widthPix.toFloat()
+    private var scrHeight : Float = heightPix.toFloat()
 
     override fun create() {
+
         camera = OrthographicCamera()
-        viewport = FitViewport(800f, 400f,camera)
+        viewport = FitViewport(scrWidth, scrHeight, camera)
         viewport.apply()
         camera.position.set(viewport.worldWidth / 2, viewport.worldHeight / 2, 0f)
         assetManager.loadTexturesFromFolder("textures")

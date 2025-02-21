@@ -7,8 +7,8 @@ import com.csd3156.group11.assetManager
 
 class SpriteComponent() : Component() {
     var region: TextureRegion = TextureRegion()  // Empty region as default
-    var width: Float = 25f
-    var height: Float = 25f
+    var width: Float = 15f
+    var height: Float = 15f
 
     // Custom constructor to initialize with a texture
     constructor(filepath : String) : this() {
