@@ -15,6 +15,7 @@ audio/sfx/fx_Player_ObtainThunder.wav
 audio/sfx/fx_TimerTicking.wav
 com/badlogic/gdx/utils/lsans-15.fnt
 com/badlogic/gdx/utils/lsans-15.png
+fonts/LiberationSans.ttf
 textures/Back.png
 textures/Background.png
 textures/BackgroundBorder.png

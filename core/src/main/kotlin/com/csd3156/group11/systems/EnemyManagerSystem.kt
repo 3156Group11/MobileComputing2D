@@ -21,6 +21,7 @@ class EnemyManagerSystem(
 
     override fun processSystem() {
         if (Globals.currentState != GameState.GAME_STAGE) return
+        if (Globals.IsStarting) return
 
         // Query for active enemy entities.
         val enemyEntities: IntBag =

@@ -4,5 +4,6 @@ enum class Tag {
     PLAYER,
     ENEMY,
     POWERUP,
+    START_TIME,
     NONE
 }

@@ -78,7 +78,8 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
         assetManager.loadTexturesFromFolder("textures")
         assetManager.loadSFXFromFolder("audio/sfx")
         assetManager.loadBGMFromFolder("audio/bgm")
-        
+        assetManager.loadFontsFromFolder("fonts")
+
 
         // Initialize rendering tools
         spriteBatch = SpriteBatch()

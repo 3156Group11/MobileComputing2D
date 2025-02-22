@@ -6,6 +6,7 @@ import com.artemis.systems.IteratingSystem
 import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.resources.Globals
 
 class PhysicsSystem : IteratingSystem(Aspect.all(TransformComponent::class.java, VelocityComponent::class.java)) {
 
@@ -17,6 +18,8 @@ class PhysicsSystem : IteratingSystem(Aspect.all(TransformComponent::class.java,
     private val screenHeight = 400f // Set screen height
 
     override fun process(entityId: Int) {
+        if (Globals.IsStarting) return
+
         val transform = transformMapper[entityId]
         val velocity = velocityMapper[entityId]
 

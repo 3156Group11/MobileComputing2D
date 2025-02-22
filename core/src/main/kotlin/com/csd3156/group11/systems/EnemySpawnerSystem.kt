@@ -13,6 +13,7 @@ import com.csd3156.group11.resources.Globals
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
 import com.csd3156.group11.components.SpawnTask
+import com.csd3156.group11.enums.GameState
 
 class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::class.java)) {
 
@@ -21,6 +22,9 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
     private val screenHeight = 35 * Globals.scrHeight / Globals.scrWidth
 
     override fun processSystem() {
+        if (Globals.IsStarting) return
+        if (Globals.currentState != GameState.GAME_STAGE) return
+
         println("screenWidth: $screenWidth, screenHeight: $screenHeight")
 
         val entities = subscription.entities

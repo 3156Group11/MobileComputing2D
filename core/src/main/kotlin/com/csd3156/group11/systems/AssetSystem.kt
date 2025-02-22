@@ -5,10 +5,20 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import java.util.Locale
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 
-class AssetSystem {
+class AssetSystem() {
     private var assetManager:AssetManager = AssetManager()
+
+    init {
+        assetManager.setLoader(BitmapFont::class.java, FreetypeFontLoader(assetManager.fileHandleResolver))
+        assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(assetManager.fileHandleResolver))
+    }
+
     public fun system() : AssetManager
     {
         return assetManager
@@ -35,6 +45,40 @@ class AssetSystem {
             }
         }
     }
+
+    public fun loadFontsFromFolder(folderPath: String)
+    {
+        println("02")
+
+        val folder = Gdx.files.internal(folderPath)
+        val files = folder.list()
+
+        for (file in files) {
+            if (file.isDirectory) {
+                // If it's a subfolder, recursively call this function
+                loadFontsFromFolder(folderPath + file.name() + "/")
+            }
+            else {
+                if (file.extension().lowercase() in listOf("ttf")) {
+                    val filePath = folderPath + "/" + file.name()
+
+                    val fontParams = FreetypeFontLoader.FreeTypeFontLoaderParameter().apply {
+                        fontFileName = filePath
+                        fontParameters.size = 64 // Set font size
+                        fontParameters.minFilter = Texture.TextureFilter.Linear
+                        fontParameters.magFilter = Texture.TextureFilter.Linear
+                    }
+
+                    assetManager.load(filePath, BitmapFont::class.java, fontParams)
+                    while (!assetManager.update())
+                    {
+                        val progress = assetManager.progress
+                    }
+                }
+            }
+        }
+    }
+
 
     public fun loadSFXFromFolder(folderPath: String) {
         // Get the folder as a FileHandle

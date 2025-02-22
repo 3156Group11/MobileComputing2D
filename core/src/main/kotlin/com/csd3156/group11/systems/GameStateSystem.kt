@@ -5,18 +5,23 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.csd3156.group11.assetManager
 import com.csd3156.group11.components.EnemySpawnerComponent
 import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.enums.EnemyFormation
 import com.csd3156.group11.prefabs.EnemyBasic
 import com.csd3156.group11.components.SpriteComponent
+import com.csd3156.group11.components.TagComponent
 import com.csd3156.group11.components.UIComponent
 import com.csd3156.group11.enums.RenderLayers
+import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.prefabs.ShieldPowerUp
 import com.csd3156.group11.prefabs.BombPowerUp
@@ -29,6 +34,7 @@ import com.csd3156.group11.prefabs.Text_Label
 import com.csd3156.group11.resources.Globals
 import com.csd3156.group11.soundSystem
 import ktx.assets.file
+import sun.font.TextLabel
 
 class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
     var currentState: GameState
@@ -229,6 +235,26 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             .add(SpriteComponent("textures/BackgroundBorder.png",RenderLayers.BackgroundBorder))
             .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
                 position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
+
+        Globals.IsStarting = true
+        Globals.StartingTimer = 3f
+
+        val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
+        val inStyle = LabelStyle(font, Color.WHITE, )
+        inStyle.font.data.setScale(3f, 3f)
+        val label = Label("3", inStyle)
+        val startTimerID = world.create()
+        //println("Enemy Created! Entity ID: $ID")
+        world.edit(startTimerID)
+            .add(
+                TransformComponent(
+                    position = Vector2(17.5f,6f),
+                    scale = Vector2(10f,10f)
+                )
+            )
+            .add(UIComponent(label))
+            .add(TagComponent(Tag.START_TIME))
+
     }
 
     private fun createHighScoreEntities() {

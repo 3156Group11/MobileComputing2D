@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.resources.Globals
 
 class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSystem(Aspect.all(PlayerInputComponent::class.java, VelocityComponent::class.java)) {
 
@@ -37,6 +38,8 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     }
 
     override fun process(entityId: Int) {
+        if (Globals.IsStarting) return
+
         val input = inputMapper[entityId]
         val velocity = velocityMapper[entityId]
 

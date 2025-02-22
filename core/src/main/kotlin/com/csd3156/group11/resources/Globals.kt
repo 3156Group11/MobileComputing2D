@@ -7,6 +7,9 @@ object Globals {
     public var scrWidth : Float = 0f // Initialised at runtime
     public var scrHeight : Float = 0f // Initialised at runtime
     public var UnitSize : Float = 0f // Initialised at runtime
+    public var IsStarting = false
+    public var StartingTimer = 0f
+
     public fun ScreenToWorld(inVec : Vector2): Vector2 {
         return Vector2(inVec.x/scrWidth * 35,inVec.y/scrWidth * 35)
     }

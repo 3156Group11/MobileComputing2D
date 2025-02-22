@@ -4,9 +4,13 @@ import com.artemis.ComponentMapper
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.Viewport
+import com.csd3156.group11.components.TagComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.UIComponent
+import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+
 
 class UISystem(
     private val batch: SpriteBatch,
@@ -35,6 +39,25 @@ class UISystem(
             val entityId = entities[i]
             val uiComponent = mUI[entityId]
             val transform = mTransform[entityId]
+
+            if (Globals.IsStarting) {
+                val tagA = world.getEntity(entityId).getComponent(TagComponent::class.java)?.tag
+                if (tagA != null) {
+                    if (tagA == Tag.START_TIME) {
+                        Globals.StartingTimer -= world.delta
+                        val timeActor = world.getEntity(entityId).getComponent((UIComponent::class.java)).actor
+                        val intTime = Globals.StartingTimer.toInt() + 1
+                        (timeActor as? Label)?.setText(intTime.toString())
+
+                        if (Globals.StartingTimer < 0)
+                        {
+                            Globals.IsStarting = false
+                            world.delete(entityId)
+                        }
+                    }
+                }
+            }
+
 
             val screenPosition = Globals.WorldToScreen(transform.position)
             uiComponent.actor?.setPosition(screenPosition.x , screenPosition.y)
