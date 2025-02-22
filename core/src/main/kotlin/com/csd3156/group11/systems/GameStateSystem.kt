@@ -44,7 +44,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private var pendingState: GameState? = null
     private var initialized = false
-    private var previousState: GameState? = null
     fun changeState(newState: GameState) {
         if (newState != currentState) {
             println("Changing state to: $newState")
@@ -98,14 +97,14 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         val gameName = Image_Label(
             filepath = "textures/Title.png",
             Position = Vector2(12f, 8f),
-            Scale = Vector2(19f, 5f),
+            Scale = Vector2(13f, 5f),
 
         )
         gameName.Create(world)
 
         val startGameButton = Image_Button(
             filepath = "textures/Start.png",
-            Position = Vector2(15f, 4f),
+            Position = Vector2(15f, 5f),
             Scale = Vector2(0.8f, 0.8f),
             Action = {
                 changeState(GameState.GAME_STAGE)
@@ -115,7 +114,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val highScore = Image_Button(
             filepath = "textures/HighScore.png",
-            Position = Vector2(15f, 1f),
+            Position = Vector2(15f, 2f),
             Scale = Vector2(0.8f,0.8f),
             Action = {
                 changeState(GameState.HIGH_SCORE)
@@ -214,8 +213,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val pauseButton = Image_Button(
             filepath = "textures/Pause.png",
-            Position = Vector2(32f, 0f),
-            Scale = Vector2(3f,3f),
+            Position = Vector2(33f, 0.5f),
+            Scale = Vector2(0.8f,0.8f),
             Action = {
 
             }
@@ -271,7 +270,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         for (i in highScores.indices) {
             val scoreLabel = Text_Label(
                 "${i + 1}. ${highScores[i]}", Label.LabelStyle(BitmapFont(), Color.YELLOW),
-                Position = Vector2(17f, 10f-i), //spacing of scores
+                Position = Vector2(16f, 10f-i), //spacing of scores
                 Scale = Vector2(5f, 5f)
             )
             scoreLabel.Create(world)
@@ -279,9 +278,11 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val backButton = Image_Button(
             filepath = "textures/Back.png",
-            Position = Vector2(13f, 0f),
-            Scale = Vector2(5f,5f),
+            Position = Vector2(13f, 1f),
+            Scale = Vector2(0.6f,0.8f),
             Action = {
+                val randomScore = com.badlogic.gdx.math.MathUtils.random(100, 10000)
+                onGameEnd(randomScore)
                 changeState(GameState.MAIN_MENU)
             }
         )
@@ -289,8 +290,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val clearButton = Image_Button(
             filepath = "textures/Clear.png",
-            Position = Vector2(19f, 0f),
-            Scale = Vector2(5f,5f),
+            Position = Vector2(19f, 1f),
+            Scale = Vector2(0.6f,0.8f),
             Action = {
                 clearHighScores()
                 removeExistingUI()
@@ -313,7 +314,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private val highScores: MutableList<Int> = mutableListOf()
     private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
-    private val pauseUIEntities = mutableListOf<Int>()
 
     private fun addScore(newScore: Int) {
         highScores.add(newScore)
