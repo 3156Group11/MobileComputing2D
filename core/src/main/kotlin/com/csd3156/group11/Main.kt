@@ -41,6 +41,7 @@ import com.csd3156.group11.systems.SoundSystem
 
 var assetManager:AssetSystem = AssetSystem()
 var soundSystem: SoundSystem = SoundSystem()
+var playerInput: PlayerInputSystem = PlayerInputSystem()
 
 
 fun createCircleTexture(diameter: Int, color: Color = Color.WHITE): TextureRegion {
@@ -77,7 +78,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
         assetManager.loadTexturesFromFolder("textures")
         assetManager.loadSFXFromFolder("audio/sfx")
         assetManager.loadBGMFromFolder("audio/bgm")
-
+        
 
         // Initialize rendering tools
         spriteBatch = SpriteBatch()
