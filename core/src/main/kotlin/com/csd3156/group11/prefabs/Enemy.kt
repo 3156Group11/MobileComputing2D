@@ -25,14 +25,14 @@ open class Enemy : Prefab()
         //println("Enemy Created! Entity ID: $ID")
         transform = TransformComponent(
             position = Vector2(17.5f, 3f),
-            scale = Vector2(1f, 1f)
+            scale = Vector2(0f, 0f)
         )
         world.edit(ID).add(transform)
 
         velocity = VelocityComponent(Vector2(0f, 0f))
         world.edit(ID).add(velocity)
 
-        world.edit(ID).add(ColliderComponent(radius = 0.5f))
+        world.edit(ID).add(ColliderComponent(radius = 0.375f))
         world.edit(ID).add(SpriteComponent("textures/Enemy.png", RenderLayers.Enemy))
         world.edit(ID).add(EnemyComponent())
         world.edit(ID).add(TagComponent(Tag.ENEMY))

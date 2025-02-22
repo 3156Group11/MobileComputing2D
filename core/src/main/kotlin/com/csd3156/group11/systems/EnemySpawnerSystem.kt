@@ -26,9 +26,6 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
         if (Globals.currentState != GameState.GAME_STAGE) return
         if (Globals.deathScreen) return
 
-
-        println("screenWidth: $screenWidth, screenHeight: $screenHeight")
-
         val entities = subscription.entities
 
         for (i in 0 until entities.size()) {
@@ -41,7 +38,7 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                         // For NONE, spawn EnemyBasic at random positions.
                         for (j in 0 until spawner.count) {
                             val pos = Vector2(MathUtils.random(0.5f, screenWidth - 1.5f), MathUtils.random(0.5f, screenHeight - 1.5f))
-                            spawner.spawnTasks.add(SpawnTask("basic", pos, Vector2(0f, 0f), 20f))
+                            spawner.spawnTasks.add(SpawnTask("basic", pos, Vector2(0f, 0f), 0.5f))
                         }
                     }
                     EnemyFormation.GRID -> {
@@ -59,7 +56,7 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                         for (r in 0 until rows) {
                             for (c in 0 until cols) {
                                 val pos = Vector2(startX + c * spacingX, startY - r * spacingY)
-                                spawner.spawnTasks.add(SpawnTask("basic", pos, Vector2(0f, 0f), 20f))
+                                spawner.spawnTasks.add(SpawnTask("basic", pos, Vector2(0f, 0f), 0.5f))
                             }
                         }
                     }
@@ -72,7 +69,7 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             val angle = j * (360f / count)
                             val rad = angle * MathUtils.degreesToRadians
                             val pos = Vector2(center.x + radius * MathUtils.cos(rad), center.y + radius * MathUtils.sin(rad))
-                            spawner.spawnTasks.add(SpawnTask("basic", pos, Vector2(0f, 0f), 20f))
+                            spawner.spawnTasks.add(SpawnTask("basic", pos, Vector2(0f, 0f), 0.5f))
                         }
                     }
                     EnemyFormation.TOP_BOTTOM -> {
@@ -85,11 +82,12 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             val enemy = EnemyLine()
                             enemy.Create(world)
                             enemy.transform.position.set(spacingX * (j + 1), 14.2f)
-                            enemy.velocity.velocity.set(0f, -10f)
+                            enemy.velocity.velocity.set(0f, -0.5f)
                             val lineComponent = world.getMapper(EnemyLineComponent::class.java).get(enemy.ID)
                             lineComponent.spawnEdge = 2
                             // Mark as part of a group
                             world.getMapper(EnemyComponent::class.java).get(enemy.ID).formationSpawnComplete = false
+                            world.getMapper(EnemyComponent::class.java).get(enemy.ID).inFormation = true
                             spawnedEnemyIds.add(enemy.ID)
                         }
                         // Bottom edge:
@@ -97,15 +95,19 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             val enemy = EnemyLine()
                             enemy.Create(world)
                             enemy.transform.position.set(spacingX * (j + 1), 0.5f)
-                            enemy.velocity.velocity.set(0f, 10f)
+                            enemy.velocity.velocity.set(0f, 0.5f)
                             val lineComponent = world.getMapper(EnemyLineComponent::class.java).get(enemy.ID)
                             lineComponent.spawnEdge = 3
                             world.getMapper(EnemyComponent::class.java).get(enemy.ID).formationSpawnComplete = false
+                            world.getMapper(EnemyComponent::class.java).get(enemy.ID).inFormation = true
+
                             spawnedEnemyIds.add(enemy.ID)
                         }
                         // After spawning the group, mark them all as ready to start immune countdown.
                         for (id in spawnedEnemyIds) {
                             world.getMapper(EnemyComponent::class.java).get(id).formationSpawnComplete = true
+                            world.getMapper(EnemyComponent::class.java).get(id).inFormation = true
+
                         }
                     }
                     EnemyFormation.LEFT_RIGHT -> {
@@ -118,10 +120,12 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             val enemy = EnemyLine()
                             enemy.Create(world)
                             enemy.transform.position.set(0.5f, spacingY * (j + 1))
-                            enemy.velocity.velocity.set(10f, 0f)
+                            enemy.velocity.velocity.set(0.5f, 0f)
                             val lineComponent = world.getMapper(EnemyLineComponent::class.java).get(enemy.ID)
                             lineComponent.spawnEdge = 0
                             world.getMapper(EnemyComponent::class.java).get(enemy.ID).formationSpawnComplete = false
+                            world.getMapper(EnemyComponent::class.java).get(enemy.ID).inFormation = true
+
                             spawnedEnemyIds.add(enemy.ID)
                         }
                         // Right edge:
@@ -129,15 +133,19 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             val enemy = EnemyLine()
                             enemy.Create(world)
                             enemy.transform.position.set(33.5f, spacingY * (j + 1))
-                            enemy.velocity.velocity.set(-10f, 0f)
+                            enemy.velocity.velocity.set(-0.5f, 0f)
                             val lineComponent = world.getMapper(EnemyLineComponent::class.java).get(enemy.ID)
                             lineComponent.spawnEdge = 1
                             world.getMapper(EnemyComponent::class.java).get(enemy.ID).formationSpawnComplete = false
+                            world.getMapper(EnemyComponent::class.java).get(enemy.ID).inFormation = true
+
                             spawnedEnemyIds.add(enemy.ID)
                         }
                         // After spawning the group, mark them all as ready to start immune countdown.
                         for (id in spawnedEnemyIds) {
                             world.getMapper(EnemyComponent::class.java).get(id).formationSpawnComplete = true
+                            world.getMapper(EnemyComponent::class.java).get(id).inFormation = true
+
                         }
                     }
                     EnemyFormation.ALL_EDGES -> {
@@ -155,10 +163,12 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             val enemy = EnemyLine()
                             enemy.Create(world)
                             enemy.transform.position.set(spacingX * (j + 1), 14.2f)
-                            enemy.velocity.velocity.set(0f, -10f)
+                            enemy.velocity.velocity.set(0f, -0.5f)
                             val lineComponent = world.getMapper(EnemyLineComponent::class.java).get(enemy.ID)
                             lineComponent.spawnEdge = 2
                             world.getMapper(EnemyComponent::class.java).get(enemy.ID).formationSpawnComplete = false
+                            world.getMapper(EnemyComponent::class.java).get(enemy.ID).inFormation = true
+
                             spawnedEnemyIds.add(enemy.ID)
                         }
                         // Bottom edge:
@@ -166,10 +176,12 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             val enemy = EnemyLine()
                             enemy.Create(world)
                             enemy.transform.position.set(spacingX * (j + 1), 0.5f)
-                            enemy.velocity.velocity.set(0f, 10f)
+                            enemy.velocity.velocity.set(0f, 0.5f)
                             val lineComponent = world.getMapper(EnemyLineComponent::class.java).get(enemy.ID)
                             lineComponent.spawnEdge = 3
                             world.getMapper(EnemyComponent::class.java).get(enemy.ID).formationSpawnComplete = false
+                            world.getMapper(EnemyComponent::class.java).get(enemy.ID).inFormation = true
+
                             spawnedEnemyIds.add(enemy.ID)
                         }
                         // Left edge:
@@ -177,10 +189,12 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             val enemy = EnemyLine()
                             enemy.Create(world)
                             enemy.transform.position.set(0.5f, spacingY * (j + 1))
-                            enemy.velocity.velocity.set(10f, 0f)
+                            enemy.velocity.velocity.set(0.5f, 0f)
                             val lineComponent = world.getMapper(EnemyLineComponent::class.java).get(enemy.ID)
                             lineComponent.spawnEdge = 0
                             world.getMapper(EnemyComponent::class.java).get(enemy.ID).formationSpawnComplete = false
+                            world.getMapper(EnemyComponent::class.java).get(enemy.ID).inFormation = true
+
                             spawnedEnemyIds.add(enemy.ID)
                         }
                         // Right edge:
@@ -188,15 +202,19 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                             val enemy = EnemyLine()
                             enemy.Create(world)
                             enemy.transform.position.set(33.5f, spacingY * (j + 1))
-                            enemy.velocity.velocity.set(-10f, 0f)
+                            enemy.velocity.velocity.set(-0.5f, 0f)
                             val lineComponent = world.getMapper(EnemyLineComponent::class.java).get(enemy.ID)
                             lineComponent.spawnEdge = 1
                             world.getMapper(EnemyComponent::class.java).get(enemy.ID).formationSpawnComplete = false
+                            world.getMapper(EnemyComponent::class.java).get(enemy.ID).inFormation = true
+
                             spawnedEnemyIds.add(enemy.ID)
                         }
                         // Now mark all spawned enemies as having completed group spawn.
                         for (id in spawnedEnemyIds) {
                             world.getMapper(EnemyComponent::class.java).get(id).formationSpawnComplete = true
+                            world.getMapper(EnemyComponent::class.java).get(id).inFormation = true
+
                         }
                     }
                 }
@@ -214,7 +232,7 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                     val enemyMapper = world.getMapper(EnemyComponent::class.java)
                     val comp = enemyMapper.get(enemy.ID)
                     comp.speed = task.speed
-                    comp.inFormation = true
+                    comp.inFormation = false
                 } else if (task.prefabType == "line") {
                     val enemy = EnemyLine()
                     enemy.Create(world)

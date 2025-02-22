@@ -41,7 +41,11 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
             // Handle enemy immunity on spawn.
             if (enemy.isImmune) {
                 enemy.ImmuneTime -= world.delta
+                val inScale = ((2f - (enemy.ImmuneTime))/2) * 0.75f
+                transform.scale = Vector2(inScale,inScale)
+
                 if (enemy.ImmuneTime < 0) {
+                    transform.scale = Vector2(0.75f,0.75f)
                     enemy.isImmune = false
                     enemy.isLive = true
                 }
@@ -63,12 +67,6 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
                 val direction = playerPos.cpy().sub(transform.position).nor()
                 velocity.velocity.set(direction.scl(enemy.speed))
 
-                // Check if enemy has reached the player.
-                val collisionThreshold = 1f
-                if (transform.position.dst(playerPos) < collisionThreshold) {
-                    enemy.isDying = true
-                    enemy.isLive = false
-                }
             }
         }
 
@@ -110,7 +108,10 @@ class EnemyLineSystem : BaseEntitySystem(
 
             if (enemy.isImmune && enemy.formationSpawnComplete) {
                 enemy.ImmuneTime -= world.delta
+                val inScale = ((2f - (enemy.ImmuneTime))/2) * 0.75f
+                transform.scale = Vector2(inScale,inScale)
                 if (enemy.ImmuneTime < 0) {
+                    transform.scale = Vector2(0.75f,0.75f)
                     enemy.isImmune = false
                     enemy.isLive = true
                 }

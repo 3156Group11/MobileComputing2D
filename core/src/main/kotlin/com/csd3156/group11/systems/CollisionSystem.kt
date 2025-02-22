@@ -83,7 +83,6 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     powerUp.shieldBreakEffect = true  // Trigger shield break effect
                     return
                 }
-
                 // player dies
                 Globals.deathScreen = true
                 Globals.deathScreenInit = true
