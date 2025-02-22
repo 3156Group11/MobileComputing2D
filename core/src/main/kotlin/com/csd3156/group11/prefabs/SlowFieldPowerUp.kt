@@ -7,23 +7,32 @@ import com.csd3156.group11.components.*
 import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
+import com.csd3156.group11.resources.Globals
 
 class SlowFieldPowerUp : Prefab() {
     override fun Create(world: World) {
         ID = world.create()
+
+        // Screen-normalized spawn dimensions
+        val screenWidth = 35f
+        val screenHeight = 35f * Globals.scrHeight / Globals.scrWidth
+
+        // Generate random spawn position within screen bounds with padding
+        val randomX = MathUtils.random(2f, screenWidth - 2f)  // 2 units of padding
+        val randomY = MathUtils.random(2f, screenHeight - 2f)
+        val spawnPosition = Vector2(randomX, randomY)
+
         world.edit(ID)
             .add(TransformComponent(
-                position = Vector2(
-                    MathUtils.random(100f, 700f),  // Random X position
-                    MathUtils.random(100f, 300f)   // Random Y position
-                )
+                position = spawnPosition,
+                scale = Vector2(1.5f, 1.5f)  // Consistent size
             ))
-            .add(ColliderComponent(radius = 10f))  // Collision radius for pickup detection
-            .add(SpriteComponent("textures/Time.png", RenderLayers.Powerup))  // Visual representation
-            .add(PowerUpComponent().apply { type = PowerUpType.SLOW_FIELD })  // Assign slow field type
-            .add(VelocityComponent(Vector2(MathUtils.random(-50f, 50f), MathUtils.random(-50f, 50f))))  // Random movement for collectible
-            .add(TagComponent(Tag.POWERUP))  // Mark as a power-up entity
+            .add(ColliderComponent(radius = 1f))  // Consistent collision detection
+            .add(SpriteComponent("textures/Time.png", RenderLayers.Powerup))
+            .add(PowerUpComponent().apply { type = PowerUpType.SLOW_FIELD })
+            .add(VelocityComponent(Vector2(MathUtils.random(-5f, 5f), MathUtils.random(-5f, 5f))))  // Small random movement
+            .add(TagComponent(Tag.POWERUP))
 
-        println("SlowFieldPowerUp created with ID: $ID at random position.")
+        println("SlowFieldPowerUp created with ID: $ID at position: $spawnPosition")
     }
 }

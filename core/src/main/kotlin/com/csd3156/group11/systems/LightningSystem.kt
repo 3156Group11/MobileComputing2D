@@ -27,7 +27,7 @@ class LightningSystem : BaseEntitySystem(
             val entityId = entities[i]
             val powerUpComp = powerUpMapper[entityId]
 
-            if (powerUpComp.type == PowerUpType.LIGHTNING) {
+            if (powerUpComp.type == PowerUpType.LIGHTNING ) {
                 val playerPosition = transformMapper.get(entityId).position
                 strikeNearestEnemies(playerPosition, maxStrikes, powerUpComp)
                 powerUpComp.type = PowerUpType.NONE  // Reset power-up state

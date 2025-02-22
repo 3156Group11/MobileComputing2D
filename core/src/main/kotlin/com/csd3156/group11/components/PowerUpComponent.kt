@@ -27,7 +27,9 @@ class PowerUpComponent : Component() {
     //  Lightning Data  - store multiple Lightning at once
     // ----------------------------------------
     data class LightningEntry(
-        val targetPosition: Vector2
+        val targetPosition: Vector2,
+
+
     )
 
     val lightning = mutableListOf<LightningEntry>()
