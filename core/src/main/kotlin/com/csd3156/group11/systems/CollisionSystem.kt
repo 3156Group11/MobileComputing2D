@@ -16,6 +16,7 @@ import com.csd3156.group11.prefabs.ShieldFX
 import com.csd3156.group11.prefabs.BombFX
 import com.csd3156.group11.prefabs.LightningFX
 import com.csd3156.group11.prefabs.SlowFieldFX
+import com.csd3156.group11.resources.Globals
 
 
 class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.java, TransformComponent::class.java)) {
@@ -84,6 +85,8 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                 }
 
                 // player dies
+                Globals.deathScreen = true
+                Globals.deathScreenInit = true
                 return
             }
             // else if powerup, TODO: Add powerup component
@@ -116,6 +119,8 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                 }
 
                 // player dies
+                Globals.deathScreen = true
+                Globals.deathScreenInit = true
                 return
             }
             // else if powerup, TODO: Add powerup component

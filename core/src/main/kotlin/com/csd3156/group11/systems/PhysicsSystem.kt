@@ -19,6 +19,7 @@ class PhysicsSystem : IteratingSystem(Aspect.all(TransformComponent::class.java,
 
     override fun process(entityId: Int) {
         if (Globals.IsStarting) return
+        if (Globals.deathScreen) return
 
         val transform = transformMapper[entityId]
         val velocity = velocityMapper[entityId]

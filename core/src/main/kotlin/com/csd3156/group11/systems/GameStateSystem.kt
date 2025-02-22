@@ -67,6 +67,23 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             currentState = newState!!
             enterState(currentState)
         }
+
+
+        if (Globals.currentState == GameState.GAME_STAGE)
+        {
+            if (Globals.deathScreen && Globals.deathScreenInit)
+            {
+                // Generate death scren UI once
+                val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
+                val GameOverLabel = Text_Label(
+                    "Game Over!",
+                    LabelStyle(font, Color.WHITE),
+                    Position = Vector2(17.5f,6f),
+                    Scale = Vector2(1f,1f) )
+                GameOverLabel.Create(world)
+                Globals.deathScreenInit = false
+            }
+        }
     }
 
 
@@ -254,6 +271,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             .add(UIComponent(label))
             .add(TagComponent(Tag.START_TIME))
 
+        Globals.deathScreen = false
+        Globals.deathScreenInit = false
     }
 
     private fun createHighScoreEntities() {

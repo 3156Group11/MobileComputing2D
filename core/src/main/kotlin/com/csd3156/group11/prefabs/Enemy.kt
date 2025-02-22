@@ -32,7 +32,7 @@ open class Enemy : Prefab()
         velocity = VelocityComponent(Vector2(0f, 0f))
         world.edit(ID).add(velocity)
 
-        world.edit(ID).add(ColliderComponent(radius = 8f))
+        world.edit(ID).add(ColliderComponent(radius = 0.5f))
         world.edit(ID).add(SpriteComponent("textures/Enemy.png", RenderLayers.Enemy))
         world.edit(ID).add(EnemyComponent())
         world.edit(ID).add(TagComponent(Tag.ENEMY))

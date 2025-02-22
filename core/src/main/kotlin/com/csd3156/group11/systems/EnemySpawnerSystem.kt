@@ -24,6 +24,8 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
     override fun processSystem() {
         if (Globals.IsStarting) return
         if (Globals.currentState != GameState.GAME_STAGE) return
+        if (Globals.deathScreen) return
+
 
         println("screenWidth: $screenWidth, screenHeight: $screenHeight")
 

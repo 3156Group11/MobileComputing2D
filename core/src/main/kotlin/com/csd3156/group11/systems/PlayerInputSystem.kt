@@ -39,6 +39,7 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
 
     override fun process(entityId: Int) {
         if (Globals.IsStarting) return
+        if (Globals.deathScreen) return
 
         val input = inputMapper[entityId]
         val velocity = velocityMapper[entityId]
