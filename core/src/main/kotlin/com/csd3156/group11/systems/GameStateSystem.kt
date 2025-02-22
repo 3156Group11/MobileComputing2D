@@ -15,6 +15,7 @@ import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.enums.EnemyFormation
 import com.csd3156.group11.prefabs.EnemyBasic
 import com.csd3156.group11.components.SpriteComponent
+import com.csd3156.group11.components.UIComponent
 import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.prefabs.Player
 import com.csd3156.group11.prefabs.ShieldPowerUp
@@ -37,6 +38,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private var pendingState: GameState? = null
     private var initialized = false
+    private var previousState: GameState? = null
     fun changeState(newState: GameState) {
         if (newState != currentState) {
             println("Changing state to: $newState")
@@ -74,7 +76,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 soundSystem.playBGM("audio/bgm/bgm_level.wav")
             }
             GameState.HIGH_SCORE -> createHighScoreEntities()
-            GameState.PAUSE_SCREEN -> pauseScreen()
         }
     }
 
@@ -210,13 +211,12 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(32f, 0f),
             Scale = Vector2(3f,3f),
             Action = {
-                clearHighScores()
-                changeState(GameState.PAUSE_SCREEN)
+
             }
         )
         pauseButton.Create(world)
 
-        //to save score into highscore, create variable to store score
+        //to save score into highScore, create variable to store score
         //on game end, call onGameEnd(variable)
 
         val background = world.create()
@@ -235,45 +235,43 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         // Example: Create high score UI elements
         loadScores() // Load saved scores before displaying
 
-        val highScore = Image_Label(
-            filepath = "textures/HighScore.png",
-            Position = Vector2(15f, 12f),
-            Scale = Vector2(8f, 3f),
-
-            )
-        highScore.Create(world)
+        val highScoreScreenOverLay = Image_Label(
+            filepath = "textures/HighScore_Overlay.png",
+            Position = Vector2(0f, 0f),
+            Scale = Vector2(35f, 15f),
+        )
+        highScoreScreenOverLay.Create(world)
 
         for (i in highScores.indices) {
             val scoreLabel = Text_Label(
-                "${i + 1}. ${highScores[i]}", Label.LabelStyle(BitmapFont(), Color.WHITE),
-                Position = Vector2(350f, 320f - (i * 30)), //spacing of scores
-                Scale = Vector2(1f, 1f)
+                "${i + 1}. ${highScores[i]}", Label.LabelStyle(BitmapFont(), Color.YELLOW),
+                Position = Vector2(17f, 10f-i), //spacing of scores
+                Scale = Vector2(5f, 5f)
             )
             scoreLabel.Create(world)
         }
 
         val backButton = Image_Button(
             filepath = "textures/Back.png",
-            Position = Vector2(14f, 0f),
-            Scale = Vector2(4f,4f),
+            Position = Vector2(13f, 0f),
+            Scale = Vector2(5f,5f),
             Action = {
                 changeState(GameState.MAIN_MENU)
             }
         )
         backButton.Create(world)
 
-        /*
         val clearButton = Image_Button(
             filepath = "textures/Clear.png",
-            Position = Vector2(20f, 0f),
-            Scale = Vector2(4f,4f),
+            Position = Vector2(19f, 0f),
+            Scale = Vector2(5f,5f),
             Action = {
                 clearHighScores()
-                changeState(GameState.HIGH_SCORE)
+                removeExistingUI()
+                createHighScoreEntities()
             }
         )
         clearButton.Create(world)
-        */
 
         val background = world.create()
         world.edit(background)
@@ -287,53 +285,15 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
     }
 
-    private fun pauseScreen() {
-        val pauseScreenOverLay = Image_Label(
-            filepath = "textures/Overlay.png",
-            Position = Vector2(0f, 0f),
-            Scale = Vector2(35f, 15f),
-            )
-        pauseScreenOverLay.Create(world)
-
-        val resumeButton = Image_Button(
-            filepath = "textures/Resume.png",
-            Position = Vector2(15f, 8f),
-            Scale = Vector2(6f, 6f),
-            Action = {
-                changeState(GameState.GAME_STAGE)
-            }
-        )
-        resumeButton.Create(world)
-
-        val restartButton = Image_Button(
-            filepath = "textures/Restart.png",
-            Position = Vector2(15f, 4f),
-            Scale = Vector2(6f, 6f),
-            Action = {
-                changeState(GameState.GAME_STAGE)
-            }
-        )
-        restartButton.Create(world)
-
-        val quitButton = Image_Button(
-            filepath = "textures/Quit.png",
-            Position = Vector2(15f, 0f),
-            Scale = Vector2(6f, 6f),
-            Action = {
-                changeState(GameState.MAIN_MENU)
-            }
-        )
-        quitButton.Create(world)
-    }
-
     private val highScores: MutableList<Int> = mutableListOf()
     private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
+    private val pauseUIEntities = mutableListOf<Int>()
 
     private fun addScore(newScore: Int) {
         highScores.add(newScore)
         highScores.sortDescending()
-        if (highScores.size > 5) {
-            highScores.removeAt(5)
+        if (highScores.size > 7) {
+            highScores.removeAt(7)
         }
     }
 
@@ -346,7 +306,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private fun loadScores() {
         highScores.clear()
-        for (i in 0 until 5) {
+        for (i in 0 until 7) {
             val score = prefs.getInteger("score_$i", 0)
             if (score > 0) {
                 highScores.add(score)
@@ -364,5 +324,11 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         prefs.flush() // Save changes to persist clearing
     }
 
-
+    private fun removeExistingUI() {
+        val entities = subscription.entities
+        for (i in 0 until entities.size()) {
+            world.delete(entities[i]) // Delete all UI elements
+        }
+        world.process()
+    }
 }

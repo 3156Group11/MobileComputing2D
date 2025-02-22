@@ -20,8 +20,10 @@ textures/Background.png
 textures/BackgroundBorder.png
 textures/Bomb.png
 textures/Circle.png
+textures/Clear.png
 textures/Enemy.png
 textures/HighScore.png
+textures/HighScore_Overlay.png
 textures/Laser.png
 textures/Lightning.png
 textures/Overlay.png
