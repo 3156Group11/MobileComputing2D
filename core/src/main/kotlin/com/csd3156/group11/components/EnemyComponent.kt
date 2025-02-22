@@ -9,6 +9,9 @@ open class EnemyComponent : Component(){
     public var isDying = false
     public var DyingTime = 2f
     public var isLive = false
+    public var speed: Float = 20f
+
+    var formationSpawnComplete: Boolean = true
 }
 
 class EnemyBasicComponent : Component() {

@@ -14,6 +14,8 @@ import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.prefabs.ShieldFX
 import com.csd3156.group11.prefabs.BombFX
+import com.csd3156.group11.prefabs.LightningFX
+import com.csd3156.group11.prefabs.SlowFieldFX
 
 
 class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.java, TransformComponent::class.java)) {
@@ -163,15 +165,56 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     bombFX.Create(world)
                 }
 
-                PowerUpType.CHAIN_LIGHTNING -> {
-                    println("Player picked up CHAIN LIGHTNING powerup!")
+                PowerUpType.LIGHTNING -> {
+                    println("Player picked up LIGHTNING powerup!")
+                    // Remove the collectible from the world
                     world.delete(powerUpEntityId)
 
-                    // Trigger a ChainLightningFX or directly run the chain lightning effect
-                    //val chainLightningFX = ChainLightningFX(playerEntityId)
-                    //chainLightningFX.Create(world)
+                    // Get the position where the pickup occurred
+                    val lightningTransform = world.getEntity(powerUpEntityId)
+                        .getComponent(TransformComponent::class.java)
+                    val lightningPickupPos = lightningTransform.position.cpy()
+
+                    // Trigger LightningFX and strikes instantly
+                    val lightningFX = LightningFX(lightningPickupPos)
+                    lightningFX.Create(world)
                 }
 
+                PowerUpType.SLOW_FIELD -> {
+                    println("Player picked up SLOW FIELD powerup!")
+                    world.delete(powerUpEntityId)
+
+                    val playerTransform = world.getEntity(playerEntityId).getComponent(TransformComponent::class.java)
+                    val playerPos = playerTransform.position.cpy()
+
+                    // Add two SlowFieldEntry instances to the PowerUpComponent (moving upward and downward)
+                    val powerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
+
+                    // Upward moving field
+                    val upwardSlowField = PowerUpComponent.SlowFieldEntry(
+                        position = playerPos.cpy(),
+                        timeLeft = 5f,  // Field lasts for 5 seconds
+                        direction = Vector2(0f, 1f)  // Moving upward
+                    )
+                    powerUpComp.slowFields.add(upwardSlowField)
+
+                    // Downward moving field
+                    val downwardSlowField = PowerUpComponent.SlowFieldEntry(
+                        position = playerPos.cpy(),
+                        timeLeft = 5f,  // Field lasts for 5 seconds
+                        direction = Vector2(0f, -1f)  // Moving downward
+                    )
+                    powerUpComp.slowFields.add(downwardSlowField)
+
+                    // Create visual FX entities for each slow field
+                    val upwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, 1f))
+                    upwardFX.Create(world)
+
+                    val downwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, -1f))
+                    downwardFX.Create(world)
+
+                    println("Spawned two slow fields with visual FX from position: $playerPos")
+                }
 
                 else -> {
                     // Handle other powerups if needed
