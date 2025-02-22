@@ -44,8 +44,8 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                     EnemyFormation.GRID -> {
                         // Fixed grid: 5 rows and 10 columns.
                         val rows = 4
-                        val cols = 10
-                        val spacingX = 3.2f
+                        val cols = 7
+                        val spacingX = 3.5f
                         val spacingY = 3.7f
                         val gridWidth = (cols - 1) * spacingX
                         val gridHeight = (rows - 1) * spacingY

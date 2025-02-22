@@ -15,8 +15,8 @@ import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.resources.Globals
 
 class EnemyManagerSystem(
-    private val threshold: Int = 20,
-    interval: Float = 2f
+    private val threshold: Int = 15,
+    interval: Float = 3f
 ) : IntervalEntitySystem(Aspect.all(EnemyComponent::class.java), interval) {
 
     override fun processSystem() {
@@ -51,7 +51,7 @@ class EnemyManagerSystem(
                 defaultRoll < 0.9f -> EnemyFormation.CIRCLE
                 else -> EnemyFormation.GRID
             }
-            val defaultCount = MathUtils.random(10, 20)
+            val defaultCount = MathUtils.random(8, 12)
             val defaultCenter: Vector2 = if (defaultFormation == EnemyFormation.CIRCLE || defaultFormation == EnemyFormation.GRID) {
                 playerCenter
             } else {

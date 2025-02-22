@@ -67,7 +67,6 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
                 // Move enemy toward the actual player's position.
                 val direction = playerPos.cpy().sub(transform.position).nor()
                 velocity.velocity.set(direction.scl(enemy.speed))
-
             }
         }
 
