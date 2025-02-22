@@ -44,8 +44,8 @@ class EnemyManagerSystem(
         if (enemyEntities.size() < threshold) {
             val defaultRoll = MathUtils.random(0f, 1f)
             val defaultFormation: EnemyFormation = when {
-                defaultRoll < 0.65f -> EnemyFormation.NONE
-                defaultRoll < 0.85f -> EnemyFormation.CIRCLE
+                defaultRoll < 0.8f -> EnemyFormation.NONE
+                defaultRoll < 0.9f -> EnemyFormation.CIRCLE
                 else -> EnemyFormation.GRID
             }
             val defaultCount = MathUtils.random(10, 20)

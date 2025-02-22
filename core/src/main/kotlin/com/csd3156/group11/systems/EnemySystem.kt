@@ -64,7 +64,7 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
                 velocity.velocity.set(direction.scl(enemy.speed))
 
                 // Check if enemy has reached the player.
-                val collisionThreshold = 2f
+                val collisionThreshold = 1f
                 if (transform.position.dst(playerPos) < collisionThreshold) {
                     enemy.isDying = true
                     enemy.isLive = false
@@ -108,7 +108,7 @@ class EnemyLineSystem : BaseEntitySystem(
             val transform = transformMapper.get(entity)
             val velocity = velocityMapper.get(entity)
 
-            if (enemy.isImmune) {
+            if (enemy.isImmune && enemy.formationSpawnComplete) {
                 enemy.ImmuneTime -= world.delta
                 if (enemy.ImmuneTime < 0) {
                     enemy.isImmune = false
@@ -127,7 +127,7 @@ class EnemyLineSystem : BaseEntitySystem(
             else {
                 // Check collision with player.
                 if (playerPos != null) {
-                    val collisionThreshold = 2f
+                    val collisionThreshold = 1f
                     if (transform.position.dst(playerPos) < collisionThreshold) {
                         enemy.isDying = true
                         enemy.isLive = false
