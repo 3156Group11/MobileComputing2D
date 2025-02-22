@@ -25,6 +25,7 @@ textures/Enemy.png
 textures/HighScore.png
 textures/HighScore_Overlay.png
 textures/Laser.png
+textures/LaserBullet.png
 textures/Lightning.png
 textures/Overlay.png
 textures/Pause.png
@@ -35,6 +36,7 @@ textures/Resume.png
 textures/Shield.png
 textures/Start.png
 textures/Time.png
+textures/TimeBeam.png
 textures/Title.png
 textures/ic_launcher.png
 ui/font-list.fnt

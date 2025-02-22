@@ -92,7 +92,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         val gameName = Image_Label(
             filepath = "textures/Title.png",
             Position = Vector2(12f, 8f),
-            Scale = Vector2(13f, 7f),
+            Scale = Vector2(19f, 5f),
 
         )
         gameName.Create(world)
@@ -100,7 +100,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         val startGameButton = Image_Button(
             filepath = "textures/Start.png",
             Position = Vector2(15f, 4f),
-            Scale = Vector2(6f, 6f),
+            Scale = Vector2(0.8f, 0.8f),
             Action = {
                 changeState(GameState.GAME_STAGE)
             }
@@ -110,7 +110,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         val highScore = Image_Button(
             filepath = "textures/HighScore.png",
             Position = Vector2(15f, 1f),
-            Scale = Vector2(6f,6f),
+            Scale = Vector2(0.8f,0.8f),
             Action = {
                 changeState(GameState.HIGH_SCORE)
             }

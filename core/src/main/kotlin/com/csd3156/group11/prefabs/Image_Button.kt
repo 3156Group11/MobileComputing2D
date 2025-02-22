@@ -28,7 +28,8 @@ public class Image_Button(filepath: String, Position:Vector2, Scale:Vector2, Act
         val region = TextureRegion(texture, texture.width, texture.height)
         val drawable = TextureRegionDrawable(region)
         val button = ImageButton(drawable)
-        button.setSize(Globals.UnitSize * inScale.x, Globals.UnitSize * inScale.y)
+        button.setSize(texture.width * inScale.x,texture.height * inScale.x)
+
         button.addListener(object : ClickListener()
         {
             override fun clicked(event: InputEvent?, x: Float, y: Float) {
