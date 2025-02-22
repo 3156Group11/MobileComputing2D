@@ -27,9 +27,21 @@ class PowerUpComponent : Component() {
     //  Lightning Data  - store multiple Lightning at once
     // ----------------------------------------
     data class LightningEntry(
-        val targetPosition: Vector2
+        val targetPosition: Vector2,
+
+
     )
 
     val lightning = mutableListOf<LightningEntry>()
 
+    // ----------------------------------------
+    //  Slow Field Data  - store multiple slow fields at once
+    // ----------------------------------------
+    data class SlowFieldEntry(
+        val  position: Vector2,
+        val timeLeft: Float,
+        val direction: Vector2
+    )
+
+    val slowFields = mutableListOf<SlowFieldEntry>()
 }

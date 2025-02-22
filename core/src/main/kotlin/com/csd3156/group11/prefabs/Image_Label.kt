@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
@@ -28,6 +29,7 @@ public class Image_Label(filepath: String, Position:Vector2, Scale:Vector2) : Pr
         val region = TextureRegion(texture, texture.width, texture.height)
         val button = Image(region)
         button.setSize(Globals.UnitSize * inScale.x, Globals.UnitSize * inScale.y)
+        button.touchable = Touchable.disabled
         ID = world.create()
         world.edit(ID)
             .add(

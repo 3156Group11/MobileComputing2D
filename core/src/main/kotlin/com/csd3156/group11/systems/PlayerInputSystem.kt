@@ -13,13 +13,28 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     private lateinit var inputMapper: ComponentMapper<PlayerInputComponent>
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
 
-    //  NORMAL (Accelerometer) Mode Variables
-    private val accelerationFactor = 500f // Determines how fast acceleration builds up
-    private val velocityCap = 1000f
+    // NORMAL (Accelerometer) Mode Variables
+    private val accelerationFactor = 2f // Determines how fast acceleration builds up
+    private val velocityCap = 10f
     private val dampingFactor = 0.95f // For deceleration when no input is given
 
-    //  DEBUG MODE (WASD) Variables
+    // DEBUG MODE (WASD) Variables
     private val debugSpeed = 50f // Speed boost for WASD movement
+
+    // Calibration Variables
+    private var calibratedAccelX = 0f
+    private var calibratedAccelY = 0f
+
+    // Player rotation (in degrees)
+    var playerRotation = 0f
+
+    /**
+     * Sets the current accelerometer values as the "flat" reference.
+     */
+    fun calibrate() {
+        calibratedAccelX = Gdx.input.accelerometerX
+        calibratedAccelY = Gdx.input.accelerometerY
+    }
 
     override fun process(entityId: Int) {
         val input = inputMapper[entityId]
@@ -44,37 +59,49 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
             velocity.velocity.set(input.tiltDirection.x * debugSpeed, input.tiltDirection.y * debugSpeed)
 
         } else {
-            //RELEASE MODE: Accelerometer-Based Movement
-            val accelX = Gdx.input.accelerometerX  // Left (-), Right (+) → Controls Y movement
-            val accelY = -Gdx.input.accelerometerY  // Forward (-), Backward (+) → Controls X movement
+            // Get adjusted accelerometer values based on calibration
+            val rawAccelX = Gdx.input.accelerometerX
+            val rawAccelY = Gdx.input.accelerometerY
 
-            // Apply dead zone to filter out small values
+            val accelX = rawAccelX - calibratedAccelX  // Left (-), Right (+) → Controls Y movement
+            val accelY = -(rawAccelY - calibratedAccelY)  // Forward (-), Backward (+) → Controls X movement
+
+            // Apply dead zone to remove noise
             val deadZone = 0.5f
             val adjustedX = if (kotlin.math.abs(accelX) > deadZone) accelX else 0f
             val adjustedY = if (kotlin.math.abs(accelY) > deadZone) accelY else 0f
 
-            // Set tilt direction based on new mapping (invert signs to match movement)
+            // Set tilt direction (inverted signs to match movement)
             input.tiltDirection.set(-adjustedY, -adjustedX)
 
-            // Normalize tilt direction for consistent acceleration
-            if (input.tiltDirection.len() > 1f) {
+            // Normalize tilt direction
+            val tiltMagnitude = input.tiltDirection.len()
+            if (tiltMagnitude > 1f) {
                 input.tiltDirection.nor()
             }
 
-            // Apply acceleration based on tilt direction
-            velocity.acceleration.set(input.tiltDirection.x * accelerationFactor, input.tiltDirection.y * accelerationFactor)
+            // Scale acceleration dynamically based on tilt intensity
+            val dynamicAcceleration = (tiltMagnitude * tiltMagnitude) * accelerationFactor
+
+            // Apply acceleration
+            velocity.acceleration.set(input.tiltDirection.x * dynamicAcceleration, input.tiltDirection.y * dynamicAcceleration)
 
             // Integrate acceleration into velocity
             velocity.velocity.x += velocity.acceleration.x * world.delta
             velocity.velocity.y += velocity.acceleration.y * world.delta
 
-            // Cap velocity to prevent it from exceeding the maximum
+            // Cap velocity to prevent excessive speed
             if (velocity.velocity.len() > velocityCap) {
                 velocity.velocity.nor().scl(velocityCap)
             }
 
-            // Apply damping to velocity for smoother deceleration
+            // Apply damping for smooth deceleration
             velocity.velocity.scl(dampingFactor)
+        }
+        // 🔹 Calculate player rotation based on movement direction
+        if (velocity.velocity.len2() > 0.01f) { // Avoid random rotations when nearly stopped
+            playerRotation = Math.toDegrees(kotlin.math.atan2(velocity.velocity.y, velocity.velocity.x)
+                .toDouble()).toFloat()
         }
     }
 }

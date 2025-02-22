@@ -32,13 +32,16 @@ import com.csd3156.group11.systems.EnemyLineSystem
 import com.csd3156.group11.systems.EnemySpawnerSystem
 import com.csd3156.group11.systems.EnemySystem
 import com.csd3156.group11.systems.FXSystem
+import com.csd3156.group11.systems.LightningSystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
 import com.csd3156.group11.systems.RenderSystem
+import com.csd3156.group11.systems.SlowFieldSystem
 import com.csd3156.group11.systems.SoundSystem
 
 var assetManager:AssetSystem = AssetSystem()
 var soundSystem: SoundSystem = SoundSystem()
+var playerInput: PlayerInputSystem = PlayerInputSystem()
 
 
 fun createCircleTexture(diameter: Int, color: Color = Color.WHITE): TextureRegion {
@@ -75,7 +78,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
         assetManager.loadTexturesFromFolder("textures")
         assetManager.loadSFXFromFolder("audio/sfx")
         assetManager.loadBGMFromFolder("audio/bgm")
-
+        
 
         // Initialize rendering tools
         spriteBatch = SpriteBatch()
@@ -97,6 +100,8 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EnemyManagerSystem(threshold = 20, interval = 2f))
             .with(PhysicsSystem())
             .with(BombSystem())
+            .with(LightningSystem())
+            .with(SlowFieldSystem())
             .with(CollisionSystem())
             .with(FXSystem())
             .with(RenderSystem(spriteBatch, camera))
