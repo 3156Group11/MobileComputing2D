@@ -54,12 +54,13 @@ class EnemySystem : BaseEntitySystem(Aspect.all(EnemyComponent::class.java, Enem
             // Handle dying state.
             else if (enemy.isDying) {
                 enemy.DyingTime -= world.delta
+                enemy.isLive = false
+                val inScale = (((enemy.DyingTime))/2) * 0.75f
+                transform.scale = Vector2(inScale,inScale)
+                velocity.velocity = Vector2(0f,0f)
                 if (enemy.DyingTime < 0) {
-                    enemy.isDying = false
-                    enemy.isLive = false
+                    entitiesToDelete.add(entity)
                 }
-
-                entitiesToDelete.add(entity)
                 continue
             }
             else {
@@ -118,6 +119,10 @@ class EnemyLineSystem : BaseEntitySystem(
                 continue
             } else if (enemy.isDying) {
                 enemy.DyingTime -= world.delta
+                enemy.isLive = false
+                velocity.velocity = Vector2(0f,0f)
+                val inScale = (((enemy.DyingTime))/2) * 0.75f
+                transform.scale = Vector2(inScale,inScale)
                 if (enemy.DyingTime < 0) {
                     entitiesToDelete.add(entity)
                 }
@@ -127,14 +132,6 @@ class EnemyLineSystem : BaseEntitySystem(
             // Check if it has reached (or passed) the opposite side.
             else {
                 // Check collision with player.
-                if (playerPos != null) {
-                    val collisionThreshold = 1f
-                    if (transform.position.dst(playerPos) < collisionThreshold) {
-                        enemy.isDying = true
-                        enemy.isLive = false
-                        continue
-                    }
-                }
                 when (line.spawnEdge) {
                     0 -> { // Spawned on left; moving right. If x > screenWidth, mark as dying.
                         if (transform.position.x > screenWidth) {
