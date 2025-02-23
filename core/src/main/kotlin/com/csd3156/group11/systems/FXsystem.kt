@@ -29,11 +29,14 @@ class FXSystem : BaseEntitySystem(Aspect.all(FXComponent::class.java, TransformC
             }
 
 
-            // For shield FX, update its position to follow the player
             if (fxComp.fxType == PowerUpType.SHIELD && fxComp.followEntityId != -1) {
                 val playerTransform = transformMapper.get(fxComp.followEntityId)
                 if (playerTransform != null) {
-                    fxTransform.position.set(playerTransform.position)
+                    // Center FX around player
+                    fxTransform.position.set(
+                        playerTransform.position.x - fxTransform.scale.x / 2f,
+                        playerTransform.position.y - fxTransform.scale.y / 2f
+                    )
                 }
             }
             // For bomb FX, no need to follow; it stays at the detonation location.

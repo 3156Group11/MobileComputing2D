@@ -58,7 +58,6 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
     }
 
     private fun handleCollision(entityA: Int, entityB: Int) {
-
         // Player and Powerup
         // 1) Grab each entity's tag (default to NONE if TagComponent is missing)
         val tagA = world.getEntity(entityA).getComponent(TagComponent::class.java)?.tag ?: Tag.NONE
@@ -158,15 +157,28 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
 
                 PowerUpType.BOMB -> {
                     println("Player picked up BOMB powerup!")
-                    // Get the bomb pickup's position; that's where the bomb will detonate
-                    val bombTransform = world.getEntity(powerUpEntityId)
-                        .getComponent(TransformComponent::class.java)
+
+                    val bombTransform = world.getEntity(powerUpEntityId).getComponent(TransformComponent::class.java)
                     val bombPickupPos = bombTransform.position.cpy()
-                    // Remove the bomb pickup entity
-                    world.delete(powerUpEntityId)
-                    // Create the BombFX entity at the pickup location
-                    val bombFX = BombFX(bombPickupPos)
+                    val bombRadius = 5f  // Set to 10 units
+
+                    // Ensure adding bomb to player's PowerUpComponent
+                    val playerPowerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
+
+                    playerPowerUpComp.bombs.add(
+                        PowerUpComponent.BombEntry(
+                            center = bombPickupPos,
+                            timeLeft = 3f,
+                            radius = bombRadius
+                        )
+                    )
+
+                    // Trigger FX
+                    val bombFX = BombFX(bombPickupPos, bombRadius)
                     bombFX.Create(world)
+
+                    // Delete power-up entity after pickup
+                    world.delete(powerUpEntityId)
                 }
 
                 PowerUpType.LIGHTNING -> {

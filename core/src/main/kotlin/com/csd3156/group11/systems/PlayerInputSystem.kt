@@ -20,7 +20,7 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     private val dampingFactor = 0.95f // For deceleration when no input is given
 
     // DEBUG MODE (WASD) Variables
-    private val debugSpeed = 50f // Speed boost for WASD movement
+    private val debugSpeed = 10f // Speed boost for WASD movement
 
     // Calibration Variables
     private var calibratedAccelX = 0f

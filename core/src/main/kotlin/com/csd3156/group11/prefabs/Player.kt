@@ -30,6 +30,7 @@ public class Player : Prefab()
             .add(SpriteComponent("textures/Player.png", RenderLayers.Player))
             .add(PlayerInputComponent())
             .add(TagComponent(Tag.PLAYER))
+            .add(PowerUpComponent())
         return ID
     }
 }
