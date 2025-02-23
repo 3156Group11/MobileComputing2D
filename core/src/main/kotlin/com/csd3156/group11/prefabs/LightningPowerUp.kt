@@ -10,30 +10,31 @@ import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
 class LightningPowerUp : Prefab() {
-    override fun Create(world: World):Int {
+    override fun Create(world: World): Int {
         ID = world.create()
 
         // Calculate screen width and height based on aspect ratio
         val screenWidth = 35f
         val screenHeight = 35f * Globals.scrHeight / Globals.scrWidth
 
-        // Random spawn position within screen bounds with padding
+        // Random spawn position within screen bounds
         val randomX = MathUtils.random(2f, screenWidth - 2f)
         val randomY = MathUtils.random(2f, screenHeight - 2f)
         val spawnPosition = Vector2(randomX, randomY)
 
+        // Spawn the power-up without triggering any effects yet
         world.edit(ID)
             .add(TransformComponent(
-                position = spawnPosition, // Use normalized screen space
-                scale = Vector2(1.5f, 1.5f)  // Consistent scale with other power-ups
+                position = spawnPosition,
+                scale = Vector2(1.5f, 1.5f)
             ))
-            .add(ColliderComponent(radius = 1f))  // Consistent collider radius
+            .add(ColliderComponent(radius = 1f))
             .add(SpriteComponent("textures/Lightning.png", RenderLayers.Powerup))
             .add(PowerUpComponent().apply { type = PowerUpType.LIGHTNING })
-            .add(VelocityComponent(Vector2(MathUtils.random(-5f, 5f), MathUtils.random(-5f, 5f))))  // Small random movement
+            .add(VelocityComponent(Vector2(MathUtils.random(-5f, 5f), MathUtils.random(-5f, 5f))))
             .add(TagComponent(Tag.POWERUP))
 
-        println("LightningPowerUp created with ID: $ID at position: $spawnPosition")
+        println("⚡ LightningPowerUp spawned with ID: $ID at position: $spawnPosition")
         return ID
     }
 }

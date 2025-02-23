@@ -35,11 +35,11 @@ class BombSystem : BaseEntitySystem(
 
                 if (bomb.timeLeft <= 0f) {
                     bombsToRemove.add(bomb)
-                    println("Bomb expired at position: ${bomb.center}")
+                    //println("Bomb expired at position: ${bomb.center}")
                     continue
                 }
 
-                println("Active Bomb at ${bomb.center} with radius ${bomb.radius}")
+                //println("Active Bomb at ${bomb.center} with radius ${bomb.radius}")
 
                 for (j in 0 until enemyEntities.size()) {
                     val enemyId = enemyEntities[j]
@@ -47,13 +47,13 @@ class BombSystem : BaseEntitySystem(
                     val enemyComponent = enemyMapper.get(enemyId)
                     val enemyTag = tagMapper.get(enemyId)
 
-                    // ✅ Debug enemy tag
-                    println("Checking Enemy $enemyId - Tag: ${enemyTag.tag}")
+                    // Debug enemy tag
+                    //println("Checking Enemy $enemyId - Tag: ${enemyTag.tag}")
 
                     if (enemyTag.tag != Tag.ENEMY) continue
 
-                    // ✅ Debug position values
-                    println("Enemy $enemyId position: ${enemyTransform.position}")
+                    // Debug position values
+                    //println("Enemy $enemyId position: ${enemyTransform.position}")
 
                     val distance = Vector2.dst(
                         bomb.center.x, bomb.center.y,
@@ -67,7 +67,7 @@ class BombSystem : BaseEntitySystem(
                             enemyComponent.isDying = true
                             //enemyComponent.DyingTime = 0f // Instant kill
                             //world.delete(enemyId) // Directly remove the enemy
-                            println("Enemy $enemyId killed by bomb!")
+                            //println("Enemy $enemyId killed by bomb!")
                         }
                     }
                 }

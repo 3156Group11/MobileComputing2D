@@ -27,10 +27,11 @@ class LightningSystem : BaseEntitySystem(
             val entityId = entities[i]
             val powerUpComp = powerUpMapper[entityId]
 
-            if (powerUpComp.type == PowerUpType.LIGHTNING ) {
+            // Only process if lightning strikes are queued
+            if (powerUpComp.lightning.isNotEmpty()) {
                 val playerPosition = transformMapper.get(entityId).position
                 strikeNearestEnemies(playerPosition, maxStrikes, powerUpComp)
-                powerUpComp.type = PowerUpType.NONE  // Reset power-up state
+                powerUpComp.lightning.clear()  // Clear the lightning queue after striking
             }
         }
     }
@@ -40,34 +41,37 @@ class LightningSystem : BaseEntitySystem(
         strikesLeft: Int,
         powerUpComp: PowerUpComponent
     ) {
-        // Fetch all enemies with required components
         val enemies = world.aspectSubscriptionManager.get(
             Aspect.all(EnemyComponent::class.java, TransformComponent::class.java)
         ).entities
 
-        // Sort enemies by distance from the origin using IntBag access
         val sortedEnemies = (0 until enemies.size())
-            .map { enemies[it] }  // Get each enemy entity ID
+            .map { enemies[it] }
             .sortedBy { enemyId ->
                 val enemyTransform = transformMapper.get(enemyId)
                 enemyTransform?.position?.dst(origin) ?: Float.MAX_VALUE
             }
 
-        // Strike up to 3 enemies within range
         var strikes = 0
         for (i in 0 until sortedEnemies.size) {
             val enemyId = sortedEnemies[i]
             val enemyTransform = transformMapper.get(enemyId)
+            val enemyComponent = enemyMapper.get(enemyId)
 
-            if (enemyTransform != null) {
+            if (enemyTransform != null && enemyComponent != null) {
                 val enemyPosition = enemyTransform.position
                 val distance = origin.dst(enemyPosition)
 
                 if (distance <= lightningRange) {
-                    println("Striking enemy ID: $enemyId at distance: $distance")
-                    world.delete(enemyId)  // Remove the enemy
+                    //println("Striking enemy ID: $enemyId at distance: $distance")
 
-                    // Create visual FX for the strike
+                    // Instead of deleting, set the enemy to dying state
+                    if (!enemyComponent.isDying) {
+                        enemyComponent.isDying = true
+                        //println("Enemy $enemyId marked as dying from lightning strike")
+                    }
+
+                    // Create Lightning FX at the enemy position
                     val lightningFX = LightningFX(enemyPosition)
                     lightningFX.Create(world)
 
@@ -78,4 +82,3 @@ class LightningSystem : BaseEntitySystem(
         }
     }
 }
-

@@ -132,17 +132,18 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
 
                 PowerUpType.LIGHTNING -> {
                     println("Player picked up LIGHTNING powerup!")
-                    // Remove the collectible from the world
+
+                    // Remove the power-up entity from the world
                     world.delete(powerUpEntityId)
 
-                    // Get the position where the pickup occurred
-                    val lightningTransform = world.getEntity(powerUpEntityId)
-                        .getComponent(TransformComponent::class.java)
-                    val lightningPickupPos = lightningTransform.position.cpy()
+                    // Add LightningEntry to the player's PowerUpComponent to trigger the effect
+                    val playerPowerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
+                    val playerTransform = world.getEntity(playerEntityId).getComponent(TransformComponent::class.java)
 
-                    // Trigger LightningFX and strikes instantly
-                    val lightningFX = LightningFX(lightningPickupPos)
-                    lightningFX.Create(world)
+                    val lightningStrike = PowerUpComponent.LightningEntry(
+                        targetPosition = playerTransform.position.cpy()  // Player's current position
+                    )
+                    playerPowerUpComp.lightning.add(lightningStrike)
                 }
 
                 PowerUpType.SLOW_FIELD -> {
