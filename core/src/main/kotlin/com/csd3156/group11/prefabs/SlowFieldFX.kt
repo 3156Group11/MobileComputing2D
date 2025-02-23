@@ -7,7 +7,7 @@ import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.RenderLayers
 
 class SlowFieldFX(private val startPosition: Vector2, private val direction: Vector2) : Prefab() {
-    override fun Create(world: World) {
+    override fun Create(world: World):Int {
         ID = world.create()
         world.edit(ID)
             .add(TransformComponent(
@@ -23,5 +23,6 @@ class SlowFieldFX(private val startPosition: Vector2, private val direction: Vec
             .add(ColliderComponent(radius = 5f))  // Collision detection
 
         println("SlowFieldFX created at position: $startPosition, moving in direction: $direction")
+        return ID
     }
 }

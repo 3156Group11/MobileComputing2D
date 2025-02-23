@@ -11,6 +11,7 @@ object Globals {
     public var StartingTimer = 0f
     public var deathScreen = false
     public var deathScreenInit = false
+    public var isPausing = false
 
     public fun ScreenToWorld(inVec : Vector2): Vector2 {
         return Vector2(inVec.x/scrWidth * 35,inVec.y/scrWidth * 35)

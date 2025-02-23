@@ -5,5 +5,6 @@ enum class Tag {
     ENEMY,
     POWERUP,
     START_TIME,
+    PAUSE_UI,
     NONE
 }

@@ -23,7 +23,7 @@ public class Image_Label(filepath: String, Position:Vector2, Scale:Vector2) : Pr
     var inPos : Vector2 = Position
     var inScale : Vector2 = Scale
 
-    public override fun Create(world: World)
+    public override fun Create(world: World): Int
     {
         val texture = assetManager.system().get(inFilepath, Texture::class.java)
         val region = TextureRegion(texture, texture.width, texture.height)
@@ -39,5 +39,6 @@ public class Image_Label(filepath: String, Position:Vector2, Scale:Vector2) : Pr
                 )
             )
             .add(UIComponent(button))
+        return ID
     }
 }

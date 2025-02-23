@@ -10,7 +10,7 @@ import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
 class SlowFieldPowerUp : Prefab() {
-    override fun Create(world: World) {
+    override fun Create(world: World):Int {
         ID = world.create()
 
         // Screen-normalized spawn dimensions
@@ -34,5 +34,6 @@ class SlowFieldPowerUp : Prefab() {
             .add(TagComponent(Tag.POWERUP))
 
         println("SlowFieldPowerUp created with ID: $ID at position: $spawnPosition")
+        return ID
     }
 }

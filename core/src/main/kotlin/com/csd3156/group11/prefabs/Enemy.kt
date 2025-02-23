@@ -19,7 +19,7 @@ open class Enemy : Prefab()
 {
     lateinit var transform: TransformComponent
     lateinit var velocity: VelocityComponent
-    open override fun Create(world: World)
+    open override fun Create(world: World): Int
     {
         ID = world.create()
         //println("Enemy Created! Entity ID: $ID")
@@ -36,24 +36,27 @@ open class Enemy : Prefab()
         world.edit(ID).add(SpriteComponent("textures/Enemy.png", RenderLayers.Enemy))
         world.edit(ID).add(EnemyComponent())
         world.edit(ID).add(TagComponent(Tag.ENEMY))
+        return ID
     }
 }
 
 class EnemyBasic : Enemy() {
-    override fun Create(world: World) {
+    override fun Create(world: World): Int {
         // Call the base enemy creation code
         super.Create(world)
 
         transform.position.set(MathUtils.random(0f, 35f), MathUtils.random(0f, 35 * Globals.scrHeight / Globals.scrWidth))
 
         world.edit(ID).add(EnemyBasicComponent())
+        return ID
     }
 }
 
 class EnemyLine : Enemy() {
-    override fun Create(world: World) {
+    override fun Create(world: World):Int {
         super.Create(world)
 
         world.edit(ID).add(EnemyLineComponent())
+        return ID
     }
 }

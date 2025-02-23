@@ -44,6 +44,12 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private var pendingState: GameState? = null
     private var initialized = false
+    private var pauseScreenCreated = false
+    private var isResuming = false
+    private val pauseEntities = mutableListOf<Int>()
+    private val highScores: MutableList<Int> = mutableListOf()
+    private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
+
     fun changeState(newState: GameState) {
         if (newState != currentState) {
             println("Changing state to: $newState")
@@ -68,24 +74,35 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             enterState(currentState)
         }
 
+        if (Globals.currentState == GameState.GAME_STAGE && !Globals.isPausing && !isResuming) {
+            if (Gdx.input.justTouched()) {
+                Globals.isPausing = true
+                if (!pauseScreenCreated) {
+                    createPauseScreenEntities()
+                    pauseScreenCreated = true
+                }
+            }
+        }
 
-        if (Globals.currentState == GameState.GAME_STAGE)
-        {
-            if (Globals.deathScreen && Globals.deathScreenInit)
-            {
-                // Generate death scren UI once
+        if (Globals.isPausing && !isResuming) {
+            return
+        }
+
+        if (Globals.currentState == GameState.GAME_STAGE) {
+            if (Globals.deathScreen && Globals.deathScreenInit) {
+                // Generate death screen UI once
                 val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
                 val GameOverLabel = Text_Label(
                     "Game Over!",
                     LabelStyle(font, Color.WHITE),
                     Position = Vector2(17.5f,6f),
-                    Scale = Vector2(1f,1f) )
+                    Scale = Vector2(1f,1f)
+                )
                 GameOverLabel.Create(world)
                 Globals.deathScreenInit = false
             }
         }
     }
-
 
     private fun enterState(state: GameState) {
         when (state) {
@@ -228,16 +245,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         spawnSlowFieldButton.Create(world)
 
-        val pauseButton = Image_Button(
-            filepath = "textures/Pause.png",
-            Position = Vector2(33f, 0.5f),
-            Scale = Vector2(0.8f,0.8f),
-            Action = {
-
-            }
-        )
-        pauseButton.Create(world)
-
         //to save score into highScore, create variable to store score
         //on game end, call onGameEnd(variable)
 
@@ -256,7 +263,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         Globals.StartingTimer = 3f
 
         val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
-        val inStyle = LabelStyle(font, Color.WHITE, )
+        val inStyle = LabelStyle(font, Color.WHITE)
         inStyle.font.data.setScale(3f, 3f)
         val label = Label("3", inStyle)
         val startTimerID = world.create()
@@ -288,7 +295,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         for (i in highScores.indices) {
             val scoreLabel = Text_Label(
-                "${i + 1}. ${highScores[i]}", Label.LabelStyle(BitmapFont(), Color.YELLOW),
+                "${i + 1}. ${highScores[i]}", LabelStyle(BitmapFont(), Color.YELLOW),
                 Position = Vector2(16f, 10f-i), //spacing of scores
                 Scale = Vector2(5f, 5f)
             )
@@ -313,7 +320,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Scale = Vector2(0.6f,0.8f),
             Action = {
                 clearHighScores()
-                removeExistingUI()
+                removeExistingScore()
                 createHighScoreEntities()
             }
         )
@@ -331,8 +338,89 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
     }
 
-    private val highScores: MutableList<Int> = mutableListOf()
-    private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
+    private fun createPauseScreenEntities() {
+        if (pauseScreenCreated) return
+
+        pauseEntities.clear()
+
+        val overlay = Image_Label(
+            filepath = "textures/Overlay.png",
+            Position = Vector2(0f, 0f),
+            Scale = Vector2(35f, 15f)
+        )
+        pauseEntities.add(overlay.Create(world)) // Store the entity ID
+
+        val resumeButton = Image_Button(
+            filepath = "textures/Resume.png",
+            Position = Vector2(15f, 7.5f),
+            Scale = Vector2(0.8f, 0.8f),
+            Action = {
+                removePauseScreenEntities() // Properly remove all pause entities
+                isResuming = true
+                startResumeCountdown()
+            }
+        )
+        pauseEntities.add(resumeButton.Create(world))
+
+        val quitButton = Image_Button(
+            filepath = "textures/Quit.png",
+            Position = Vector2(15f, 4.5f),
+            Scale = Vector2(0.8f, 0.8f),
+            Action = {
+                Globals.isPausing = false
+                pauseScreenCreated = false
+                changeState(GameState.MAIN_MENU)
+            }
+        )
+        pauseEntities.add(quitButton.Create(world))
+        pauseScreenCreated = true
+    }
+
+    private fun removePauseScreenEntities() {
+        for (entity in pauseEntities) {
+            if (entity != -1 && world.getEntity(entity) != null) {
+                world.delete(entity)
+            }
+        }
+        world.process() // Force immediate deletion
+
+        pauseEntities.clear() // Clear stored entity IDs
+        pauseScreenCreated = false // Allow UI to be created again next time
+    }
+
+    private fun startResumeCountdown() {
+        var countdownTime = 3
+        val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
+        val style = LabelStyle(font, Color.WHITE)
+        style.font.data.setScale(5f, 5f)
+        val countdownLabel = Label(countdownTime.toString(), style)
+        val countdownEntity = world.create()
+        world.edit(countdownEntity)
+            .add(
+                TransformComponent(
+                    position = Vector2(17.5f, 6f),
+                    scale = Vector2(10f, 10f)
+                )
+            )
+            .add(UIComponent(countdownLabel))
+            .add(TagComponent(Tag.START_TIME))
+
+        com.badlogic.gdx.utils.Timer.schedule(object : com.badlogic.gdx.utils.Timer.Task() {
+            override fun run() {
+                countdownTime--
+                if (countdownTime > 0) {
+                    countdownLabel.setText(countdownTime.toString())
+                } else {
+                    world.delete(countdownEntity)
+                    world.process()
+                    // Clear both flags so the game resumes normally
+                    Globals.isPausing = false
+                    isResuming = false
+                    cancel()
+                }
+            }
+        }, 1f, 1f)
+    }
 
     private fun addScore(newScore: Int) {
         highScores.add(newScore)
@@ -369,7 +457,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         prefs.flush() // Save changes to persist clearing
     }
 
-    private fun removeExistingUI() {
+    private fun removeExistingScore() {
         val entities = subscription.entities
         for (i in 0 until entities.size()) {
             world.delete(entities[i]) // Delete all UI elements

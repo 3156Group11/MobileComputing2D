@@ -15,7 +15,7 @@ public class Text_Label(Text: String, Style: LabelStyle, Position:Vector2, Scale
     var inPos : Vector2 = Position
     var inScale : Vector2 = Scale
 
-    public override fun Create(world: World) {
+    public override fun Create(world: World):Int {
         inStyle.font.data.setScale(inScale.x, inScale.y)
         val label = Label(inText, inStyle)
         ID = world.create()
@@ -28,5 +28,6 @@ public class Text_Label(Text: String, Style: LabelStyle, Position:Vector2, Scale
             )
             )
             .add(UIComponent(label))
+        return ID
     }
 }

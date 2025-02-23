@@ -25,6 +25,7 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
         if (Globals.IsStarting) return
         if (Globals.currentState != GameState.GAME_STAGE) return
         if (Globals.deathScreen) return
+        if (Globals.isPausing) return
 
         val entities = subscription.entities
 

@@ -10,7 +10,7 @@ import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
 class BombPowerUp : Prefab() {
-    override fun Create(world: World) {
+    override fun Create(world: World): Int {
         ID = world.create()
 
         // Calculate screen width and height using aspect ratio
@@ -35,5 +35,6 @@ class BombPowerUp : Prefab() {
             .add(TagComponent(Tag.POWERUP))
 
         println("BombPowerUp created with ID: $ID at position: $spawnPosition")
+        return ID
     }
 }

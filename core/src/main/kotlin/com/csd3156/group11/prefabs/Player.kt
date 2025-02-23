@@ -15,7 +15,7 @@ import com.csd3156.group11.enums.Tag
 
 public class Player : Prefab()
 {
-    public override fun Create(world: World)
+    public override fun Create(world: World):Int
     {
         // Default values
         ID = world.create()
@@ -30,5 +30,6 @@ public class Player : Prefab()
             .add(SpriteComponent("textures/Player.png", RenderLayers.Player))
             .add(PlayerInputComponent())
             .add(TagComponent(Tag.PLAYER))
+        return ID
     }
 }

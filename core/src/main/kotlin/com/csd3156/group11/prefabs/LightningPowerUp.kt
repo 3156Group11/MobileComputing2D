@@ -10,7 +10,7 @@ import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
 class LightningPowerUp : Prefab() {
-    override fun Create(world: World) {
+    override fun Create(world: World):Int {
         ID = world.create()
 
         // Calculate screen width and height based on aspect ratio
@@ -34,5 +34,6 @@ class LightningPowerUp : Prefab() {
             .add(TagComponent(Tag.POWERUP))
 
         println("LightningPowerUp created with ID: $ID at position: $spawnPosition")
+        return ID
     }
 }

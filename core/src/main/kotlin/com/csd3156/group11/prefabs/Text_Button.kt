@@ -17,7 +17,7 @@ public class Text_Button(Text: String, Style: TextButton.TextButtonStyle, Positi
     var inScale : Vector2 = Scale
     var inAction : ()->Unit = Action
 
-    public override fun Create(world: World)
+    public override fun Create(world: World):Int
     {
         inStyle.font.data.setScale(inScale.x, inScale.y)
         val button = TextButton(inText, inStyle)
@@ -39,5 +39,6 @@ public class Text_Button(Text: String, Style: TextButton.TextButtonStyle, Positi
                 )
             )
             .add(UIComponent(button))
+        return ID
     }
 }

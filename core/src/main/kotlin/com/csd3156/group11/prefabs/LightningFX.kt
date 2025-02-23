@@ -7,7 +7,7 @@ import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.RenderLayers
 
 class LightningFX(private val strikePosition: Vector2) : Prefab() {
-    override fun Create(world: World) {
+    override fun Create(world: World):Int {
         ID = world.create()
         world.edit(ID)
             .add(TransformComponent(
@@ -21,5 +21,6 @@ class LightningFX(private val strikePosition: Vector2) : Prefab() {
             })
 
         println("LightningFX created with ID: $ID at position $strikePosition")
+        return ID
     }
 }

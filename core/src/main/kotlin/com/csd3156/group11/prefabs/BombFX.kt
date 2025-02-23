@@ -7,7 +7,7 @@ import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.RenderLayers
 
 class BombFX(private val detonationPos: Vector2) : Prefab() {
-    override fun Create(world: World) {
+    override fun Create(world: World): Int {
         ID = world.create()
         world.edit(ID)
             .add(TransformComponent(
@@ -23,5 +23,6 @@ class BombFX(private val detonationPos: Vector2) : Prefab() {
 
 
         println("BombFX created with ID: $ID at position $detonationPos")
+        return ID
     }
 }

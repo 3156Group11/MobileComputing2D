@@ -7,7 +7,7 @@ import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.RenderLayers
 
 class ShieldFX(private val followId: Int) : Prefab() {
-    override fun Create(world: World) {
+    override fun Create(world: World):Int {
         ID = world.create()
         world.edit(ID)
             .add(TransformComponent(
@@ -21,5 +21,6 @@ class ShieldFX(private val followId: Int) : Prefab() {
             })
 
         println("ShieldFX created with ID: $ID following entity $followId")
+        return ID
     }
 }
