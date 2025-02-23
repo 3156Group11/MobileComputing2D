@@ -136,6 +136,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 isDeathScreenCreated = true // Set flag to prevent multiple creation
                 Globals.deathScreenInit = false // Reset init flag
 
+                soundSystem.stopBGM()
+                soundSystem.playSFX("audio/sfx/fx_Player_Death.wav")
+
                 val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
 
                 // 🔹 Calculate Final Score
@@ -181,6 +184,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                     Position = Vector2(15f, 5f),
                     Scale = Vector2(0.8f, 0.8f),
                     Action = {
+                        soundSystem.playSFX("audio/sfx/fx_Button_DefaultSelection.wav")
                         removeDeathScreenEntities()
                         removePauseScreenEntities()
                         world.process()
@@ -213,6 +217,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
                 removeDeathScreenEntities()
                 createGameEntities()
+                soundSystem.resetDeathSFXFlag()
                 soundSystem.playBGM("audio/bgm/bgm_level.wav")
             }
             GameState.HIGH_SCORE -> createHighScoreEntities()
@@ -477,7 +482,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     private fun createPauseScreenEntities() {
         if (pauseScreenCreated) return
-
+        soundSystem.playSFX("audio/sfx/fx_Button_PauseGame.wav")
         pauseEntities.clear()
 
         val overlay = Image_Label(
@@ -492,6 +497,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(15f, 7.5f),
             Scale = Vector2(0.8f, 0.8f),
             Action = {
+                soundSystem.playSFX("audio/sfx/fx_Button_UnpauseGame.wav")
                 removePauseScreenEntities() // Properly remove all pause entities
                 isResuming = true
                 startResumeCountdown()
@@ -504,6 +510,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(15f, 4.5f),
             Scale = Vector2(0.8f, 0.8f),
             Action = {
+                soundSystem.playSFX("audio/sfx/fx_Button_GoBack.wav")
                 Globals.isPausing = false
                 pauseScreenCreated = false
                 changeState(GameState.MAIN_MENU)

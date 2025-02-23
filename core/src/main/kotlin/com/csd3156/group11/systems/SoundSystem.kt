@@ -9,6 +9,7 @@ class SoundSystem : BaseSystem() {
 
     private var currentBGM: Music? = null // store a reference to the currently playing BGM
     private var currentBGMFilePath: String? = null // Store the current file path bgm asset
+    private var hasPlayedDeathSFX = false
 
     fun playBGM(filePath: String, loop: Boolean = true, volume: Float = 1.0f) {
         // Check to see if BGM file is withn the assetManager
@@ -46,8 +47,22 @@ class SoundSystem : BaseSystem() {
             return
         }
 
+        if (filePath.contains("audio/sfx/fx_Player_Death.wav") && hasPlayedDeathSFX) {
+            println("🔄 Player death SFX already played, skipping...")
+            return
+        }
+
         val sfx = assetManager.system().get(filePath, Sound::class.java)
         sfx.play(volume)
+
+        // ✅ Mark death sound as played
+        if (filePath.contains("audio/sfx/fx_Player_Death.wav")) {
+            hasPlayedDeathSFX = true
+        }
+    }
+
+    fun resetDeathSFXFlag() {
+        hasPlayedDeathSFX = false // ✅ Call this when restarting the game
     }
 
     fun setBGMVolume(volume: Float) {

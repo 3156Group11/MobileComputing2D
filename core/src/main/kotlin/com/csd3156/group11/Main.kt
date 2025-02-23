@@ -89,7 +89,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
 
         //True for WASD
         //False for Tilt
-        val isDebugMode = false
+        val isDebugMode = true
         val particleTexture = createCircleTexture(360)
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()
