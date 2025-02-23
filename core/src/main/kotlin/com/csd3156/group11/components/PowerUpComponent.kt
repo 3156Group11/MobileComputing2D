@@ -46,4 +46,16 @@ class PowerUpComponent : Component() {
     )
 
     val slowFields = mutableListOf<SlowFieldEntry>()
+
+    // ----------------------------------------
+    //  LASER DATA - store multiple lasers at once
+    // ----------------------------------------
+    data class LaserEntry(
+        val startPosition: Vector2,  // Starting position of the laser (player's position)
+        val direction: Vector2,     // Direction of the laser beam
+        var timeLeft: Float,         // Duration the laser remains active
+        val length: Float,           // Length of the laser beam
+        val damage: Float            // Damage dealt to enemies
+    )
+    val lasers = mutableListOf<LaserEntry>() // List to store active lasers
 }

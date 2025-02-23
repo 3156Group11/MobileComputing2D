@@ -182,6 +182,28 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     println("Spawned two slow fields with visual FX from position: $playerPos")
                 }
 
+                PowerUpType.LASER_3X -> {
+                    println("Player picked up LASER powerup!")
+
+                    val playerTransform = world.getEntity(playerEntityId).getComponent(TransformComponent::class.java)
+                    val playerPowerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
+
+                    val laserEntry = PowerUpComponent.LaserEntry(
+                        startPosition = playerTransform.position.cpy(),
+                        direction = Vector2(1f, 0f), // Default forward direction
+                        timeLeft = 3f,
+                        length = 10f,
+                        damage = 10f
+                    )
+
+                    playerPowerUpComp.lasers.add(laserEntry)
+
+                    // Debugging print to confirm storage
+                    println("Laser stored in PowerUpComponent: Start=${laserEntry.startPosition}, Dir=${laserEntry.direction}")
+
+                    world.delete(powerUpEntityId)
+                }
+
                 else -> {
                     // Handle other powerups if needed
                 }

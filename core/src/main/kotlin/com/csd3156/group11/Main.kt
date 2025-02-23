@@ -32,6 +32,7 @@ import com.csd3156.group11.systems.EnemyLineSystem
 import com.csd3156.group11.systems.EnemySpawnerSystem
 import com.csd3156.group11.systems.EnemySystem
 import com.csd3156.group11.systems.FXSystem
+import com.csd3156.group11.systems.LaserSystem
 import com.csd3156.group11.systems.LightningSystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
@@ -105,6 +106,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(ShieldSystem())
             .with(LightningSystem())
             .with(SlowFieldSystem())
+            .with(LaserSystem())
             .with(CollisionSystem())
             .with(FXSystem())
             .with(RenderSystem(spriteBatch, camera))

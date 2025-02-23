@@ -4,6 +4,7 @@ enum class Tag {
     PLAYER,
     ENEMY,
     POWERUP,
+    LASER_BEAM,
     START_TIME,
     PAUSE_UI,
     NONE

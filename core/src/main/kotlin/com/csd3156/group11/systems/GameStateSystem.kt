@@ -27,6 +27,7 @@ import com.csd3156.group11.prefabs.ShieldPowerUp
 import com.csd3156.group11.prefabs.BombPowerUp
 import com.csd3156.group11.prefabs.LightningPowerUp
 import com.csd3156.group11.prefabs.SlowFieldPowerUp
+import com.csd3156.group11.prefabs.LaserPowerUp
 import com.csd3156.group11.prefabs.Image_Button
 import com.csd3156.group11.prefabs.Image_Label
 import com.csd3156.group11.prefabs.Text_Button
@@ -244,6 +245,21 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             }
         )
         spawnSlowFieldButton.Create(world)
+
+        // -----------------------------
+        // Laser Bomb Button
+        // -----------------------------
+        val spawnLaserButton = Text_Button(
+            "Spawn Laser",
+            TextButton.TextButtonStyle().apply { font = BitmapFont() },
+            Position = Vector2(8f, 8f),
+            Scale = Vector2(3f, 3f),
+            Action = {
+                val laserPowerUp = LaserPowerUp()
+                laserPowerUp.Create(world)
+            }
+        )
+        spawnLaserButton.Create(world)
 
         //to save score into highScore, create variable to store score
         //on game end, call onGameEnd(variable)
