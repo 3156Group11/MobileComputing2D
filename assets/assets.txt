@@ -23,6 +23,8 @@ textures/Back.png
 textures/Background.png
 textures/BackgroundBorder.png
 textures/Bomb.png
+textures/Calibration.png
+textures/Calibration_ Down.png
 textures/Circle.png
 textures/Clear.png
 textures/Enemy.png
@@ -31,6 +33,7 @@ textures/HighScore_Overlay.png
 textures/Laser.png
 textures/LaserBullet.png
 textures/Lightning.png
+textures/MainMenu.png
 textures/Overlay.png
 textures/Pause.png
 textures/Player.png

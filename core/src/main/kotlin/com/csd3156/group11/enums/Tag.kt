@@ -6,6 +6,6 @@ enum class Tag {
     POWERUP,
     LASER_BEAM,
     START_TIME,
-    PAUSE_UI,
+    SCORE_UI,
     NONE
 }

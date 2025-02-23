@@ -9,9 +9,12 @@ object Globals {
     public var UnitSize : Float = 0f // Initialised at runtime
     public var IsStarting = false
     public var StartingTimer = 0f
-    public var deathScreen = false
-    public var deathScreenInit = false
-    public var isPausing = false
+    public var deathScreen: Boolean = false
+    public var deathScreenInit: Boolean = false
+    public var isPausing: Boolean = false
+    public var timeElapsed: Float = 0f
+    public var enemiesKilled: Int = 0
+    public var highScoreSaved: Boolean = false
 
     public fun ScreenToWorld(inVec : Vector2): Vector2 {
         return Vector2(inVec.x/scrWidth * 35,inVec.y/scrWidth * 35)

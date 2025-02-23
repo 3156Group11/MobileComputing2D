@@ -28,6 +28,20 @@ class EnemyManagerSystem(
         // Query for active enemy entities.
         val enemyEntities: IntBag =
             world.aspectSubscriptionManager.get(Aspect.all(EnemyComponent::class.java)).entities
+
+        val enemyMapper = world.getMapper(EnemyComponent::class.java)
+
+        // 🔹 Track enemy kills before deletion
+        for (i in 0 until enemyEntities.size()) {
+            val enemyId = enemyEntities[i]
+            val enemy = enemyMapper.get(enemyId)
+
+            if (enemy.isDying) { // If enemy is in dying state before deletion
+                Globals.enemiesKilled++ // ✅ Increase enemy kill count
+                world.delete(enemyId) // ✅ Remove enemy from world
+            }
+        }
+
         val playerEntities = world.aspectSubscriptionManager
             .get(
                 Aspect.all(

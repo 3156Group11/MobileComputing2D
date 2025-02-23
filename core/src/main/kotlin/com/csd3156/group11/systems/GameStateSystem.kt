@@ -48,8 +48,10 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
     private var pauseScreenCreated = false
     private var isResuming = false
     private val pauseEntities = mutableListOf<Int>()
+    private val deathScreenEntities = mutableListOf<Int>()
     private val highScores: MutableList<Int> = mutableListOf()
     private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
+    private var isDeathScreenCreated = false
 
     fun changeState(newState: GameState) {
         if (newState != currentState) {
@@ -75,32 +77,118 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             enterState(currentState)
         }
 
-        if (Globals.currentState == GameState.GAME_STAGE && !Globals.isPausing && !isResuming) {
-            if (Gdx.input.justTouched()) {
-                Globals.isPausing = true
-                if (!pauseScreenCreated) {
-                    createPauseScreenEntities()
-                    pauseScreenCreated = true
+        if(Globals.currentState == GameState.GAME_STAGE){
+            if(Globals.IsStarting && Globals.StartingTimer > 0){
+                return
+            }
+            if(!Globals.deathScreen && !Globals.isPausing)
+            {
+                Globals.timeElapsed += world.delta
+            }
+
+            // 🔹 Update Score UI
+            val uiMapper = world.getMapper(UIComponent::class.java)
+            val tagMapper = world.getMapper(TagComponent::class.java)
+
+            val entities = world.aspectSubscriptionManager.get(Aspect.all(UIComponent::class.java, TagComponent::class.java)).entities
+            for (i in 0 until entities.size()) {
+                val entityId = entities[i]
+                val tagComponent = tagMapper[entityId]
+
+                if (tagComponent.tag == Tag.SCORE_UI) { // Find score label
+                    val uiComponent = uiMapper[entityId]
+                    val scoreLabel = uiComponent.actor as Label
+                    val currentScore = Globals.timeElapsed.toInt() + Globals.enemiesKilled
+
+                    // 🔹 Prevent updating score if death screen is active
+                    if (!Globals.deathScreen) {
+                        scoreLabel.setText("Score: $currentScore")
+                    }
                 }
             }
         }
 
+        // --------------------------
+        // ⏸ Pause Game Logic
+        // --------------------------
+        if (Globals.currentState == GameState.GAME_STAGE && !Globals.isPausing && !isResuming) {
+            if (Gdx.input.justTouched()) {
+                if (!Globals.deathScreen) {
+                    Globals.isPausing = true
+                    if (!pauseScreenCreated) {
+                        createPauseScreenEntities()
+                        pauseScreenCreated = true
+                    }
+                }
+            }
+        }
+
+        // If game is paused, stop processing
         if (Globals.isPausing && !isResuming) {
             return
         }
 
+        // --------------------------
+        // 💀 Handle Game Over
+        // --------------------------
         if (Globals.currentState == GameState.GAME_STAGE) {
-            if (Globals.deathScreen && Globals.deathScreenInit) {
-                // Generate death screen UI once
+            if (Globals.deathScreen && Globals.deathScreenInit && !isDeathScreenCreated) {
+                isDeathScreenCreated = true // Set flag to prevent multiple creation
+                Globals.deathScreenInit = false // Reset init flag
+
                 val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
-                val GameOverLabel = Text_Label(
+
+                // 🔹 Calculate Final Score
+                val finalScore = Globals.timeElapsed.toInt() + Globals.enemiesKilled
+
+                // 🔹 Stop updating the score
+                Globals.timeElapsed = finalScore.toFloat()
+
+                //Store the final score into high score list
+                if (!Globals.highScoreSaved) {
+                    onGameEnd(finalScore)
+                    Globals.highScoreSaved = true  // Prevent duplicate saving
+                }
+
+                val uiMapper = world.getMapper(UIComponent::class.java)
+                val tagMapper = world.getMapper(TagComponent::class.java)
+
+                val entities = world.aspectSubscriptionManager.get(Aspect.all(UIComponent::class.java, TagComponent::class.java)).entities
+                for (i in 0 until entities.size()) {
+                    val entityId = entities[i]
+                    val tagComponent = tagMapper[entityId]
+
+                    if (tagComponent.tag == Tag.SCORE_UI) { // Ensure it's the correct UI element
+                        val uiComponent = uiMapper[entityId]
+                        val scoreLabel = uiComponent.actor as Label
+                        scoreLabel.setText("Score: $finalScore")  // Update UI with the latest score
+                    }
+                }
+
+                // Game Over Label
+                val gameOverLabel = Text_Label(
                     "Game Over!",
                     LabelStyle(font, Color.WHITE),
-                    Position = Vector2(17.5f,6f),
-                    Scale = Vector2(1f,1f)
+                    Position = Vector2(12.5f, 10f),
+                    Scale = Vector2(3f, 3f)
                 )
-                GameOverLabel.Create(world)
-                Globals.deathScreenInit = false
+                val gameOverEntity = gameOverLabel.Create(world)
+                deathScreenEntities.add(gameOverEntity)
+
+                // Main Menu Button
+                val mainMenuButton = Image_Button(
+                    filepath = "textures/MainMenu.png",
+                    Position = Vector2(15f, 5f),
+                    Scale = Vector2(0.8f, 0.8f),
+                    Action = {
+                        removeDeathScreenEntities()
+                        removePauseScreenEntities()
+                        world.process()
+                        changeState(GameState.MAIN_MENU)
+                    }
+                )
+                val mainMenuEntity = mainMenuButton.Create(world)
+                deathScreenEntities.add(mainMenuEntity)
             }
         }
     }
@@ -112,6 +200,18 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 soundSystem.playBGM("audio/bgm/bgm_mainMenu.wav")
             }
             GameState.GAME_STAGE -> {
+                Globals.deathScreen = false
+                Globals.deathScreenInit = false
+                Globals.isPausing = false
+                isResuming = false
+                isDeathScreenCreated = false
+                Globals.highScoreSaved = false
+
+                // 🔹 Only reset score when a new game starts
+                Globals.timeElapsed = 0f
+                Globals.enemiesKilled = 0
+
+                removeDeathScreenEntities()
                 createGameEntities()
                 soundSystem.playBGM("audio/bgm/bgm_level.wav")
             }
@@ -131,7 +231,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         // Example: Create UI entities for Main Menu
         val gameName = Image_Label(
             filepath = "textures/Title.png",
-            Position = Vector2(12f, 8f),
+            Position = Vector2(12f, 8.5f),
             Scale = Vector2(13f, 5f),
 
         )
@@ -139,7 +239,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val startGameButton = Image_Button(
             filepath = "textures/Start.png",
-            Position = Vector2(15f, 5f),
+            Position = Vector2(15f, 7f),
             Scale = Vector2(0.8f, 0.8f),
             Action = {
                 soundSystem.playSFX("audio/sfx/fx_Button_DefaultSelection.wav")
@@ -150,7 +250,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val highScore = Image_Button(
             filepath = "textures/HighScore.png",
-            Position = Vector2(15f, 2f),
+            Position = Vector2(15f, 4.5f),
             Scale = Vector2(0.8f,0.8f),
             Action = {
                 soundSystem.playSFX("audio/sfx/fx_Button_DefaultSelection.wav")
@@ -158,6 +258,16 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             }
         )
         highScore.Create(world)
+
+        var calibration = Image_Button(
+            filepath = "textures/Calibration.png", // Default image
+            Position = Vector2(13.5f, 2f),
+            Scale = Vector2(0.8f, 0.8f),
+            Action = {
+
+            }
+        )
+        calibration.Create(world)
 
         val entity = world.create()
         val emitter = world.edit(entity).create(EmitterComponent::class.java)
@@ -182,6 +292,19 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         // Example: Create player, enemies, and other game entities
         val player = Player()
         player.Create(world)
+
+        // Inside createGameEntities() function:
+        val typeStyle = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
+        val scoreLabelStyle = LabelStyle(typeStyle, Color.WHITE)
+
+        val scoreLabel = Label("Score: 0", scoreLabelStyle)
+        val scoreEntity = world.create()
+        world.edit(scoreEntity)
+            .add(TransformComponent(position = Vector2(1f, 13f),
+                0f, Vector2(0.5f,0.5f))) // Position at top-left
+            .add(UIComponent(scoreLabel))
+            .add(TagComponent(Tag.SCORE_UI)) // Use a tag to identify the score label
+
 
         // -----------------------------
         //  Shield button
@@ -263,9 +386,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         spawnLaserButton.Create(world)
 
-        //to save score into highScore, create variable to store score
-        //on game end, call onGameEnd(variable)
-
         val background = world.create()
         world.edit(background)
             .add(SpriteComponent("textures/Background.png",RenderLayers.Background))
@@ -301,7 +421,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
     }
 
     private fun createHighScoreEntities() {
-        // Example: Create high score UI elements
         loadScores() // Load saved scores before displaying
 
         val highScoreScreenOverLay = Image_Label(
@@ -326,8 +445,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Scale = Vector2(0.6f,0.8f),
             Action = {
                 soundSystem.playSFX("audio/sfx/fx_Button_GoBack.wav")
-                val randomScore = com.badlogic.gdx.math.MathUtils.random(100, 10000)
-                onGameEnd(randomScore)
                 changeState(GameState.MAIN_MENU)
             }
         )
@@ -483,5 +600,20 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             world.delete(entities[i]) // Delete all UI elements
         }
         world.process()
+    }
+
+    private fun removeDeathScreenEntities() {
+        for (entity in deathScreenEntities) {
+            if (entity != -1) {
+                world.delete(entity)
+            }
+        }
+        world.process() // Ensure immediate removal
+        deathScreenEntities.clear() // Clear stored IDs
+
+        // Reset game over flags to prevent re-creation
+        Globals.deathScreen = false
+        Globals.deathScreenInit = false
+        isDeathScreenCreated = false
     }
 }
