@@ -269,7 +269,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         highScore.Create(world)
 
         val calibrationButton = Image_Button(
-            filepath = "textures/Calibration(1).png",  // Default image
+            filepath = "textures/Calibration.png",  // Default image
             Position = Vector2(15f, 2f),
             Scale = Vector2(0.8f, 0.8f),
             Action = { button ->

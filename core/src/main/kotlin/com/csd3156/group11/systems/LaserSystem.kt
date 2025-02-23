@@ -27,15 +27,19 @@ class LaserSystem : BaseEntitySystem(Aspect.all(PowerUpComponent::class.java, Tr
                     continue
                 }
 
-                // Set laser start position to player position
+                // Set laser start position
                 laser.startPosition.set(playerTransform.position)
 
-                // Debugging print
-                //println("Laser fired from ${laser.startPosition} in direction ${laser.direction}")
+                // Normalize direction and set laser end position
+                val laserDirectionNormalized = laser.direction.cpy().nor()
+                val laserSpeed = 200f // Adjust speed of the laser extending
 
-                // Create Laser FX
-                val laserFX = LaserFX(laser.startPosition.cpy(), laser.direction, laser.length)
-                laserFX.Create(world)
+                // Create or Update Laser FX
+                val laserFX = LaserFX(laser.startPosition.cpy(), laserDirectionNormalized, laserSpeed)
+                val laserId = laserFX.Create(world)
+
+                // Keep updating laser over time
+                laserFX.update(world, world.delta)
 
                 // Check for enemy collisions
                 val enemyEntities = world.aspectSubscriptionManager
@@ -45,14 +49,18 @@ class LaserSystem : BaseEntitySystem(Aspect.all(PowerUpComponent::class.java, Tr
                 for (j in 0 until enemyEntities.size()) {
                     val enemyId = enemyEntities[j]
                     val enemyTransform = transformMapper.get(enemyId)
+                    val enemyPos = enemyTransform.position
 
-                    val distance = Vector2.dst(
-                        laser.startPosition.x, laser.startPosition.y,
-                        enemyTransform.position.x, enemyTransform.position.y
-                    )
+                    // Calculate laser extension
+                    val laserEndPos = laser.startPosition.cpy().add(laserDirectionNormalized.scl(laserFX.currentLength))
 
-                    if (distance < laser.length) { // Laser hits enemy
-                        //println("🔥 Enemy $enemyId hit by laser at distance $distance!")
+                    // Check if enemy is within laser width
+                    val laserWidth = 0.5f
+
+                    val distanceToLine = distanceFromPointToLineSegment(enemyPos, laser.startPosition, laserEndPos)
+
+                    if (distanceToLine < laserWidth && isPointWithinSegment(enemyPos, laser.startPosition, laserEndPos)) {
+                        println("🔥 Enemy $enemyId hit by laser!")
                         world.delete(enemyId) // Destroy enemy
                     }
                 }
@@ -60,4 +68,27 @@ class LaserSystem : BaseEntitySystem(Aspect.all(PowerUpComponent::class.java, Tr
             pwrComp.lasers.removeAll(lasersToRemove)
         }
     }
+}
+
+fun distanceFromPointToLineSegment(point: Vector2, start: Vector2, end: Vector2): Float {
+    val lineVec = end.cpy().sub(start)
+    val pointVec = point.cpy().sub(start)
+
+    val lineLengthSquared = lineVec.len2()
+    if (lineLengthSquared == 0f) return pointVec.len() // If start == end, return distance to start
+
+    // Project point onto line, clamping to segment
+    val t = pointVec.dot(lineVec) / lineLengthSquared
+    val clampedT = t.coerceIn(0f, 1f)
+
+    val closestPoint = start.cpy().add(lineVec.scl(clampedT))
+    return point.dst(closestPoint)
+}
+
+fun isPointWithinSegment(point: Vector2, start: Vector2, end: Vector2): Boolean {
+    val segmentLengthSquared = start.dst2(end) // Squared distance for efficiency
+    val pointToStartLengthSquared = start.dst2(point)
+    val pointToEndLengthSquared = end.dst2(point)
+
+    return pointToStartLengthSquared <= segmentLengthSquared && pointToEndLengthSquared <= segmentLengthSquared
 }

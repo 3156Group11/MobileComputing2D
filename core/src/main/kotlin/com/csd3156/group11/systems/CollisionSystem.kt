@@ -4,6 +4,7 @@ import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
 import com.artemis.ComponentMapper
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.MathUtils
 import com.csd3156.group11.components.ColliderComponent
 import com.csd3156.group11.components.EnemyComponent
 import com.csd3156.group11.components.PlayerInputComponent
@@ -197,9 +198,13 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     val playerTransform = world.getEntity(playerEntityId).getComponent(TransformComponent::class.java)
                     val playerPowerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
 
+                    // Convert rotation angle (in degrees) to a forward-facing direction (unit vector)
+                    val angleRad = MathUtils.degreesToRadians * (playerTransform.rotation + 90)
+                    val playerDirection = Vector2(MathUtils.cos(angleRad), MathUtils.sin(angleRad)).nor() // Normalize to get direction
+
                     val laserEntry = PowerUpComponent.LaserEntry(
                         startPosition = playerTransform.position.cpy(),
-                        direction = Vector2(1f, 0f), // Default forward direction
+                        direction = playerDirection, // Use the calculated direction
                         timeLeft = 3f,
                         length = 10f,
                         damage = 10f
