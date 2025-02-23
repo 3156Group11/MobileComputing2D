@@ -153,10 +153,10 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     val playerTransform = world.getEntity(playerEntityId).getComponent(TransformComponent::class.java)
                     val playerPos = playerTransform.position.cpy()
 
-                    // Add two SlowFieldEntry instances to the PowerUpComponent (moving upward and downward)
+                    // Access player's PowerUpComponent to store the slow field data
                     val powerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
 
-                    // Upward moving field
+                    // Upward beam (faster)
                     val upwardSlowField = PowerUpComponent.SlowFieldEntry(
                         position = playerPos.cpy(),
                         timeLeft = 5f,  // Field lasts for 5 seconds
@@ -164,7 +164,7 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     )
                     powerUpComp.slowFields.add(upwardSlowField)
 
-                    // Downward moving field
+                    // Downward beam (slower)
                     val downwardSlowField = PowerUpComponent.SlowFieldEntry(
                         position = playerPos.cpy(),
                         timeLeft = 5f,  // Field lasts for 5 seconds
@@ -172,15 +172,16 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     )
                     powerUpComp.slowFields.add(downwardSlowField)
 
-                    // Create visual FX entities for each slow field
-                    val upwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, 1f))
+                    // Create visual FX entities with different speeds
+                    val upwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, 1f), 10f)  // Faster upward beam
                     upwardFX.Create(world)
 
-                    val downwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, -1f))
+                    val downwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, -1f), 10f)  // Slower downward beam
                     downwardFX.Create(world)
 
-                    println("Spawned two slow fields with visual FX from position: $playerPos")
+                    //println("Two slow fields spawned with speeds: Upward (150f), Downward (75f)")
                 }
+
 
                 PowerUpType.LASER_3X -> {
                     println("Player picked up LASER powerup!")

@@ -10,6 +10,8 @@ open class EnemyComponent : Component(){
     public var DyingTime = 2f
     public var isLive = false
     public var speed: Float = 2f
+    var isSlowed: Boolean = false
+    var slowTimeRemaining: Float = 0f
 
     var formationSpawnComplete: Boolean = true
 }
