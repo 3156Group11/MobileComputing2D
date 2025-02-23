@@ -20,23 +20,26 @@ class FXSystem : BaseEntitySystem(Aspect.all(FXComponent::class.java, TransformC
             val fxComp = fxMapper[fxId]
             val fxTransform = transformMapper[fxId]
 
-            // Decrease FX duration timer
-            fxComp.duration -= world.delta
-            if (fxComp.duration <= 0f) {
-                world.delete(fxId)
-                continue
+            // Skip duration check for shield FX
+            if (fxComp.fxType != PowerUpType.SHIELD) {
+                fxComp.duration -= world.delta
+                if (fxComp.duration <= 0f) {
+                    world.delete(fxId)
+                    continue
+                }
             }
 
-            // Make Shield FX follow player
+            // Make Shield FX follow the player
             if (fxComp.fxType == PowerUpType.SHIELD && fxComp.followEntityId != -1) {
                 val playerTransform = transformMapper.get(fxComp.followEntityId)
                 if (playerTransform != null) {
-                    // Align FX center with player
+                    val playerCenterX = playerTransform.position.x + (playerTransform.scale.x / 2f)
+                    val playerCenterY = playerTransform.position.y + (playerTransform.scale.y / 2f)
+
                     fxTransform.position.set(
-                        playerTransform.position.x - fxTransform.scale.x / 2f,
-                        playerTransform.position.y - fxTransform.scale.y / 2f
+                        playerCenterX - (fxTransform.scale.x / 2f),
+                        playerCenterY - (fxTransform.scale.y / 2f)
                     )
-                    println(" ShieldFX following player at position: ${fxTransform.position}")
                 }
             }
         }

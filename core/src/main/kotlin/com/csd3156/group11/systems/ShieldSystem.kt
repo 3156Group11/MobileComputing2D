@@ -28,13 +28,13 @@ class ShieldSystem : BaseEntitySystem(
         val playerTransform = transformMapper[playerId]
         val playerCollider = colliderMapper[playerId]
 
-        // Handle shield cooldown (temporary invincibility)
+        // Handle shield cooldown (temporary invincibility after shield breaks)
         if (playerPowerUp.invulnerability > 0f) {
             playerPowerUp.invulnerability -= world.delta
-            return  // Skip processing during cooldown
+            return
         }
 
-        if (!playerPowerUp.hasShield) return  // Skip if the player has no active shield
+        if (!playerPowerUp.hasShield) return // Skip if shield is not active
 
         // Check for collisions with enemies
         val enemyEntities = world.aspectSubscriptionManager.get(
@@ -47,11 +47,18 @@ class ShieldSystem : BaseEntitySystem(
             val enemyCollider = colliderMapper[enemyId]
 
             if (isColliding(playerTransform, playerCollider, enemyTransform, enemyCollider)) {
-                // Shield absorbs the hit
+                // Shield absorbs the hit and breaks
                 playerPowerUp.hasShield = false
                 playerPowerUp.shieldBreakEffect = true
-                playerPowerUp.invulnerability = 0.5f  // 0.5 sec invul window
-                println("🛡️ Shield absorbed the hit and broke! Player is temporarily invincible.")
+                playerPowerUp.invulnerability = 1.0f // Add a 1-second invincibility window
+
+                // Remove Shield FX immediately
+                if (playerPowerUp.shieldFXEntityId != -1) {
+                    world.delete(playerPowerUp.shieldFXEntityId)
+                    playerPowerUp.shieldFXEntityId = -1 // Reset the FX ID
+                }
+
+                println("🛡️ Shield absorbed the hit, broke, and FX has been removed.")
                 return
             }
         }

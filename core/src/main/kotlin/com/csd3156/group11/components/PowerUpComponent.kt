@@ -13,6 +13,7 @@ class PowerUpComponent : Component() {
     var hasShield: Boolean = false //shield active
     var shieldBreakEffect: Boolean = false //shield effect.
     var invulnerability: Float = 0f //invulnerability timer after shield breaks
+    var shieldFXEntityId: Int = -1
 
     // ----------------------------------------
     // BOMB DATA - store multiple bombs at once
