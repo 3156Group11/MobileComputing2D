@@ -15,29 +15,25 @@ import com.csd3156.group11.components.UIComponent
 import com.csd3156.group11.resources.Globals
 
 
-public class Image_Button(filepath: String, Position:Vector2, Scale:Vector2, Action:()->Unit ) : Prefab()
-{
-    var inFilepath : String = filepath
-    var inPos : Vector2 = Position
-    var inScale : Vector2 = Scale
-    var inAction : ()->Unit = Action
+public class Image_Button(filepath: String, Position: Vector2, Scale: Vector2, Action: (ImageButton) -> Unit) : Prefab() {
+    var inFilepath: String = filepath
+    var inPos: Vector2 = Position
+    var inScale: Vector2 = Scale
+    var inAction: (ImageButton) -> Unit = Action
 
-    public override fun Create(world: World): Int
-    {
+    public override fun Create(world: World): Int {
         val texture = assetManager.system().get(inFilepath, Texture::class.java)
         val region = TextureRegion(texture, texture.width, texture.height)
         val drawable = TextureRegionDrawable(region)
         val button = ImageButton(drawable)
-        button.setSize(texture.width * inScale.x,texture.height * inScale.x)
+        button.setSize(texture.width * inScale.x, texture.height * inScale.x)
 
-        button.addListener(object : ClickListener()
-        {
+        button.addListener(object : ClickListener() {
             override fun clicked(event: InputEvent?, x: Float, y: Float) {
-                // Communicate with the ECS world
-                inAction()
+
+                inAction(button)
             }
-        }
-        )
+        })
 
         ID = world.create()
         world.edit(ID)
