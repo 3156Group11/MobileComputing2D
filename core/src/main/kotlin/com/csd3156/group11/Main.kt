@@ -36,6 +36,7 @@ import com.csd3156.group11.systems.LightningSystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
 import com.csd3156.group11.systems.RenderSystem
+import com.csd3156.group11.systems.ShieldSystem
 import com.csd3156.group11.systems.SlowFieldSystem
 import com.csd3156.group11.systems.SoundSystem
 
@@ -101,6 +102,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EnemyManagerSystem(threshold = 10, interval = 2f))
             .with(PhysicsSystem())
             .with(BombSystem())
+            .with(ShieldSystem())
             .with(LightningSystem())
             .with(SlowFieldSystem())
             .with(CollisionSystem())

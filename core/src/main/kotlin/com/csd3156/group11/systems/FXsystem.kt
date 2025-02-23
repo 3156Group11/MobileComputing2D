@@ -7,7 +7,6 @@ import com.csd3156.group11.components.FXComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.enums.PowerUpType
 
-
 class FXSystem : BaseEntitySystem(Aspect.all(FXComponent::class.java, TransformComponent::class.java)) {
 
     private lateinit var fxMapper: ComponentMapper<FXComponent>
@@ -21,25 +20,25 @@ class FXSystem : BaseEntitySystem(Aspect.all(FXComponent::class.java, TransformC
             val fxComp = fxMapper[fxId]
             val fxTransform = transformMapper[fxId]
 
-            // Decrement duration timer
+            // Decrease FX duration timer
             fxComp.duration -= world.delta
             if (fxComp.duration <= 0f) {
                 world.delete(fxId)
                 continue
             }
 
-
+            // Make Shield FX follow player
             if (fxComp.fxType == PowerUpType.SHIELD && fxComp.followEntityId != -1) {
                 val playerTransform = transformMapper.get(fxComp.followEntityId)
                 if (playerTransform != null) {
-                    // Center FX around player
+                    // Align FX center with player
                     fxTransform.position.set(
                         playerTransform.position.x - fxTransform.scale.x / 2f,
                         playerTransform.position.y - fxTransform.scale.y / 2f
                     )
+                    println(" ShieldFX following player at position: ${fxTransform.position}")
                 }
             }
-            // For bomb FX, no need to follow; it stays at the detonation location.
         }
     }
 }

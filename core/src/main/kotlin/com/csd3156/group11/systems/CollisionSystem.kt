@@ -59,86 +59,35 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
 
     private fun handleCollision(entityA: Int, entityB: Int) {
         // Player and Powerup
-        // 1) Grab each entity's tag (default to NONE if TagComponent is missing)
         val tagA = world.getEntity(entityA).getComponent(TagComponent::class.java)?.tag ?: Tag.NONE
         val tagB = world.getEntity(entityB).getComponent(TagComponent::class.java)?.tag ?: Tag.NONE
 
-        // 2) If one is PLAYER and the other is POWERUP, handle powerup pickup
         if (tagA == Tag.PLAYER && tagB == Tag.POWERUP) {
             pickupPowerUp(entityA, entityB)
         } else if (tagB == Tag.PLAYER && tagA == Tag.POWERUP) {
             pickupPowerUp(entityB, entityA)
         }
 
-        // Player and Enemy
-        // Enemy and Destructive objects
-        // Player
+        // Player and Enemy collision detection (Check for invincibility)
         if (world.getEntity(entityA).getComponent(PlayerInputComponent::class.java) != null) {
             if (world.getEntity(entityB).getComponent(EnemyComponent::class.java) != null) {
                 val powerUp = world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
 
-                if (powerUp != null && powerUp.hasShield) {
-                    powerUp.hasShield = false
-                    powerUp.shieldBreakEffect = true  // Trigger shield break effect
-                    return
-                }
-                // player dies
-                Globals.deathScreen = true
-                Globals.deathScreenInit = true
-                return
-            }
-            // else if powerup, TODO: Add powerup component
-            else if (world.getEntity(entityB).getComponent(PowerUpComponent::class.java) != null) {
-                val powerUp = world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
-
-                if (powerUp != null && powerUp.hasShield) {
-                    val playerPowerUp =
-                        world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
-                    if (playerPowerUp != null) {
-                        playerPowerUp.hasShield = true
-                    }
-                    world.delete(entityB) // Remove the power-up after collection
-                }
-
-                // Activate Powerup
-                return
-            }
-        }
-
-        // Player
-        else if (world.getEntity(entityB).getComponent(PlayerInputComponent::class.java) != null) {
-            if (world.getEntity(entityA).getComponent(EnemyComponent::class.java) != null) {
-                val powerUp = world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
-
-                if (powerUp != null && powerUp.hasShield) {
-                    powerUp.hasShield = false
-                    powerUp.shieldBreakEffect = true  // Trigger shield break effect
+                // Skip if player is in shield cooldown (temporary invincibility)
+                if (powerUp != null && powerUp.invulnerability > 0f) {
+                    println("Player is temporarily invincible due to shield cooldown.")
                     return
                 }
 
-                // player dies
+                // If no shield or invincibility, player dies
                 Globals.deathScreen = true
                 Globals.deathScreenInit = true
-                return
-            }
-            // else if powerup, TODO: Add powerup component
-            else if (world.getEntity(entityA).getComponent(PowerUpComponent::class.java) != null) {
-                val powerUp = world.getEntity(entityA).getComponent(PowerUpComponent::class.java)
 
-                if (powerUp != null && powerUp.hasShield) {
-                    val playerPowerUp =
-                        world.getEntity(entityB).getComponent(PowerUpComponent::class.java)
-                    if (playerPowerUp != null) {
-                        playerPowerUp.hasShield = true
-                    }
-                    world.delete(entityA) // Remove the power-up after collection
-                }
-
-                // Activate Powerup
                 return
             }
         }
-    } // end of handle collision func
+    }
+
 
     // Helper function:
     private fun pickupPowerUp(playerEntityId: Int, powerUpEntityId: Int) {
@@ -148,11 +97,11 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
             when (powerUpComp.type) {
                 PowerUpType.SHIELD -> {
                     println("Player picked up SHIELD powerup!")
-                    // Remove the shield pickup entity
-                    world.delete(powerUpEntityId)
-                    // Create the ShieldFX entity so that it follows the player
+                    val playerPowerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
+                    playerPowerUpComp.hasShield = true
                     val shieldFX = ShieldFX(playerEntityId)
                     shieldFX.Create(world)
+                    world.delete(powerUpEntityId)
                 }
 
                 PowerUpType.BOMB -> {
