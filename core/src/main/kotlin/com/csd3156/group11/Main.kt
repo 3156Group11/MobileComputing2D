@@ -43,8 +43,6 @@ import com.csd3156.group11.systems.SoundSystem
 
 var assetManager:AssetSystem = AssetSystem()
 var soundSystem: SoundSystem = SoundSystem()
-var playerInput: PlayerInputSystem = PlayerInputSystem()
-
 
 fun createCircleTexture(diameter: Int, color: Color = Color.WHITE): TextureRegion {
     val pixmap = Pixmap(diameter, diameter, Pixmap.Format.RGBA8888)
@@ -91,7 +89,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
 
         //True for WASD
         //False for Tilt
-        val isDebugMode = true
+        val isDebugMode = false
         val particleTexture = createCircleTexture(360)
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()

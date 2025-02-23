@@ -54,10 +54,21 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
             if (sprite != null) {
                 spriteBatch.draw(
                     sprite.region,
-                    transform.position.x * Globals.UnitSize, transform.position.y * Globals.UnitSize, // Position
-                    sprite.width * transform.scale.x, // Apply scaling to width
-                    sprite.height * transform.scale.y // Apply scaling to height
+                    transform.position.x * Globals.UnitSize, // X Position
+                    transform.position.y * Globals.UnitSize, // Y Position
+
+                    sprite.width * 0.5f, // Origin X (center of sprite)
+                    sprite.height * 0.5f, // Origin Y (center of sprite)
+
+                    sprite.width * transform.scale.x, // Width (scaled)
+                    sprite.height * transform.scale.y, // Height (scaled)
+
+                    transform.scale.x, // Scale X
+                    transform.scale.y, // Scale Y
+
+                    transform.rotation // Rotation in degrees
                 )
+
             }
         }
     }

@@ -6,13 +6,16 @@ import com.artemis.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.csd3156.group11.components.PlayerInputComponent
+import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
 import com.csd3156.group11.resources.Globals
+import javax.xml.crypto.dsig.Transform
 
 class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSystem(Aspect.all(PlayerInputComponent::class.java, VelocityComponent::class.java)) {
 
     private lateinit var inputMapper: ComponentMapper<PlayerInputComponent>
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
+    private lateinit var transformMapper: ComponentMapper<TransformComponent>
 
     // NORMAL (Accelerometer) Mode Variables
     private val accelerationFactor = 2f // Determines how fast acceleration builds up
@@ -25,9 +28,6 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     // Calibration Variables
     private var calibratedAccelX = 0f
     private var calibratedAccelY = 0f
-
-    // Player rotation (in degrees)
-    var playerRotation = 0f
 
     /**
      * Sets the current accelerometer values as the "flat" reference.
@@ -44,6 +44,7 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
 
         val input = inputMapper[entityId]
         val velocity = velocityMapper[entityId]
+        val transform = transformMapper[entityId]
 
         if (debugMode) {
             // DEBUG MODE: WASD Movement with Speed Boost
@@ -105,8 +106,8 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
         }
         // 🔹 Calculate player rotation based on movement direction
         if (velocity.velocity.len2() > 0.01f) { // Avoid random rotations when nearly stopped
-            playerRotation = Math.toDegrees(kotlin.math.atan2(velocity.velocity.y, velocity.velocity.x)
-                .toDouble()).toFloat()
+            transform.rotation = Math.toDegrees(kotlin.math.atan2(velocity.velocity.y, velocity.velocity.x)
+                .toDouble()).toFloat() - 90f
         }
     }
 }
