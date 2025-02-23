@@ -7,9 +7,12 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.viewport.Viewport
 import com.csd3156.group11.assetManager
 import com.csd3156.group11.components.EnemySpawnerComponent
@@ -52,6 +55,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
     private val highScores: MutableList<Int> = mutableListOf()
     private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
     private var isDeathScreenCreated = false
+    private var isCalibrated = true
 
     fun changeState(newState: GameState) {
         if (newState != currentState) {
@@ -264,15 +268,16 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         highScore.Create(world)
 
-        var calibration = Image_Button(
-            filepath = "textures/Calibration.png", // Default image
-            Position = Vector2(13.5f, 2f),
+        val calibrationButton = Image_Button(
+            filepath = "textures/Calibration(1).png",  // Default image
+            Position = Vector2(15f, 2f),
             Scale = Vector2(0.8f, 0.8f),
-            Action = {
-
+            Action = { button ->
+                swapImages(button, isCalibrated) // Toggle image
+                isCalibrated = !isCalibrated // Call function to update the image
             }
         )
-        calibration.Create(world)
+        calibrationButton.Create(world)
 
         val entity = world.create()
         val emitter = world.edit(entity).create(EmitterComponent::class.java)
@@ -291,6 +296,17 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             .add(SpriteComponent("textures/BackgroundBorder.png",RenderLayers.BackgroundBorder))
             .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
                 position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
+    }
+
+    private fun swapImages(button: ImageButton, isBack: Boolean) {
+        val newFilepath = if (isBack) "textures/TopDown.png" else "textures/Calibration(1).png"
+
+        val texture = assetManager.system().get(newFilepath, Texture::class.java)
+        val region = TextureRegion(texture, texture.width, texture.height)
+        val drawable = TextureRegionDrawable(region)
+
+        button.style.imageUp = drawable
+        button.invalidate()
     }
 
     private fun createGameEntities() {
