@@ -31,7 +31,7 @@ class LaserSystem : BaseEntitySystem(Aspect.all(PowerUpComponent::class.java, Tr
                 laser.startPosition.set(playerTransform.position)
 
                 // Debugging print
-                println("Laser fired from ${laser.startPosition} in direction ${laser.direction}")
+                //println("Laser fired from ${laser.startPosition} in direction ${laser.direction}")
 
                 // Create Laser FX
                 val laserFX = LaserFX(laser.startPosition.cpy(), laser.direction, laser.length)
@@ -52,7 +52,7 @@ class LaserSystem : BaseEntitySystem(Aspect.all(PowerUpComponent::class.java, Tr
                     )
 
                     if (distance < laser.length) { // Laser hits enemy
-                        println("🔥 Enemy $enemyId hit by laser at distance $distance!")
+                        //println("🔥 Enemy $enemyId hit by laser at distance $distance!")
                         world.delete(enemyId) // Destroy enemy
                     }
                 }

@@ -17,6 +17,7 @@ import com.csd3156.group11.prefabs.BombFX
 import com.csd3156.group11.prefabs.LightningFX
 import com.csd3156.group11.prefabs.SlowFieldFX
 import com.csd3156.group11.resources.Globals
+import com.csd3156.group11.soundSystem
 
 
 class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.java, TransformComponent::class.java)) {
@@ -97,6 +98,8 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
             when (powerUpComp.type) {
                 PowerUpType.SHIELD -> {
                     println("Player picked up SHIELD powerup!")
+                    soundSystem.playSFX("audio/sfx/fx_Player_ObtainShield.wav")
+
                     val playerPowerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
                     playerPowerUpComp.hasShield = true
                     val shieldFX = ShieldFX(playerEntityId)
@@ -106,6 +109,7 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
 
                 PowerUpType.BOMB -> {
                     println("Player picked up BOMB powerup!")
+                    soundSystem.playSFX("audio/sfx/fx_Player_ObtainBomb.wav")
 
                     val bombTransform = world.getEntity(powerUpEntityId).getComponent(TransformComponent::class.java)
                     val bombPickupPos = bombTransform.position.cpy()
@@ -132,6 +136,7 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
 
                 PowerUpType.LIGHTNING -> {
                     println("Player picked up LIGHTNING powerup!")
+                    soundSystem.playSFX("audio/sfx/fx_Player_ObtainThunder.wav")
 
                     // Remove the power-up entity from the world
                     world.delete(powerUpEntityId)
@@ -148,6 +153,8 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
 
                 PowerUpType.SLOW_FIELD -> {
                     println("Player picked up SLOW FIELD powerup!")
+                    soundSystem.playSFX("audio/sfx/fx_Player_ObtainSlowDown.wav")
+
                     world.delete(powerUpEntityId)
 
                     val playerTransform = world.getEntity(playerEntityId).getComponent(TransformComponent::class.java)
@@ -184,7 +191,8 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
 
 
                 PowerUpType.LASER_3X -> {
-                    println("Player picked up LASER powerup!")
+                   // println("Player picked up LASER powerup!")
+                    soundSystem.playSFX("audio/sfx/fx_Player_ObtainLaser.wav")
 
                     val playerTransform = world.getEntity(playerEntityId).getComponent(TransformComponent::class.java)
                     val playerPowerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
@@ -200,7 +208,7 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     playerPowerUpComp.lasers.add(laserEntry)
 
                     // Debugging print to confirm storage
-                    println("Laser stored in PowerUpComponent: Start=${laserEntry.startPosition}, Dir=${laserEntry.direction}")
+                    //println("Laser stored in PowerUpComponent: Start=${laserEntry.startPosition}, Dir=${laserEntry.direction}")
 
                     world.delete(powerUpEntityId)
                 }

@@ -142,6 +142,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(15f, 5f),
             Scale = Vector2(0.8f, 0.8f),
             Action = {
+                soundSystem.playSFX("audio/sfx/fx_Button_DefaultSelection.wav")
                 changeState(GameState.GAME_STAGE)
             }
         )
@@ -152,6 +153,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(15f, 2f),
             Scale = Vector2(0.8f,0.8f),
             Action = {
+                soundSystem.playSFX("audio/sfx/fx_Button_DefaultSelection.wav")
                 changeState(GameState.HIGH_SCORE)
             }
         )
@@ -323,6 +325,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(13f, 1f),
             Scale = Vector2(0.6f,0.8f),
             Action = {
+                soundSystem.playSFX("audio/sfx/fx_Button_GoBack.wav")
                 val randomScore = com.badlogic.gdx.math.MathUtils.random(100, 10000)
                 onGameEnd(randomScore)
                 changeState(GameState.MAIN_MENU)
@@ -335,6 +338,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(19f, 1f),
             Scale = Vector2(0.6f,0.8f),
             Action = {
+                soundSystem.playSFX("audio/sfx/fx_Button_Clear.wav")
                 clearHighScores()
                 removeExistingScore()
                 createHighScoreEntities()
