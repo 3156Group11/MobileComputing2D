@@ -11,7 +11,7 @@ class EnemySpawnerComponent() : Component() {
     var enemyFormation: EnemyFormation = EnemyFormation.NONE
     var count: Int = 0
     var center: Vector2 = Vector2()
-    var spawnInterval: Float = 0.1f  // seconds between spawns
+    var spawnInterval: Float = 3f  // seconds between spawns
     var spawnTimer: Float = 0f
     var spawnTasks: MutableList<SpawnTask> = mutableListOf()
 

@@ -37,17 +37,16 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                 when (spawner.enemyFormation) {
                     EnemyFormation.NONE -> {
                         // For NONE, spawn EnemyBasic at random positions.
-                        for (j in 0 until spawner.count) {
+                        /*for (j in 0 until spawner.count) {*/
                             val pos = Vector2(MathUtils.random(0.5f, screenWidth - 1.5f), MathUtils.random(0.5f, screenHeight - 1.5f))
                             spawner.spawnTasks.add(SpawnTask("basic", pos, Vector2(0f, 0f), 0.5f))
-                        }
+                        /*}*/
                     }
                     EnemyFormation.GRID -> {
-                        // Fixed grid: 5 rows and 10 columns.
-                        val rows = 4
-                        val cols = 7
-                        val spacingX = 3.5f
-                        val spacingY = 3.7f
+                        val rows = 3
+                        val cols = 6
+                        val spacingX = 3.8f
+                        val spacingY = 4f
                         val gridWidth = (cols - 1) * spacingX
                         val gridHeight = (rows - 1) * spacingY
                         val centerX = 17.2f
@@ -74,7 +73,7 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                         }
                     }
                     EnemyFormation.TOP_BOTTOM -> {
-                        val halfCount = 10  // fixed for top and bottom edges
+                        val halfCount = 8 // fixed for top and bottom edges
                         val spacingX = screenWidth / (halfCount + 1)
                         val spawnedEnemyIds = mutableListOf<Int>()
 
@@ -112,7 +111,7 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                         }
                     }
                     EnemyFormation.LEFT_RIGHT -> {
-                        val halfCount = 6  // fixed for left/right edges
+                        val halfCount = 5  // fixed for left/right edges
                         val spacingY = screenHeight / (halfCount + 1)
                         val spawnedEnemyIds = mutableListOf<Int>()
 
@@ -151,8 +150,8 @@ class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::cl
                     }
                     EnemyFormation.ALL_EDGES -> {
                         // We'll assume a fixed number per edge; adjust as needed.
-                        val widthCount = 10
-                        val heightCount = 6
+                        val widthCount = 8
+                        val heightCount = 4
                         val spawnedEnemyIds = mutableListOf<Int>()
 
                         // Calculate spacing based on world dimensions:
