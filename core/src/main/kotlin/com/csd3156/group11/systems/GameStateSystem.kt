@@ -464,8 +464,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val highScoreScreenOverLay = Image_Label(
             filepath = "textures/HighScore_Overlay.png",
-            Position = Vector2(0f, 0f),
-            Scale = Vector2(35f, 15f),
+            Position = Vector2(11f, 11f),
+            Scale = Vector2(10.5f, 3f),
         )
         highScoreScreenOverLay.Create(world)
 
@@ -482,7 +482,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         val backButton = Image_Button(
             filepath = "textures/Back.png",
             filepath2 = "textures/Back_pressed.png",
-            Position = Vector2(13f, 1f),
+            Position = Vector2(11f, 1f),
             Scale = Vector2(0.6f, 0.8f),
             Action = {
                 soundSystem.playSFX("audio/sfx/fx_Button_GoBack.wav")
@@ -494,7 +494,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         val clearButton = Image_Button(
             filepath = "textures/Clear.png",
             filepath2 = "textures/Clear_pressed.png",
-            Position = Vector2(19f, 1f),
+            Position = Vector2(17f, 1f),
             Scale = Vector2(0.6f, 0.8f),
             Action = {
                 soundSystem.playSFX("audio/sfx/fx_Button_Clear.wav")
