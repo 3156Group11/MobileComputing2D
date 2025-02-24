@@ -37,6 +37,7 @@ import com.csd3156.group11.prefabs.Text_Button
 import com.csd3156.group11.prefabs.Text_Label
 import com.csd3156.group11.resources.Globals
 import com.csd3156.group11.soundSystem
+import com.csd3156.group11.systems.PlayerInputSystem
 import ktx.assets.file
 import sun.font.TextLabel
 
@@ -55,7 +56,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
     private val highScores: MutableList<Int> = mutableListOf()
     private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
     private var isDeathScreenCreated = false
-    private var isCalibrated = true
+    private var isCalibrated = false
 
     fun changeState(newState: GameState) {
         if (newState != currentState) {
@@ -275,8 +276,15 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(15f, 1f),
             Scale = Vector2(0.8f, 0.8f),
             Action = { button ->
-                swapImages(button, isCalibrated) // Toggle image
-                isCalibrated = !isCalibrated // Call function to update the image
+
+                isCalibrated = !isCalibrated
+                swapImages(button, isCalibrated)
+
+                if (isCalibrated) {
+                    Globals.calibrate()
+                } else {
+                    Globals.topdown()
+                }
             }
         )
         calibrationButton.Create(world)
@@ -301,7 +309,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             )
     }
     private fun swapImages(button: ImageButton, isBack: Boolean) {
-        val newFilepath = if (isBack) "textures/TopDown.png" else "textures/Calibration(1).png"
+        val newFilepath = if (isBack) "textures/Calibration.png" else "textures/TopDown.png"
 
         val texture = assetManager.system().get(newFilepath, Texture::class.java)
         val region = TextureRegion(texture, texture.width, texture.height)
@@ -328,7 +336,6 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             .add(UIComponent(scoreLabel))
             .add(TagComponent(Tag.SCORE_UI)) // Use a tag to identify the score label
 
-
 /*
         // -----------------------------
         //  Shield button
@@ -344,9 +351,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         but.Create(world)
 
-       */
-/* val spawnEntityNone = world.create()
-        world.edit(spawnEntityNone).add(EnemySpawnerComponent(EnemyFormation.ALL_EDGES, 20, Vector2(400f, 240f)))*//*
+ val spawnEntityNone = world.create()
+        world.edit(spawnEntityNone).add(EnemySpawnerComponent(EnemyFormation.ALL_EDGES, 20, Vector2(400f, 240f)))
 
 
         // -----------------------------
@@ -410,8 +416,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 laserPowerUp.Create(world)
             }
         )
-        spawnLaserButton.Create(world)
-*/
+        spawnLaserButton.Create(world)*/
 
         val background = world.create()
         world.edit(background)

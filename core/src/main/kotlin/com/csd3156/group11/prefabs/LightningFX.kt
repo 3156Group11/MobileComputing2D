@@ -12,9 +12,9 @@ class LightningFX(private val strikePosition: Vector2) : Prefab() {
         world.edit(ID)
             .add(TransformComponent(
                 position = strikePosition.cpy(),
-                scale = Vector2(1.5f, 1.5f)  // Adjust scale as needed for visual size
+                scale = Vector2(0.5f, 0.5f)  // Adjust scale as needed for visual size
             ))
-            .add(SpriteComponent("textures/Circle.png", RenderLayers.FX))
+            .add(SpriteComponent("textures/LightningFX.png", RenderLayers.FX))
             .add(FXComponent().apply {
                 fxType = PowerUpType.LIGHTNING
                 duration = 1.5f  // Duration for how long the FX should last (e.g., 1.5 seconds)

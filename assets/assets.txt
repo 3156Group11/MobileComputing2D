@@ -39,6 +39,7 @@ textures/HighScore_pressed.png
 textures/Laser.png
 textures/LaserBullet.png
 textures/Lightning.png
+textures/LightningFX.png
 textures/MainMenu.png
 textures/MainMenu_pressed.png
 textures/Overlay.png
