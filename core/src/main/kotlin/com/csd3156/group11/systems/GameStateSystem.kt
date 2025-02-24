@@ -244,7 +244,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(12f, 9.5f),
             Scale = Vector2(13f, 5f),
 
-        )
+            )
         gameName.Create(world)
 
         val startGameButton = Image_Button(
@@ -263,7 +263,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             filepath = "textures/HighScore.png",
             filepath2 = "textures/HighScore_pressed.png",
             Position = Vector2(15f, 4f),
-            Scale = Vector2(0.8f,0.8f),
+            Scale = Vector2(0.8f, 0.8f),
             Action = {
                 soundSystem.playSFX("audio/sfx/fx_Button_DefaultSelection.wav")
                 changeState(GameState.HIGH_SCORE)
@@ -292,15 +292,15 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         val background = world.create()
         world.edit(background)
             .add(SpriteComponent("textures/Background.png", RenderLayers.Background))
-            .add(TransformComponent(scale = Vector2(35f,35f * viewport.worldHeight/viewport.worldWidth )))
-
-        val backgroundBox = world.create()
-        world.edit(backgroundBox)
-            .add(SpriteComponent("textures/BackgroundBorder.png",RenderLayers.BackgroundBorder))
-            .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
-                position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
+            .add(
+                TransformComponent(
+                    scale = Vector2(
+                        7f,
+                        9.5f * viewport.worldHeight / viewport.worldWidth
+                    )
+                )
+            )
     }
-
     private fun swapImages(button: ImageButton, isBack: Boolean) {
         val newFilepath = if (isBack) "textures/TopDown.png" else "textures/Calibration(1).png"
 
@@ -416,14 +416,15 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val background = world.create()
         world.edit(background)
-            .add(SpriteComponent("textures/Background.png",RenderLayers.Background))
-            .add(TransformComponent(scale = Vector2(35f,35f * viewport.worldHeight/viewport.worldWidth )))
-
-        val backgroundBox = world.create()
-        world.edit(backgroundBox)
-            .add(SpriteComponent("textures/BackgroundBorder.png",RenderLayers.BackgroundBorder))
-            .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
-                position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
+            .add(SpriteComponent("textures/Background.png", RenderLayers.Background))
+            .add(
+                TransformComponent(
+                    scale = Vector2(
+                        7f,
+                        9.5f * viewport.worldHeight / viewport.worldWidth
+                    )
+                )
+            )
 
         Globals.IsStarting = true
         Globals.StartingTimer = 3f
@@ -458,11 +459,12 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         highScoreScreenOverLay.Create(world)
 
+        val highScoreFont = assetManager.system().get("fonts/DroidSans.ttf", BitmapFont::class.java)
         for (i in highScores.indices) {
             val scoreLabel = Text_Label(
-                "${i + 1}. ${highScores[i]}", LabelStyle(BitmapFont(), Color.YELLOW),
-                Position = Vector2(16f, 10f-i), //spacing of scores
-                Scale = Vector2(5f, 5f)
+                "${i + 1}. ${highScores[i]}", LabelStyle(highScoreFont, Color.YELLOW),
+                Position = Vector2(16f, 10f - i), //spacing of scores
+                Scale = Vector2(0.75f, 0.75f)
             )
             scoreLabel.Create(world)
         }
@@ -471,7 +473,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             filepath = "textures/Back.png",
             filepath2 = "textures/Back_pressed.png",
             Position = Vector2(13f, 1f),
-            Scale = Vector2(0.6f,0.8f),
+            Scale = Vector2(0.6f, 0.8f),
             Action = {
                 soundSystem.playSFX("audio/sfx/fx_Button_GoBack.wav")
                 changeState(GameState.MAIN_MENU)
@@ -483,7 +485,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             filepath = "textures/Clear.png",
             filepath2 = "textures/Clear_pressed.png",
             Position = Vector2(19f, 1f),
-            Scale = Vector2(0.6f,0.8f),
+            Scale = Vector2(0.6f, 0.8f),
             Action = {
                 soundSystem.playSFX("audio/sfx/fx_Button_Clear.wav")
                 clearHighScores()
@@ -495,14 +497,15 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val background = world.create()
         world.edit(background)
-            .add(SpriteComponent("textures/Background.png",RenderLayers.Background))
-            .add(TransformComponent(scale = Vector2(35f,35f * viewport.worldHeight/viewport.worldWidth )))
-
-        val backgroundBox = world.create()
-        world.edit(backgroundBox)
-            .add(SpriteComponent("textures/BackgroundBorder.png",RenderLayers.BackgroundBorder))
-            .add(TransformComponent(scale = Vector2(35f * 0.9f,35f * viewport.worldHeight/viewport.worldWidth * 0.8f),
-                position = Vector2(viewport.worldWidth * 0.05f, viewport.worldHeight * 0.1f)))
+            .add(SpriteComponent("textures/Background.png", RenderLayers.Background))
+            .add(
+                TransformComponent(
+                    scale = Vector2(
+                        7f,
+                        9.5f * viewport.worldHeight / viewport.worldWidth
+                    )
+                )
+            )
     }
 
     private fun createPauseScreenEntities() {

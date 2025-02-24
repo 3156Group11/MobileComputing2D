@@ -56,8 +56,12 @@ class EmitterSystem(private val screenWidth: Float, private val screenHeight: Fl
         ).nor().scl(emitter.particleSpeed)
 
         particle.lifeTime = emitter.particleLifeTime
-        particle.size = Random.nextFloat() * 3f + 2f // Size between 2 and 5
+        particle.size = emitter.particleSize
 
+        if (emitter.texture != null)
+        {
+            particle.texture = emitter.texture
+        }
         // If pre-populating, set the elapsed time randomly so particles are in different states
         if (prePopulate) {
             particle.elapsedTime = Random.nextFloat() * particle.lifeTime

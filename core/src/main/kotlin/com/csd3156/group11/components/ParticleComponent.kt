@@ -1,4 +1,5 @@
 import com.artemis.Component
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 
 class ParticleComponent : Component() {
@@ -7,4 +8,5 @@ class ParticleComponent : Component() {
     var lifeTime = 1f // Particle lifespan in seconds
     var elapsedTime = 0f
     var size = 1f
+    var texture : TextureRegion? = null
 }
