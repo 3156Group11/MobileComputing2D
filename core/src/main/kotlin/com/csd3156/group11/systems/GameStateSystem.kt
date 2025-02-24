@@ -282,7 +282,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             Position = Vector2(15f, 1f),
             Scale = Vector2(0.8f, 0.8f),
             Action = { button ->
-
+                soundSystem.playSFX("audio/sfx/fx_Button_DefaultSelection.wav")
                 isCalibrated = !isCalibrated
                 swapImages(button, isCalibrated)
 
