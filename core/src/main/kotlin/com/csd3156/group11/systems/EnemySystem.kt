@@ -77,8 +77,8 @@ class EnemySystem : BaseEntitySystem(
                     enemy.slowTimeRemaining -= world.delta
                     if (enemy.slowTimeRemaining <= 0f) {
                         enemy.isSlowed = false
-                        enemy.speed *= 2f
-                        println(" Slow effect expired for enemy $entity. Speed reset.")
+                        enemy.speed *= 2f  // Reset speed back to normal
+                        println("⏳ Slow effect expired for enemy $entity. Speed reset.")
                     }
                 }
             }
