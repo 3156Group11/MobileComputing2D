@@ -1,3 +1,10 @@
+/**
+ * @file EnemyManagerSystem.kt
+ * @brief Manages enemy spawning and tracking enemy states in the game.
+ *
+ * This system controls the spawning of enemies based on thresholds, manages enemy kills,
+ * and applies different spawn formations depending on player positioning and difficulty levels.
+ */
 import com.artemis.Aspect
 import com.artemis.ComponentMapper
 import com.artemis.WorldConfigurationBuilder
@@ -14,14 +21,28 @@ import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.resources.Globals
 
+/**
+ * @class EnemySpawnerSystem
+ * @brief Spawns enemies in different formations and patterns.
+ *
+ * This system processes enemy spawners, determines spawn positions, and creates enemies
+ * based on predefined formations. It ensures that enemies appear in strategic locations
+ * relative to the player and the game world.
+ */
 class EnemyManagerSystem(
     private val threshold: Int = 10,
     interval: Float = 5f
 ) : IntervalEntitySystem(Aspect.all(EnemyComponent::class.java), interval) {
 
-    var easeInEnemy: Int = 8
-    var easeInEnemyCounter: Int = 0
+    var easeInEnemy: Int = 8 // Number of enemies to spawn gradually at the start.
+    var easeInEnemyCounter: Int = 0 // Counter for tracking spawned enemies during the ease-in phase.
 
+    /**
+     * @brief Processes enemy spawning logic.
+     *
+     * This method removes dying enemies, tracks enemy kill counts,
+     * and spawns new enemies based on the game's progression.
+     */
     override fun processSystem() {
         if (Globals.currentState != GameState.GAME_STAGE) return
         if (Globals.IsStarting) return
@@ -44,6 +65,7 @@ class EnemyManagerSystem(
             }
         }
 
+        // Get player position to adjust enemy spawn location.
         val playerEntities = world.aspectSubscriptionManager
             .get(
                 Aspect.all(
@@ -59,6 +81,7 @@ class EnemyManagerSystem(
             Vector2(17.5f, 3f)
         }
 
+        // Handle ease-in phase enemy spawning.
         if (easeInEnemyCounter <= easeInEnemy) {
             val formation = EnemyFormation.NONE
             val count = 1  // spawn one enemy at a time

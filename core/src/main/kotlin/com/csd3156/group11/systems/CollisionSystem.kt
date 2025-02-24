@@ -1,3 +1,10 @@
+/**
+ * @file CollisionSystem.kt
+ * @brief Manages collision detection between entities in the game.
+ *
+ * The CollisionSystem handles interactions between players, enemies, and power-ups.
+ * It checks for collisions, applies appropriate effects, and manages power-up pickups.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -20,7 +27,13 @@ import com.csd3156.group11.prefabs.SlowFieldFX
 import com.csd3156.group11.resources.Globals
 import com.csd3156.group11.soundSystem
 
-
+/**
+ * @class CollisionSystem
+ * @brief Handles collision detection and response.
+ *
+ * This system processes entity collisions, applying effects such as power-up pickups,
+ * enemy interactions, and player invulnerability checks.
+ */
 class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.java, TransformComponent::class.java)) {
 
     private lateinit var transformMapper: ComponentMapper<TransformComponent>
@@ -28,6 +41,9 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
     private lateinit var playerMapper: ComponentMapper<PlayerInputComponent>
     private lateinit var powerUpMapper: ComponentMapper<PowerUpComponent>
 
+    /**
+     * @brief Processes all collisions between entities.
+     */
     override fun processSystem() {
         val entities = subscription.entities
 
@@ -48,6 +64,14 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
         }
     }
 
+    /**
+     * @brief Checks if two entities are colliding.
+     * @param transformA Transform component of the first entity.
+     * @param colliderA Collider component of the first entity.
+     * @param transformB Transform component of the second entity.
+     * @param colliderB Collider component of the second entity.
+     * @return True if the entities are colliding, false otherwise.
+     */
     private fun isColliding(
         transformA: TransformComponent, colliderA: ColliderComponent,
         transformB: TransformComponent, colliderB: ColliderComponent
@@ -59,6 +83,11 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
         return distance < (colliderA.radius + colliderB.radius)
     }
 
+    /**
+     * @brief Handles collision events between two entities.
+     * @param entityA First entity involved in the collision.
+     * @param entityB Second entity involved in the collision.
+     */
     private fun handleCollision(entityA: Int, entityB: Int) {
         // Player and Powerup
         val tagA = world.getEntity(entityA).getComponent(TagComponent::class.java)?.tag ?: Tag.NONE
@@ -91,7 +120,13 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
     }
 
 
+
     // Helper function:
+    /**
+     * @brief Handles power-up pickup logic for the player.
+     * @param playerEntityId The ID of the player entity.
+     * @param powerUpEntityId The ID of the power-up entity.
+     */
     private fun pickupPowerUp(playerEntityId: Int, powerUpEntityId: Int) {
         val powerUpComp =
             world.getEntity(powerUpEntityId).getComponent(PowerUpComponent::class.java)

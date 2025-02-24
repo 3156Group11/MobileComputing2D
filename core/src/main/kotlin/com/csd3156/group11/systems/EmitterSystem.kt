@@ -1,14 +1,35 @@
+/**
+ * @file EmitterSystem.kt
+ * @brief Manages particle emissions and effects in the game.
+ *
+ * The EmitterSystem is responsible for creating and updating particles, ensuring
+ * dynamic visual effects such as explosions, sparks, and other environmental feedback.
+ */
+
 import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
 import com.artemis.ComponentMapper
 import com.csd3156.group11.resources.Globals
 import kotlin.random.Random
 
+/**
+ * @class EmitterSystem
+ * @brief Handles the generation and updating of particle effects.
+ *
+ * This system creates particle effects at specified locations and manages their
+ * behavior over time, adjusting movement, lifetime, and appearance.
+ */
 class EmitterSystem(private val screenWidth: Float, private val screenHeight: Float) : BaseEntitySystem(Aspect.all(EmitterComponent::class.java)) {
 
     private lateinit var mEmitter: ComponentMapper<EmitterComponent>
     private var isFirstRun = true // Flag to check if it's the first frame
 
+    /**
+     * @brief Processes particle emissions every frame.
+     *
+     * This method updates active particles, emits new ones based on the emitter rate,
+     * and ensures smooth visual transitions.
+     */
     override fun processSystem() {
         val delta = world.delta
         val entities = subscription.entities
@@ -34,6 +55,11 @@ class EmitterSystem(private val screenWidth: Float, private val screenHeight: Fl
         }
     }
 
+    /**
+     * @brief Spawns a new particle with randomized movement and properties.
+     * @param emitter The emitter component responsible for spawning particles.
+     * @param prePopulate Whether this particle should be pre-initialized to create a smoother effect.
+     */
     private fun spawnParticle(emitter: EmitterComponent, prePopulate: Boolean = false) {
         val entity = world.create()
         val particle = world.edit(entity).create(ParticleComponent::class.java)

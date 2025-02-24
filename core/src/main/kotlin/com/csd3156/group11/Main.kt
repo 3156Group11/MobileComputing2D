@@ -43,9 +43,15 @@ import com.csd3156.group11.systems.ShieldSystem
 import com.csd3156.group11.systems.SlowFieldSystem
 import com.csd3156.group11.systems.SoundSystem
 
-var assetManager:AssetSystem = AssetSystem()
-var soundSystem: SoundSystem = SoundSystem()
+var assetManager:AssetSystem = AssetSystem() // Global asset manager for handling game resources.
+var soundSystem: SoundSystem = SoundSystem() // Global sound system for managing background music (BGM) and sound effects (SFX)
 
+/**
+ * @brief Creates a circular texture with a specified diameter and color.
+ * @param diameter The diameter of the circle in pixels.
+ * @param color The color of the circle (default is white).
+ * @return A TextureRegion containing the generated circular texture.
+ */
 fun createCircleTexture(diameter: Int, color: Color = Color.WHITE): TextureRegion {
     val pixmap = Pixmap(diameter, diameter, Pixmap.Format.RGBA8888)
     pixmap.setColor(color)
@@ -57,7 +63,13 @@ fun createCircleTexture(diameter: Int, color: Color = Color.WHITE): TextureRegio
     return TextureRegion(texture)
 }
 
-
+/**
+ * @class Main
+ * @brief Main application class responsible for initializing and managing the game loop.
+ *
+ * This class initializes game resources, sets up the Entity Component System (ECS),
+ * handles rendering, and manages input processing.
+ */
 /** [com.badlogic.gdx.ApplicationListener] implementation shared by all platforms. */
 class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
 {
@@ -69,6 +81,9 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
     private var scrWidth : Float = widthPix.toFloat()
     private var scrHeight : Float = heightPix.toFloat()
 
+    /**
+     * @brief Initializes the game, including assets, ECS world, and UI.
+     */
     override fun create() {
         Globals.scrWidth = scrWidth
         Globals.scrHeight = scrHeight
@@ -93,6 +108,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
         //False for Tilt
         val isDebugMode = true
         val particleTexture = createCircleTexture(360)
+
         // Configure ECS world
         val worldConfiguration = WorldConfigurationBuilder()
             .with(GameStateSystem(viewport))
@@ -125,21 +141,34 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
 
     }
 
+    /**
+     * @brief Updates and renders the game world every frame.
+     */
     override fun render() {
+
         // Clear the screen
         Gdx.gl.glClearColor(0.1f, 0.2f, 0.3f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-            // Update ECS world
+
+        // Update ECS world
         world.setDelta(Gdx.graphics.deltaTime)
         world.process()
     }
 
+    /**
+     * @brief Handles window resizing and updates viewport and camera.
+     * @param width The new width of the window.
+     * @param height The new height of the window.
+     */
     override fun resize(width: Int, height: Int) {
         viewport.update(width, height)
         camera.position.set(viewport.worldWidth / 2, viewport.worldHeight / 2, 0f)
         (world.getSystem(UISystem::class.java) as UISystem).resize(width, height)
     }
 
+    /**
+     * @brief Cleans up resources upon game exit.
+     */
     override fun dispose() {
         spriteBatch.dispose()
         font.dispose()
@@ -147,6 +176,9 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
         assetManager.dispose()
     }
 
+    /**
+     * @brief Sets up input processing for touch events.
+     */
     // Input handling (optional, for user input processing)
     private fun setupInputProcessor() {
         Gdx.input.inputProcessor = object : InputAdapter() {

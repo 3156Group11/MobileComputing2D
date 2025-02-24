@@ -1,3 +1,10 @@
+/**
+ * @file EnemySystem.kt
+ * @brief Manages enemy behavior, including movement, status effects, and elimination.
+ *
+ * This system processes enemy logic such as tracking the player, handling movement,
+ * applying status effects, and deleting defeated enemies.
+ */
 package com.csd3156.group11.systems
 
 import EmitterComponent
@@ -11,6 +18,13 @@ import com.csd3156.group11.createCircleTexture
 import com.csd3156.group11.resources.Globals
 import com.csd3156.group11.soundSystem
 
+/**
+ * @class EnemySystem
+ * @brief Handles enemy AI, movement, and death processing.
+ *
+ * This system manages the movement of enemies toward the player, applies status effects,
+ * and processes the death sequence, including visual effects.
+ */
 class EnemySystem : BaseEntitySystem(
     Aspect.all(EnemyComponent::class.java, EnemyBasicComponent::class.java, VelocityComponent::class.java, TransformComponent::class.java)
 ) {
@@ -21,6 +35,11 @@ class EnemySystem : BaseEntitySystem(
 
     private val entitiesToDelete = mutableListOf<Int>()
 
+    /**
+     * @brief Processes enemy movement and status updates.
+     *
+     * This method updates enemy positions, checks for status effects, and triggers death animations.
+     */
     override fun processSystem() {
         val playerEntities = world.aspectSubscriptionManager.get(
             Aspect.all(PlayerInputComponent::class.java, TransformComponent::class.java)
@@ -93,6 +112,13 @@ class EnemySystem : BaseEntitySystem(
     }
 }
 
+/**
+ * @class EnemyLineSystem
+ * @brief Handles movement and behavior of line-based enemy formations.
+ *
+ * This system manages enemies that move in predefined linear paths and ensures they
+ * respond correctly to game conditions such as screen boundaries.
+ */
 class EnemyLineSystem : BaseEntitySystem(
     Aspect.all(EnemyLineComponent::class.java, EnemyComponent::class.java, VelocityComponent::class.java, TransformComponent::class.java)
 ) {
@@ -106,6 +132,11 @@ class EnemyLineSystem : BaseEntitySystem(
     private val screenWidth = 35f
     private val screenHeight = 35 * Globals.scrHeight / Globals.scrWidth
 
+    /**
+     * @brief Processes movement for line-based enemies.
+     *
+     * Ensures enemies move in formation and handle boundary conditions.
+     */
     override fun processSystem() {
         val entities = subscription.entities
 

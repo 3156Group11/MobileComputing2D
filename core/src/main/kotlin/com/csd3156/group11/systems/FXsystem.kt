@@ -1,3 +1,11 @@
+/**
+ * @file FXSystem.kt
+ * @brief
+ * The FXSystem tracks effect components, updates their duration, and handles
+ * entity-following behavior for effects like shields.
+ */
+
+
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -7,11 +15,18 @@ import com.csd3156.group11.components.FXComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.enums.PowerUpType
 
+/**
+ * @file FXSystem.kt
+ * @brief Manages special effects (FX) such as shields and visual enhancements.
+ */
 class FXSystem : BaseEntitySystem(Aspect.all(FXComponent::class.java, TransformComponent::class.java)) {
 
     private lateinit var fxMapper: ComponentMapper<FXComponent>
     private lateinit var transformMapper: ComponentMapper<TransformComponent>
 
+    /**
+     * @brief Processes all active FX components.
+     */
     override fun processSystem() {
         val fxEntities = subscription.entities
 

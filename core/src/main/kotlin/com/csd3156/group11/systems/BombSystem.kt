@@ -1,3 +1,10 @@
+/**
+ * @file BombSystem.kt
+ * @brief Manages the behavior of bombs within the game, including their activation, timing, and effects on enemies.
+ *
+ * The BombSystem handles bomb placement, countdown timers, and interactions with enemy entities.
+ * When a bomb expires, it checks for nearby enemies and applies damage if they are within range.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -10,6 +17,13 @@ import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.components.TagComponent
 
+/**
+ * @class BombSystem
+ * @brief Handles the placement, countdown, and detonation of bombs in the game.
+ *
+ * This system manages all active bombs, reducing their timers each frame and checking for enemy proximity.
+ * When a bomb detonates, it damages or eliminates enemies within its blast radius.
+ */
 class BombSystem : BaseEntitySystem(
     Aspect.all(PowerUpComponent::class.java)
 ) {
@@ -18,6 +32,11 @@ class BombSystem : BaseEntitySystem(
     private lateinit var enemyMapper: ComponentMapper<EnemyComponent>
     private lateinit var tagMapper: ComponentMapper<TagComponent>
 
+    /**
+     * @brief Processes all active bombs in the game.
+     *
+     * Iterates through all bombs, reduces their timers, and checks for nearby enemies upon detonation.
+     */
     override fun processSystem() {
         val enemyEntities = world.aspectSubscriptionManager
             .get(Aspect.all(EnemyComponent::class.java, TransformComponent::class.java, TagComponent::class.java))

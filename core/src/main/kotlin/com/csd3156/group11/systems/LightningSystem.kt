@@ -1,3 +1,11 @@
+/**
+ * @file LightningSystem.kt
+ * @brief Handles lightning-based power-ups and enemy strikes.
+ *
+ * The LightningSystem is responsible for detecting and applying lightning strikes
+ * to enemies within range, ensuring they are affected in a prioritized order.
+ */
+
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -10,6 +18,10 @@ import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.prefabs.LightningFX
 
+/**
+ * @file LightningSystem.kt
+ * @brief Handles lightning-based power-ups and enemy strikes.
+ */
 class LightningSystem : BaseEntitySystem(
     Aspect.all(PowerUpComponent::class.java, TransformComponent::class.java)
 ) {
@@ -20,6 +32,9 @@ class LightningSystem : BaseEntitySystem(
     private val lightningRange = 6f  // Only strike enemies within this range
     private val maxStrikes = 3  // Maximum number of targets to strike
 
+    /**
+     * @brief Processes lightning power-ups and applies effects to enemies.
+     */
     override fun processSystem() {
         val entities = subscription.entities
 
@@ -36,6 +51,16 @@ class LightningSystem : BaseEntitySystem(
         }
     }
 
+    /**
+     * @brief Strikes the nearest enemies with a lightning effect.
+     *
+     * This function finds the closest enemies to the given origin within the lightning range
+     * and marks them as "dying" while triggering a lightning visual effect.
+     *
+     * @param origin The starting position of the lightning strike.
+     * @param strikesLeft The maximum number of enemies that can be struck.
+     * @param powerUpComp The power-up component associated with the lightning attack.
+     */
     private fun strikeNearestEnemies(
         origin: Vector2,
         strikesLeft: Int,

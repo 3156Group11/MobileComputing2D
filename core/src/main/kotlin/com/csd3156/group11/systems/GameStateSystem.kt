@@ -1,3 +1,12 @@
+/**
+ * @file GameStateSystem.kt
+ * @brief Manages the overall game state transitions and logic.
+ *
+ * The GameStateSystem controls different game states, including initialization, gameplay,
+ * game-over conditions, and scene transitions. It ensures that the game behaves correctly
+ * depending on its current state.
+ */
+
 import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
 import com.badlogic.gdx.graphics.Color
@@ -41,6 +50,13 @@ import com.csd3156.group11.systems.PlayerInputSystem
 import ktx.assets.file
 import sun.font.TextLabel
 
+/**
+ * @class GameStateSystem
+ * @brief Handles game state transitions and logic updates.
+ *
+ * This system is responsible for managing game flow, including transitioning between
+ * different game states such as the start screen, active gameplay, and game over.
+ */
 class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(TransformComponent::class.java)) {
     var currentState: GameState
         get() = Globals.currentState
@@ -63,7 +79,10 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         get() = Globals.isCalibrated
         set(value) { Globals.isCalibrated = value }
 
-
+    /**
+     * @brief Changes the current game state.
+     * @param newState The new state to transition to.
+     */
     fun changeState(newState: GameState) {
         if (newState != currentState) {
             println("Changing state to: $newState")
@@ -71,6 +90,12 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         }
     }
 
+    /**
+     * @brief Processes game state updates and transitions.
+     *
+     * This method updates the current game state and handles logic for different phases
+     * such as starting, pausing, and restarting the game.
+     */
     override fun processSystem() {
         if (!initialized) {
             enterState(currentState)
@@ -208,6 +233,10 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         }
     }
 
+    /**
+     * @brief Handles the transition into a new game state.
+     * @param state The game state being entered.
+     */
     private fun enterState(state: GameState) {
         when (state) {
             GameState.MAIN_MENU -> {
@@ -235,6 +264,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         }
     }
 
+    /**
+     * @brief Handles the exit transition from the current game state.
+     */
     private fun exitState() {
         val entities = subscription.entities
         for (i in 0 until entities.size())  {
@@ -243,6 +275,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         world.process() // Ensure entities are removed immediately
     }
 
+    /**
+     * @brief Handles the the creation of the entity in the main menu page such as title and buttons.
+     */
     private fun createMainMenuEntities() {
         // Example: Create UI entities for Main Menu
         val gameName = Image_Label(
@@ -314,6 +349,10 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 )
             )
     }
+
+    /**
+     * @brief Handles the the creation of the button entity for the calibration/TopDown setting button.
+     */
     private fun swapImages(button: ImageButton, isCalibrated: Boolean) {
         val newFilepath = if (isCalibrated) "textures/Calibration.png" else "textures/TopDown.png"
 
@@ -325,6 +364,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         button.invalidate()
     }
 
+    /**
+     * @brief Handles the the creation of the entity in the game level such as the player and enemies.
+     */
     private fun createGameEntities() {
         // Example: Create player, enemies, and other game entities
         val player = Player()
@@ -459,6 +501,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         Globals.deathScreenInit = false
     }
 
+    /**
+     * @brief Handles the the creation of the entity in the high score page.
+     */
     private fun createHighScoreEntities() {
         loadScores() // Load saved scores before displaying
 
@@ -518,6 +563,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             )
     }
 
+    /**
+     * @brief Handles the the creation of the entity in the pause screen.
+     */
     private fun createPauseScreenEntities() {
         if (pauseScreenCreated) return
         soundSystem.playSFX("audio/sfx/fx_Button_PauseGame.wav")
@@ -559,6 +607,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         pauseScreenCreated = true
     }
 
+    /**
+     * @brief Handles the removal of pause screen entity.
+     */
     private fun removePauseScreenEntities() {
         for (entity in pauseEntities) {
             if (entity != -1 && world.getEntity(entity) != null) {
@@ -571,6 +622,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         pauseScreenCreated = false // Allow UI to be created again next time
     }
 
+    /**
+     * @brief Handles the countdown timer when player resumes the game.
+     */
     private fun startResumeCountdown() {
         var countdownTime = 3
         val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
@@ -605,6 +659,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         }, 1f, 1f)
     }
 
+    /**
+     * @brief Handles the logic of adding score to High Score board.
+     */
     private fun addScore(newScore: Int) {
         highScores.add(newScore)
         highScores.sortDescending()
@@ -613,6 +670,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         }
     }
 
+    /**
+     * @brief Handles the logic of saving score to High Score board.
+     */
     private fun saveScores() {
         for (i in highScores.indices) {
             prefs.putInteger("score_$i", highScores[i])
@@ -620,6 +680,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         prefs.flush() // Save changes
     }
 
+    /**
+     * @brief Handles the logic of loading score to High Score board.
+     */
     private fun loadScores() {
         highScores.clear()
         for (i in 0 until 7) {
@@ -629,17 +692,27 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             }
         }
     }
+
+    /**
+     * @brief Handles the logic of adding score to High Score board when the game ends.
+     */
     private fun onGameEnd(finalScore: Int) {
         addScore(finalScore)
         saveScores() // Save new high scores
     }
 
+    /**
+     * @brief Handles the logic of clearing the high score board.
+     */
     private fun clearHighScores() {
         highScores.clear() // Clear the list in memory
         prefs.clear() // Clear stored scores in SharedPreferences
         prefs.flush() // Save changes to persist clearing
     }
 
+    /**
+     * @brief Handles the logic of removing lower score on the High Score board.
+     */
     private fun removeExistingScore() {
         val entities = subscription.entities
         for (i in 0 until entities.size()) {
@@ -648,6 +721,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         world.process()
     }
 
+    /**
+     * @brief Handles the logic of removing the death screen entities.
+     */
     private fun removeDeathScreenEntities() {
         for (entity in deathScreenEntities) {
             if (entity != -1) {

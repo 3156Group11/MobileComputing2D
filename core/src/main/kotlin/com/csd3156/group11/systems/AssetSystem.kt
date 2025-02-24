@@ -1,3 +1,9 @@
+/**
+ * @file AssetSystem.kt
+ * @brief Manages the loading and storage of game assets including textures, fonts, sound effects, and background music.
+ *
+ * The AssetSystem provides methods for dynamically loading assets from specified folders and managing their lifecycle.
+ */
 package com.csd3156.group11.systems
 
 import com.badlogic.gdx.Gdx
@@ -11,6 +17,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import java.util.Locale
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 
+/**
+ * @class AssetSystem
+ * @brief Handles asset management for the game, including textures, fonts, and audio.
+ *
+ * This system is responsible for loading and retrieving game assets, ensuring they are efficiently managed.
+ */
 class AssetSystem() {
     private var assetManager:AssetManager = AssetManager()
 
@@ -19,10 +31,19 @@ class AssetSystem() {
         assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(assetManager.fileHandleResolver))
     }
 
+    /**
+     * @brief Returns the AssetManager instance.
+     * @return The AssetManager used by this system.
+     */
     public fun system() : AssetManager
     {
         return assetManager
     }
+
+    /**
+     * @brief Loads all texture assets from a specified folder.
+     * @param folderPath The path of the folder containing texture files.
+     */
     public fun loadTexturesFromFolder(folderPath: String)
     {
         val folder = Gdx.files.internal(folderPath)
@@ -46,6 +67,10 @@ class AssetSystem() {
         }
     }
 
+    /**
+     * @brief Loads all font assets from a specified folder.
+     * @param folderPath The path of the folder containing font files.
+     */
     public fun loadFontsFromFolder(folderPath: String)
     {
         println("02")
@@ -79,7 +104,10 @@ class AssetSystem() {
         }
     }
 
-
+    /**
+     * @brief Loads all sound effect assets from a specified folder.
+     * @param folderPath The path of the folder containing sound effect files.
+     */
     public fun loadSFXFromFolder(folderPath: String) {
         // Get the folder as a FileHandle
         val folder = Gdx.files.internal(folderPath)
@@ -111,6 +139,10 @@ class AssetSystem() {
         }
     }
 
+    /**
+     * @brief Loads all background music assets from a specified folder.
+     * @param folderPath The path of the folder containing background music files.
+     */
     public fun loadBGMFromFolder(folderPath: String) {
         // Get the folder as a FileHandle
         val folder = Gdx.files.internal(folderPath)
@@ -141,6 +173,9 @@ class AssetSystem() {
         }
     }
 
+    /**
+     * @brief Disposes of all loaded assets.
+     */
     public fun dispose()
     {
         assetManager.dispose()

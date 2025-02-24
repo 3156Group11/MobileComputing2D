@@ -1,3 +1,10 @@
+/**
+ * @file EnemySpawnerSystem.kt
+ * @brief Handles the spawning of enemies in different formations and locations.
+ *
+ * The EnemySpawnerSystem determines where and how enemies appear in the game world.
+ * It supports various formations such as grid, circle, and edge spawns.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -15,12 +22,26 @@ import com.badlogic.gdx.math.Vector2
 import com.csd3156.group11.components.SpawnTask
 import com.csd3156.group11.enums.GameState
 
+/**
+ * @class EnemySpawnerSystem
+ * @brief Spawns enemies in different formations and patterns.
+ *
+ * This system processes enemy spawners, determines spawn positions, and creates enemies
+ * based on predefined formations. It ensures that enemies appear in strategic locations
+ * relative to the player and the game world.
+ */
 class EnemySpawnerSystem : BaseEntitySystem(Aspect.all(EnemySpawnerComponent::class.java)) {
 
     private lateinit var spawnMapper: ComponentMapper<EnemySpawnerComponent>
     private val screenWidth = 35f
     private val screenHeight = 35 * Globals.scrHeight / Globals.scrWidth
 
+    /**
+     * @brief Processes enemy spawn logic.
+     *
+     * This method checks for enemy spawn requests, assigns positions, and creates enemies
+     * based on their assigned formation and type.
+     */
     override fun processSystem() {
         if (Globals.IsStarting) return
         if (Globals.currentState != GameState.GAME_STAGE) return
