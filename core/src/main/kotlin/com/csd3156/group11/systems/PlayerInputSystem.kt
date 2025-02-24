@@ -8,6 +8,7 @@ import com.badlogic.gdx.Input
 import com.csd3156.group11.components.PlayerInputComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
+import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.resources.Globals
 import javax.xml.crypto.dsig.Transform
 
@@ -26,16 +27,16 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     private val debugSpeed = 10f // Speed boost for WASD movement
 
     // Calibration Variables
-    private var calibratedAccelX = 0f
-    private var calibratedAccelY = 0f
-
+    var calibratedAccelY: Float
+        get() = Globals.calibratedAccelY
+        set(value) { Globals.calibratedAccelY = value }
+    var calibratedAccelX: Float
+        get() = Globals.calibratedAccelX
+        set(value) { Globals.calibratedAccelX = value }
     /**
      * Sets the current accelerometer values as the "flat" reference.
      */
-    fun calibrate() {
-        calibratedAccelX = Gdx.input.accelerometerX
-        calibratedAccelY = Gdx.input.accelerometerY
-    }
+
 
     override fun process(entityId: Int) {
         if (Globals.IsStarting) return
