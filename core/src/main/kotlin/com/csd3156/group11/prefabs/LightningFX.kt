@@ -12,7 +12,7 @@ class LightningFX(private val strikePosition: Vector2) : Prefab() {
         world.edit(ID)
             .add(TransformComponent(
                 position = strikePosition.cpy(),
-                scale = Vector2(0.5f, 0.5f)  // Adjust scale as needed for visual size
+                scale = Vector2(1f, 1f)  // Adjust scale as needed for visual size
             ))
             .add(SpriteComponent("textures/LightningFX.png", RenderLayers.FX))
             .add(FXComponent().apply {

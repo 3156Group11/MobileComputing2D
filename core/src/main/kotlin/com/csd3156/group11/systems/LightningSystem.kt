@@ -17,7 +17,7 @@ class LightningSystem : BaseEntitySystem(
     private lateinit var powerUpMapper: ComponentMapper<PowerUpComponent>
     private lateinit var enemyMapper: ComponentMapper<EnemyComponent>
 
-    private val lightningRange = 300f  // Only strike enemies within this range
+    private val lightningRange = 6f  // Only strike enemies within this range
     private val maxStrikes = 3  // Maximum number of targets to strike
 
     override fun processSystem() {
@@ -72,6 +72,7 @@ class LightningSystem : BaseEntitySystem(
                     }
 
                     // Create Lightning FX at the enemy position
+
                     val lightningFX = LightningFX(enemyPosition)
                     lightningFX.Create(world)
 
