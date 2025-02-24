@@ -1,10 +1,13 @@
 package com.csd3156.group11.systems
 
+import EmitterComponent
 import com.artemis.Aspect
 import com.artemis.BaseEntitySystem
 import com.artemis.ComponentMapper
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.csd3156.group11.components.*
+import com.csd3156.group11.createCircleTexture
 import com.csd3156.group11.resources.Globals
 
 class EnemySystem : BaseEntitySystem(
@@ -44,6 +47,20 @@ class EnemySystem : BaseEntitySystem(
                 }
                 continue
             } else if (enemy.isDying) {
+
+                if (!world.getMapper(EmitterComponent::class.java).has(entity))
+                {
+                    val emitter = world.edit(entity).create(EmitterComponent::class.java)
+                    emitter.position = Vector2(transform.position)
+                    emitter.position.x+=0.3f
+                    emitter.position.y+=0.3f
+                    emitter.point = true
+                    emitter.emissionRate = 10f
+                    emitter.particleLifeTime = 1f
+                    emitter.particleSpeed = 20f
+                    emitter.particleSize = 9f
+                    emitter.texture = createCircleTexture(360, Color.MAROON)
+                }
                 enemy.DyingTime -= world.delta
                 enemy.isLive = false
                 transform.scale = Vector2((enemy.DyingTime / 2) * 0.75f, (enemy.DyingTime / 2) * 0.75f)
@@ -108,6 +125,19 @@ class EnemyLineSystem : BaseEntitySystem(
                 }
                 continue
             } else if (enemy.isDying) {
+                if (!world.getMapper(EmitterComponent::class.java).has(entity))
+                {
+                    val emitter = world.edit(entity).create(EmitterComponent::class.java)
+                    emitter.position = Vector2(transform.position)
+                    emitter.position.x+=0.3f
+                    emitter.position.y+=0.3f
+                    emitter.point = true
+                    emitter.emissionRate = 10f
+                    emitter.particleLifeTime = 1f
+                    emitter.particleSpeed = 20f
+                    emitter.particleSize = 9f
+                    emitter.texture = createCircleTexture(360, Color.MAROON)
+                }
                 enemy.DyingTime -= world.delta
                 enemy.isLive = false
                 velocity.velocity = Vector2(0f, 0f)

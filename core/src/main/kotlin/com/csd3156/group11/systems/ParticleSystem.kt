@@ -29,7 +29,10 @@ class ParticleSystem(private val batch: SpriteBatch, private val texture: Textur
             }
 
             // Draw particle
-            batch.draw(texture, particle.position.x, particle.position.y, particle.size, particle.size)
+            if (particle.texture == null)
+                batch.draw(texture, particle.position.x, particle.position.y, particle.size, particle.size)
+            else
+                batch.draw(particle.texture, particle.position.x, particle.position.y, particle.size, particle.size)
         }
         batch.end()
     }

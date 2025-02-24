@@ -1,4 +1,5 @@
 import com.artemis.Component
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 
 class EmitterComponent : Component() {
@@ -7,5 +8,7 @@ class EmitterComponent : Component() {
     var particleLifeTime = 1f
     var particleSpeed = 50f
     var lastEmissionTime = 0f
+    var particleSize = 3f
     var point = false
+    var texture : TextureRegion? = null
 }
