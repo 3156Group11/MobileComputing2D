@@ -185,6 +185,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 // Main Menu Button
                 val mainMenuButton = Image_Button(
                     filepath = "textures/MainMenu.png",
+                    filepath2 = "textures/MainMenu_pressed.png",
                     Position = Vector2(15f, 5f),
                     Scale = Vector2(0.8f, 0.8f),
                     Action = {
@@ -240,7 +241,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         // Example: Create UI entities for Main Menu
         val gameName = Image_Label(
             filepath = "textures/Title.png",
-            Position = Vector2(12f, 8.5f),
+            Position = Vector2(12f, 9.5f),
             Scale = Vector2(13f, 5f),
 
         )
@@ -248,6 +249,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val startGameButton = Image_Button(
             filepath = "textures/Start.png",
+            filepath2 = "textures/Start_pressed.png",
             Position = Vector2(15f, 7f),
             Scale = Vector2(0.8f, 0.8f),
             Action = {
@@ -259,7 +261,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val highScore = Image_Button(
             filepath = "textures/HighScore.png",
-            Position = Vector2(15f, 4.5f),
+            filepath2 = "textures/HighScore_pressed.png",
+            Position = Vector2(15f, 4f),
             Scale = Vector2(0.8f,0.8f),
             Action = {
                 soundSystem.playSFX("audio/sfx/fx_Button_DefaultSelection.wav")
@@ -270,7 +273,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val calibrationButton = Image_Button(
             filepath = "textures/Calibration.png",  // Default image
-            Position = Vector2(15f, 2f),
+            Position = Vector2(15f, 1f),
             Scale = Vector2(0.8f, 0.8f),
             Action = { button ->
                 swapImages(button, isCalibrated) // Toggle image
@@ -317,12 +320,12 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         // Inside createGameEntities() function:
         val typeStyle = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
         val scoreLabelStyle = LabelStyle(typeStyle, Color.WHITE)
-
+        scoreLabelStyle.font.data.setScale(0.15f,.015f)
         val scoreLabel = Label("Score: 0", scoreLabelStyle)
         val scoreEntity = world.create()
         world.edit(scoreEntity)
             .add(TransformComponent(position = Vector2(1f, 13f),
-                0f, Vector2(0.5f,0.5f))) // Position at top-left
+                0f, scale = Vector2(0.15f,0.15f))) // Position at top-left
             .add(UIComponent(scoreLabel))
             .add(TagComponent(Tag.SCORE_UI)) // Use a tag to identify the score label
 
@@ -423,7 +426,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
         val inStyle = LabelStyle(font, Color.WHITE)
-        inStyle.font.data.setScale(3f, 3f)
+        inStyle.font.data.setScale(1.5f, 1.5f)
         val label = Label("3", inStyle)
         val startTimerID = world.create()
         //println("Enemy Created! Entity ID: $ID")
@@ -462,6 +465,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val backButton = Image_Button(
             filepath = "textures/Back.png",
+            filepath2 = "textures/Back_pressed.png",
             Position = Vector2(13f, 1f),
             Scale = Vector2(0.6f,0.8f),
             Action = {
@@ -473,6 +477,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val clearButton = Image_Button(
             filepath = "textures/Clear.png",
+            filepath2 = "textures/Clear_pressed.png",
             Position = Vector2(19f, 1f),
             Scale = Vector2(0.6f,0.8f),
             Action = {
@@ -510,6 +515,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val resumeButton = Image_Button(
             filepath = "textures/Resume.png",
+            filepath2 = "textures/Resume_pressed.png",
             Position = Vector2(15f, 7.5f),
             Scale = Vector2(0.8f, 0.8f),
             Action = {
@@ -523,6 +529,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
         val quitButton = Image_Button(
             filepath = "textures/Quit.png",
+            filepath2 = "textures/Quit_pressed.png",
             Position = Vector2(15f, 4.5f),
             Scale = Vector2(0.8f, 0.8f),
             Action = {
@@ -552,7 +559,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         var countdownTime = 3
         val font = assetManager.system().get("fonts/LiberationSans.ttf", BitmapFont::class.java)
         val style = LabelStyle(font, Color.WHITE)
-        style.font.data.setScale(5f, 5f)
+        style.font.data.setScale(1.5f, 1.5f)
         val countdownLabel = Label(countdownTime.toString(), style)
         val countdownEntity = world.create()
         world.edit(countdownEntity)

@@ -6,13 +6,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.csd3156.group11.assetManager
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.UIComponent
-import com.csd3156.group11.resources.Globals
 
 
 public class Image_Button(filepath: String, Position: Vector2, Scale: Vector2, Action: (ImageButton) -> Unit) : Prefab() {
@@ -20,12 +18,35 @@ public class Image_Button(filepath: String, Position: Vector2, Scale: Vector2, A
     var inPos: Vector2 = Position
     var inScale: Vector2 = Scale
     var inAction: (ImageButton) -> Unit = Action
+    var inFilepath2: String? = null
+
+    constructor(
+        filepath: String,
+        filepath2: String,
+        Position: Vector2,
+        Scale: Vector2,
+        Action: (ImageButton) -> Unit
+    ) : this(filepath, Position, Scale, Action) {  // Calls the primary constructor
+        inFilepath2 = filepath2
+    }
 
     public override fun Create(world: World): Int {
         val texture = assetManager.system().get(inFilepath, Texture::class.java)
         val region = TextureRegion(texture, texture.width, texture.height)
         val drawable = TextureRegionDrawable(region)
-        val button = ImageButton(drawable)
+        val button : ImageButton
+        if (inFilepath2 != null)
+        {
+            val texture2 = assetManager.system().get(inFilepath2, Texture::class.java)
+            val region2 = TextureRegion(texture2, texture2.width, texture2.height)
+            val drawable2 = TextureRegionDrawable(region2)
+            button = ImageButton(drawable, drawable2)
+        }
+        else
+        {
+            button = ImageButton(drawable)
+        }
+
         button.setSize(texture.width * inScale.x, texture.height * inScale.x)
 
         button.addListener(object : ClickListener() {
