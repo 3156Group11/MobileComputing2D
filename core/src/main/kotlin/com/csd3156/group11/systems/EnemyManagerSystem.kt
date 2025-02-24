@@ -15,15 +15,17 @@ import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.resources.Globals
 
 class EnemyManagerSystem(
-    private val threshold: Int = 15,
-    interval: Float = 3f
+    private val threshold: Int = 10,
+    interval: Float = 5f
 ) : IntervalEntitySystem(Aspect.all(EnemyComponent::class.java), interval) {
+
+    var easeInEnemy: Int = 8
+    var easeInEnemyCounter: Int = 0
 
     override fun processSystem() {
         if (Globals.currentState != GameState.GAME_STAGE) return
         if (Globals.IsStarting) return
         if (Globals.deathScreen) return
-
 
         // Query for active enemy entities.
         val enemyEntities: IntBag =
@@ -57,38 +59,63 @@ class EnemyManagerSystem(
             Vector2(17.5f, 3f)
         }
 
+        if (easeInEnemyCounter <= easeInEnemy) {
+            val formation = EnemyFormation.NONE
+            val count = 1  // spawn one enemy at a time
+            val spawnInterval = 5f  // slower spawn rate for ease-in
+            val spawnEntity = world.create()
+            world.edit(spawnEntity).add(EnemySpawnerComponent(formation, count, playerCenter))
+            // Override the spawn interval for this request.
+            val spawner = world.getMapper(EnemySpawnerComponent::class.java).get(spawnEntity)
+            spawner.spawnInterval = spawnInterval
+            println("Ease-in spawn request: formation=$formation, count=$count, center=$playerCenter, interval=$spawnInterval")
+            easeInEnemyCounter += count
+            return  // Do not process other spawns during ease-in.
+        }
+
         // If enemy count is below threshold, spawn a new formation.
         if (enemyEntities.size() < threshold) {
-            val defaultRoll = MathUtils.random(0f, 1f)
+           /* val defaultRoll = MathUtils.random(0f, 1f)
             val defaultFormation: EnemyFormation = when {
                 defaultRoll < 0.8f -> EnemyFormation.NONE
                 defaultRoll < 0.9f -> EnemyFormation.CIRCLE
                 else -> EnemyFormation.GRID
-            }
-            val defaultCount = MathUtils.random(8, 12)
+            }*/
+            /*val defaultCount = MathUtils.random(8, 12)
             val defaultCenter: Vector2 = if (defaultFormation == EnemyFormation.CIRCLE || defaultFormation == EnemyFormation.GRID) {
                 playerCenter
             } else {
                 Vector2(17.5f, 3f)
+            }*/
+
+            val defaultRoll = MathUtils.random(0f, 1f)
+            if (defaultRoll < 0.8f) {
+                val defaultSpawnEntity = world.create()
+                val defaultCount = 1
+                world.edit(defaultSpawnEntity)
+                    .add(EnemySpawnerComponent(EnemyFormation.NONE, defaultCount, Vector2(17.5f, 3f)))
             }
-            val defaultSpawnEntity = world.create()
-            world.edit(defaultSpawnEntity)
-                .add(EnemySpawnerComponent(defaultFormation, defaultCount, defaultCenter))
 
             val specialCandidates = listOf(
                 EnemyFormation.TOP_BOTTOM,
                 EnemyFormation.LEFT_RIGHT,
-                EnemyFormation.ALL_EDGES
+                EnemyFormation.ALL_EDGES,
+                EnemyFormation.CIRCLE,
+                EnemyFormation.GRID
             )
-            val specialChance = 0.2f
+
             val roll = MathUtils.random(0f, 1f)
-            if (roll < specialChance) {
+            if (roll < 0.5f) {
                 val specialFormation = specialCandidates.random()
-                val specialCount = MathUtils.random(10, 20)
-                val specialCenter = Vector2(17.5f, 3f)
+                val defaultCount = MathUtils.random(8, 12)
+                val specialCenter: Vector2 = if (specialFormation == EnemyFormation.CIRCLE || specialFormation == EnemyFormation.GRID) {
+                    playerCenter
+                } else {
+                    Vector2(17.5f, 3f)
+                }
                 val specialSpawnEntity = world.create()
                 world.edit(specialSpawnEntity)
-                    .add(EnemySpawnerComponent(specialFormation, specialCount, specialCenter))
+                    .add(EnemySpawnerComponent(specialFormation, defaultCount, specialCenter))
             }
         }
     }
