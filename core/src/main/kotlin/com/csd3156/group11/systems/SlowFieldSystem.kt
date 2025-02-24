@@ -40,14 +40,15 @@ class SlowFieldSystem : BaseEntitySystem(
                     val enemyComponent = enemyMapper[enemyId]
 
                     val distance = slowField.position.dst(enemyTransform.position)
-                    if (distance <= 30f) {  // Collision detection range
+                    if (distance <= 5f) {  // Match collision radius with actual beam width
                         if (!enemyComponent.isSlowed) {
                             println("🌀 Enemy $enemyId hit by Slow Field! Applying slow effect.")
                             enemyComponent.isSlowed = true
                             enemyComponent.slowTimeRemaining = 5f  // Slow effect lasts 5 seconds
-                            enemyComponent.speed *= 0.5f  // Reduce speed by 50%
+                            enemyVelocity.velocity.scl(0.5f)  // Reduce current velocity by 50%
                         }
                     }
+
                 }
 
                 val updatedTimeLeft = slowField.timeLeft - world.delta
