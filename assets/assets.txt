@@ -18,6 +18,7 @@ audio/sfx/fx_Player_TimerTicking.wav
 audio/sfx/fx_Player_TimesUp.wav
 com/badlogic/gdx/utils/lsans-15.fnt
 com/badlogic/gdx/utils/lsans-15.png
+fonts/DroidSans.ttf
 fonts/LiberationSans.ttf
 textures/Back.png
 textures/Back_pressed.png

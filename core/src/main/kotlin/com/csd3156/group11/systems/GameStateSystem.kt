@@ -455,11 +455,12 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         )
         highScoreScreenOverLay.Create(world)
 
+        val highScoreFont = assetManager.system().get("fonts/DroidSans.ttf", BitmapFont::class.java)
         for (i in highScores.indices) {
             val scoreLabel = Text_Label(
-                "${i + 1}. ${highScores[i]}", LabelStyle(BitmapFont(), Color.YELLOW),
+                "${i + 1}. ${highScores[i]}", LabelStyle(highScoreFont, Color.YELLOW),
                 Position = Vector2(16f, 10f - i), //spacing of scores
-                Scale = Vector2(5f, 5f)
+                Scale = Vector2(0.75f, 0.75f)
             )
             scoreLabel.Create(world)
         }
