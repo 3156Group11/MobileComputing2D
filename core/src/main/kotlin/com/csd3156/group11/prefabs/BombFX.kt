@@ -10,20 +10,28 @@ class BombFX(private val detonationPos: Vector2, private val radius: Float) : Pr
     override fun Create(world: World): Int {
         ID = world.create()
 
-        val adjustedPosition = detonationPos.cpy().sub(radius, radius) // Center FX correctly
+        // Directly use the provided screen-space detonation position
+        val adjustedPosition = detonationPos.cpy().sub(radius, radius) // Properly center the FX
+
+        // Set the visual scale based on the actual radius (scale is diameter)
+        val visualScale = Vector2(radius , radius )
 
         world.edit(ID)
             .add(TransformComponent(
                 position = adjustedPosition,  // Proper centering
-                scale = Vector2(radius * 2f, radius * 2f)  // Scale to diameter
+                scale = visualScale  // Visual size matches the collision radius
             ))
             .add(SpriteComponent("textures/Circle.png", RenderLayers.FX))
             .add(FXComponent().apply {
                 fxType = PowerUpType.BOMB
-                duration = 3f  // Effect lasts for 3 seconds
+                duration = 3f  // Effect duration
             })
 
-        println("💣 BombFX created at $adjustedPosition with radius $radius and scale ${radius * 2f}")
+        // Debug logs for verification
+        println("💥 BombFX created at $adjustedPosition with visual scale $visualScale and radius $radius")
+        println("💥 BombFX Debug Info:")
+        println("Original Detonation Position (Screen): $detonationPos")
+        println("Adjusted Centered Position: $adjustedPosition")
         return ID
     }
 }
