@@ -36,6 +36,8 @@ import com.csd3156.group11.systems.LaserSystem
 import com.csd3156.group11.systems.LightningSystem
 import com.csd3156.group11.systems.PhysicsSystem
 import com.csd3156.group11.systems.PlayerInputSystem
+import com.csd3156.group11.systems.PowerUpMovementSystem
+import com.csd3156.group11.systems.PowerUpSpawnerSystem
 import com.csd3156.group11.systems.RenderSystem
 import com.csd3156.group11.systems.ShieldSystem
 import com.csd3156.group11.systems.SlowFieldSystem
@@ -107,6 +109,8 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(CollisionSystem())
             .with(LaserSystem())
             .with(FXSystem())
+            .with(PowerUpSpawnerSystem())
+            .with(PowerUpMovementSystem())
             .with(RenderSystem(spriteBatch, camera))
             .with(EmitterSystem(viewport.worldWidth, viewport.worldHeight))
             .with(ParticleSystem(spriteBatch, particleTexture))

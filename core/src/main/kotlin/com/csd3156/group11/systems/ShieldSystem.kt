@@ -58,7 +58,7 @@ class ShieldSystem : BaseEntitySystem(
                     playerPowerUp.shieldFXEntityId = -1 // Reset the FX ID
                 }
 
-                println("🛡️ Shield absorbed the hit, broke, and FX has been removed.")
+                println(" Shield absorbed the hit, broke, and FX has been removed.")
                 return
             }
         }
