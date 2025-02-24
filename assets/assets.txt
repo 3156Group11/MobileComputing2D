@@ -4,7 +4,6 @@ audio/bgm/bgm_mainMenu.wav
 audio/sfx/fx_Button_Clear.wav
 audio/sfx/fx_Button_DefaultSelection.wav
 audio/sfx/fx_Button_GoBack.wav
-audio/sfx/fx_Button_PauseGame (2).wav
 audio/sfx/fx_Button_PauseGame.wav
 audio/sfx/fx_Button_UnpauseGame.wav
 audio/sfx/fx_EnemyDeath.wav
