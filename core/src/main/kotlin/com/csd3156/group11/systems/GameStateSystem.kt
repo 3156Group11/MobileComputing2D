@@ -56,7 +56,13 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
     private val highScores: MutableList<Int> = mutableListOf()
     private val prefs: Preferences = Gdx.app.getPreferences("HighScores")
     private var isDeathScreenCreated = false
-    private var isCalibrated = false
+
+
+    // Use Globals to store calibration state persistently
+    var isCalibrated: Boolean
+        get() = Globals.isCalibrated
+        set(value) { Globals.isCalibrated = value }
+
 
     fun changeState(newState: GameState) {
         if (newState != currentState) {
@@ -172,13 +178,13 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                     }
                 }
 
-                // Game Over Label
-                val gameOverLabel = Text_Label(
-                    "Game Over!",
-                    LabelStyle(font, Color.WHITE),
-                    Position = Vector2(12.5f, 10f),
-                    Scale = Vector2(3f, 3f)
-                )
+
+                val gameOverLabel = Image_Label(
+                    filepath = "textures/GameOver_Text.png",
+                    Position = Vector2(12f, 9.5f),
+                    Scale = Vector2(13f, 5f),
+                    )
+                gameOverLabel.Create(world)
                 val gameOverEntity = gameOverLabel.Create(world)
                 deathScreenEntities.add(gameOverEntity)
 
@@ -270,9 +276,9 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             }
         )
         highScore.Create(world)
-
+        val initialFilepath = if (isCalibrated) "textures/Calibration.png" else "textures/TopDown.png"
         val calibrationButton = Image_Button(
-            filepath = "textures/Calibration.png",  // Default image
+            filepath = initialFilepath,  // Default image
             Position = Vector2(15f, 1f),
             Scale = Vector2(0.8f, 0.8f),
             Action = { button ->
@@ -308,8 +314,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
                 )
             )
     }
-    private fun swapImages(button: ImageButton, isBack: Boolean) {
-        val newFilepath = if (isBack) "textures/Calibration.png" else "textures/TopDown.png"
+    private fun swapImages(button: ImageButton, isCalibrated: Boolean) {
+        val newFilepath = if (isCalibrated) "textures/Calibration.png" else "textures/TopDown.png"
 
         val texture = assetManager.system().get(newFilepath, Texture::class.java)
         val region = TextureRegion(texture, texture.width, texture.height)
