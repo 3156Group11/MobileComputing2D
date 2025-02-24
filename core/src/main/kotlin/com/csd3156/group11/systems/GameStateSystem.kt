@@ -75,9 +75,8 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             pendingState = null
 
             world.process()
-
-            exitState(currentState)
             currentState = newState!!
+            exitState()
             enterState(currentState)
         }
 
@@ -229,7 +228,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         }
     }
 
-    private fun exitState(state: GameState) {
+    private fun exitState() {
         val entities = subscription.entities
         for (i in 0 until entities.size())  {
             world.delete(entities[i]) // Delete all active entities
@@ -513,12 +512,11 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
         soundSystem.playSFX("audio/sfx/fx_Button_PauseGame.wav")
         pauseEntities.clear()
 
-        val overlay = Image_Label(
-            filepath = "textures/Overlay.png",
-            Position = Vector2(0f, 0f),
-            Scale = Vector2(35f, 15f)
-        )
-        pauseEntities.add(overlay.Create(world)) // Store the entity ID
+        val over = world.create()
+        world.edit(over).add(TransformComponent(position = Vector2(-1f,-1f), scale = Vector2(10f,5f)))
+            .add(SpriteComponent("textures/Overlay.png", RenderLayers.BackgroundBorder))
+
+        pauseEntities.add(over) // Store the entity ID
 
         val resumeButton = Image_Button(
             filepath = "textures/Resume.png",
