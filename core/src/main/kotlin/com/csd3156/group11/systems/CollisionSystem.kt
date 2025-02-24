@@ -80,7 +80,7 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     println("Player is temporarily invincible due to shield cooldown.")
                     return
                 }
-
+                if (!world.getEntity(entityB).getComponent(EnemyComponent::class.java).isLive) return
                 // If no shield or invincibility, player dies
                 Globals.deathScreen = true
                 Globals.deathScreenInit = true
