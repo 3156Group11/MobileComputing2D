@@ -118,14 +118,14 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
             if (Gdx.input.justTouched()) {
                 if (!Globals.deathScreen) {
                     Globals.isPausing = true
-                    if (!pauseScreenCreated) {
-                        createPauseScreenEntities()
-                        pauseScreenCreated = true
-                    }
+
                 }
             }
         }
-
+        if (Globals.isPausing && !pauseScreenCreated && !isResuming) {
+            createPauseScreenEntities()
+            pauseScreenCreated = true
+        }
         // If game is paused, stop processing
         if (Globals.isPausing && !isResuming) {
             return
