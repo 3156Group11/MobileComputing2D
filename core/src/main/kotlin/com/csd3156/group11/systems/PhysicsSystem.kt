@@ -35,13 +35,13 @@ class PhysicsSystem : IteratingSystem(Aspect.all(TransformComponent::class.java,
         }
 
         // Check collision with screen edges and reflect velocity
-        if (transform.position.x <= 0 || transform.position.x >= screenWidth) {
+        if (transform.position.x <= 0 || transform.position.x >= 34) {
             velocity.velocity.x *= -1 // Reverse X direction
-            transform.position.x = transform.position.x.coerceIn(0f, screenWidth) // Keep inside bounds
+            transform.position.x = transform.position.x.coerceIn(0f, 34f) // Keep inside bounds
         }
-        if (transform.position.y <= 0 || transform.position.y >= screenHeight) {
+        if (transform.position.y <= 0 || transform.position.y >= 35 * screenHeight/screenWidth - 3) {
             velocity.velocity.y *= -1 // Reverse Y direction
-            transform.position.y = transform.position.y.coerceIn(0f, screenHeight) // Keep inside bounds
+            transform.position.y = transform.position.y.coerceIn(0f, 35f * screenHeight/screenWidth - 3) // Keep inside bounds
         }
     }
 }
