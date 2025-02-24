@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2
 import com.csd3156.group11.components.*
 import com.csd3156.group11.createCircleTexture
 import com.csd3156.group11.resources.Globals
+import com.csd3156.group11.soundSystem
 
 class EnemySystem : BaseEntitySystem(
     Aspect.all(EnemyComponent::class.java, EnemyBasicComponent::class.java, VelocityComponent::class.java, TransformComponent::class.java)
@@ -60,6 +61,7 @@ class EnemySystem : BaseEntitySystem(
                     emitter.particleSpeed = 20f
                     emitter.particleSize = 9f
                     emitter.texture = createCircleTexture(360, Color.MAROON)
+                    soundSystem.playSFX("audio/sfx/fx_EnemyDeath.wav", 0.5f)
                 }
                 enemy.DyingTime -= world.delta
                 enemy.isLive = false
@@ -137,6 +139,7 @@ class EnemyLineSystem : BaseEntitySystem(
                     emitter.particleSpeed = 20f
                     emitter.particleSize = 9f
                     emitter.texture = createCircleTexture(360, Color.MAROON)
+                    soundSystem.playSFX("audio/sfx/fx_EnemyDeath.wav", 0.5f)
                 }
                 enemy.DyingTime -= world.delta
                 enemy.isLive = false
