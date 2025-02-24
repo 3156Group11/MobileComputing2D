@@ -112,9 +112,10 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     println("Player picked up BOMB powerup!")
                     soundSystem.playSFX("audio/sfx/fx_Player_ObtainBomb.wav")
 
-                    val bombTransform = world.getEntity(powerUpEntityId).getComponent(TransformComponent::class.java)
+                    val bombTransform = world.getMapper(TransformComponent::class.java)
+                        .get(powerUpEntityId)
                     val bombPickupPos = bombTransform.position.cpy()
-                    val bombRadius = 5f  // Set to 10 units
+                    val bombRadius = 3f  // Set to 10 units
 
                     // Ensure adding bomb to player's PowerUpComponent
                     val playerPowerUpComp = world.getEntity(playerEntityId).getComponent(PowerUpComponent::class.java)
@@ -181,18 +182,17 @@ class CollisionSystem : BaseEntitySystem(Aspect.all(ColliderComponent::class.jav
                     powerUpComp.slowFields.add(downwardSlowField)
 
                     // Create visual FX entities with different speeds
-                    val upwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, 1f), 10f)  // Faster upward beam
+                    val upwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, 1f), 5f)  // Faster upward beam
                     upwardFX.Create(world)
 
-                    val downwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, -1f), 10f)  // Slower downward beam
+                    val downwardFX = SlowFieldFX(playerPos.cpy(), Vector2(0f, -1f), 5f)  // Slower downward beam
                     downwardFX.Create(world)
 
                     //println("Two slow fields spawned with speeds: Upward (150f), Downward (75f)")
                 }
 
 
-                PowerUpType.LASER_3X -> {
-                   // println("Player picked up LASER powerup!")
+                PowerUpType.LASER_3X -> { // println("Player picked up LASER powerup!")
                     soundSystem.playSFX("audio/sfx/fx_Player_ObtainLaser.wav")
 
                     val playerTransform = world.getEntity(playerEntityId).getComponent(TransformComponent::class.java)
