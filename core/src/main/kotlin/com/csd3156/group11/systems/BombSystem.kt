@@ -62,7 +62,7 @@ class BombSystem : BaseEntitySystem(
 
                     //println(" Distance from bomb to enemy $enemyId: $distance (Radius: ${bomb.radius})")
 
-                    if (distance < bomb.radius) {
+                    if (distance < bomb.radius + 1.8f) {
                         if (!enemyComponent.isDying) {
                             enemyComponent.isDying = true
                             //enemyComponent.DyingTime = 0f // Instant kill

@@ -47,7 +47,7 @@ class PowerUpSpawnerSystem : BaseEntitySystem(
 
     private fun spawnRandomPowerUp() {
         // Generate a random number between 0 and 4 for random power-up type
-        val randomPowerUp = MathUtils.random(0, 4)
+        val randomPowerUp = MathUtils.random(0, 3)
 
         // Spawn corresponding power-up based on random number
         when (randomPowerUp) {
@@ -70,11 +70,6 @@ class PowerUpSpawnerSystem : BaseEntitySystem(
                 println("Spawning Slow Field Power-Up")
                 val slowFieldPowerUp = SlowFieldPowerUp()
                 slowFieldPowerUp.Create(world)
-            }
-            4 -> {
-                println("Spawning Laser Power-Up")
-                val laserPowerUp = LaserPowerUp()
-                laserPowerUp.Create(world)
             }
         }
     }

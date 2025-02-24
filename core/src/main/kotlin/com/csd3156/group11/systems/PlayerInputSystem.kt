@@ -19,12 +19,13 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     private lateinit var transformMapper: ComponentMapper<TransformComponent>
 
     // NORMAL (Accelerometer) Mode Variables
-    private val accelerationFactor = 2f // Determines how fast acceleration builds up
-    private val velocityCap = 10f
+    private val accelerationFactor = 4f // Determines how fast acceleration builds up
+    private val velocityCap = 15f
     private val dampingFactor = 0.95f // For deceleration when no input is given
 
     // DEBUG MODE (WASD) Variables
     private val debugSpeed = 10f // Speed boost for WASD movement
+    
 
     // Calibration Variables
     var calibratedAccelY: Float
