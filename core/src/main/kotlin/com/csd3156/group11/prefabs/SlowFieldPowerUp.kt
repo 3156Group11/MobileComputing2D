@@ -1,3 +1,7 @@
+/**
+ * @file SlowFieldPowerUp.kt
+ * @brief  This file contains the prefab for slow field power up
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -9,6 +13,14 @@ import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
+/**
+ * @class SlowFieldPowerUp
+ * @brief Prefab for slow field power-up entities.
+ *
+ * SlowFieldPowerUp spawns a power-up that grants the player a slow field ability.
+ * It is randomly positioned within the game world with padding to avoid the screen edges,
+ * and includes movement, collision, and rendering components.
+ */
 class SlowFieldPowerUp : Prefab() {
     override fun Create(world: World):Int {
         ID = world.create()

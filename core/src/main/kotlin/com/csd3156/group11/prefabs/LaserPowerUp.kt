@@ -1,3 +1,7 @@
+/**
+ * @file LaserPowerUp.kt
+ * @brief  This file contains the prefab for laser power up
+ */
 // LaserPowerUp.kt
 package com.csd3156.group11.prefabs
 
@@ -10,6 +14,14 @@ import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
+/**
+ * @class LaserPowerUp
+ * @brief Prefab for laser power-up entities.
+ *
+ * LaserPowerUp spawns a power-up entity with a laser image, collider, and associated power-up behavior.
+ * The entity is positioned randomly within safe boundaries of the game world, has a small random
+ * movement, and is tagged appropriately.
+ */
 class LaserPowerUp : Prefab() {
     override fun Create(world: World): Int {
         ID = world.create()

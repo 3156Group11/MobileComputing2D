@@ -1,3 +1,7 @@
+/**
+ * @file ShieldFX.kt
+ * @brief  This file contains the prefab for shield FX
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -8,6 +12,16 @@ import com.csd3156.group11.createCircleTexture
 import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.RenderLayers
 
+/**
+ * @class ShieldFX
+ * @brief Prefab for shield visual effects.
+ *
+ * ShieldFX creates an effect that visually represents a shield around an entity.
+ * It generates a blue circular texture, applies it to a sprite, and attaches an FXComponent
+ * with shield properties. The FX follows the entity specified by followId.
+ *
+ * @param followId The entity ID that the shield effect should follow.
+ */
 class ShieldFX(private val followId: Int) : Prefab() {
     override fun Create(world: World):Int {
         ID = world.create()

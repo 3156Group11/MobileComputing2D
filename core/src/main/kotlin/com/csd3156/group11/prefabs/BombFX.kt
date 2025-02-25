@@ -1,3 +1,7 @@
+/**
+ * @file Bomb.kt
+ * @brief  This file contains the prefab for bombs
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -9,6 +13,18 @@ import com.csd3156.group11.createCircleTexture
 import com.csd3156.group11.enums.PowerUpType
 import com.csd3156.group11.enums.RenderLayers
 
+
+/**
+ * @class BombFX
+ * @brief Prefab for bomb explosion visual effects.
+ *
+ * The BombFX class creates an explosion effect using a circular texture generated at runtime.
+ * The effect is centered around the specified detonation position and scaled according to the
+ * provided radius. The effect lasts for a fixed duration.
+ *
+ * @param detonationPos The screen-space position where the bomb detonates.
+ * @param radius The collision radius, used to calculate the visual scale.
+ */
 class BombFX(private val detonationPos: Vector2, private val radius: Float) : Prefab() {
     override fun Create(world: World): Int {
         ID = world.create()

@@ -1,3 +1,7 @@
+/**
+ * @file Player.kt
+ * @brief  This file contains the prefab for the player
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -13,6 +17,14 @@ import com.csd3156.group11.components.VelocityComponent
 import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 
+/**
+ * @class Player
+ * @brief Prefab for the player entity.
+ *
+ * The Player prefab initializes the player with components such as TransformComponent,
+ * VelocityComponent, ColliderComponent, SpriteComponent, PlayerInputComponent, TagComponent, and
+ * PowerUpComponent. The default spawn position is set at (17.5, 3) in world coordinates.
+ */
 public class Player : Prefab()
 {
     public override fun Create(world: World):Int

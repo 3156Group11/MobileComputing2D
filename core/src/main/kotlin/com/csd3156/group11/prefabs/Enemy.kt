@@ -1,3 +1,7 @@
+/**
+ * @file Enemy.kt
+ * @brief  This file contains the prefab for enemies
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -15,6 +19,15 @@ import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
+
+/**
+ * @class Enemy
+ * @brief Base prefab for enemy entities.
+ *
+ * The Enemy class sets up common components for enemy entities such as TransformComponent,
+ * VelocityComponent, ColliderComponent, SpriteComponent, and EnemyComponent. It also tags the
+ * entity as an enemy.
+ */
 open class Enemy : Prefab()
 {
     lateinit var transform: TransformComponent
@@ -40,6 +53,12 @@ open class Enemy : Prefab()
     }
 }
 
+/**
+ * @class EnemyBasic
+ * @brief Prefab for basic enemy entities.
+ *
+ * EnemyBasic extends the base Enemy prefab and spawns at a random position within the game world.
+ */
 class EnemyBasic : Enemy() {
     override fun Create(world: World): Int {
         // Call the base enemy creation code
@@ -52,6 +71,14 @@ class EnemyBasic : Enemy() {
     }
 }
 
+/**
+ * @class EnemyLine
+ * @brief Prefab for enemy entities used in line formations.
+ *
+ * EnemyLine extends the base Enemy prefab and adds an EnemyLineComponent to store information
+ * specific to line formations (e.g., spawn edge). The spawner system will later configure the position,
+ * velocity, and spawn edge.
+ */
 class EnemyLine : Enemy() {
     override fun Create(world: World):Int {
         super.Create(world)

@@ -1,3 +1,7 @@
+/**
+ * @file Image_Label.kt
+ * @brief  This file contains the prefab for labels
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -16,7 +20,18 @@ import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.UIComponent
 import com.csd3156.group11.resources.Globals
 
-
+/**
+ * @class Image_Label
+ * @brief Prefab for a UI label displayed as an image.
+ *
+ * The Image_Label prefab loads a texture from a file, creates an Image actor,
+ * and configures its size based on Globals.UnitSize. The actor is then attached
+ * to the ECS using a UIComponent.
+ *
+ * @param filepath The file path to the label texture.
+ * @param Position The position where the label will be placed.
+ * @param Scale The scale to be applied to the label.
+ */
 public class Image_Label(filepath: String, Position:Vector2, Scale:Vector2) : Prefab()
 {
     var inFilepath : String = filepath

@@ -1,3 +1,7 @@
+/**
+ * @file BombPowerUp.kt
+ * @brief  This file contains the prefab for bomb power up
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -9,6 +13,14 @@ import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
+/**
+ * @class BombPowerUp
+ * @brief Prefab for bomb power-up entities.
+ *
+ * The BombPowerUp prefab creates a power-up entity that uses a bomb texture and provides bomb-related
+ * abilities. It is spawned at a random position within defined screen boundaries, has a specific collider
+ * size, and is rendered on the Powerup layer.
+ */
 class BombPowerUp : Prefab() {
     override fun Create(world: World): Int {
         ID = world.create()

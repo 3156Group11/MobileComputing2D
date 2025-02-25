@@ -1,3 +1,7 @@
+/**
+ * @file LightningPowerUp.kt
+ * @brief  This file contains the prefab for Lightning power up
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -9,6 +13,14 @@ import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
+/**
+ * @class LightningPowerUp
+ * @brief Prefab for the lightning power-up entity.
+ *
+ * The LightningPowerUp prefab spawns a power-up entity that grants the player a triple-laser
+ * attack. It randomly positions the entity within safe boundaries of the game world, and assigns
+ * necessary components for collision, rendering, and movement.
+ */
 class LightningPowerUp : Prefab() {
     override fun Create(world: World): Int {
         ID = world.create()

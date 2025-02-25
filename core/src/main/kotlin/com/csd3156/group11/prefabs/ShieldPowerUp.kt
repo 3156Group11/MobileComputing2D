@@ -1,3 +1,7 @@
+/**
+ * @file ShieldPowerUp.kt
+ * @brief  This file contains the prefab for shield power up
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -9,6 +13,14 @@ import com.csd3156.group11.enums.RenderLayers
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
+/**
+ * @class ShieldPowerUp
+ * @brief Prefab for shield power-up entities.
+ *
+ * ShieldPowerUp creates a power-up that allows the player to gain a temporary shield.
+ * It spawns at a random location within screen bounds (with padding), and includes components
+ * for collision, rendering, and a small random movement.
+ */
 class ShieldPowerUp : Prefab() {
     override fun Create(world: World):Int {
         ID = world.create()

@@ -1,3 +1,7 @@
+/**
+ * @file Text_Button.kt
+ * @brief  This file contains the prefab for text buttons
+ */
 package com.csd3156.group11.prefabs
 
 import com.artemis.World
@@ -9,6 +13,19 @@ import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.UIComponent
 
 
+/**
+ * @class Text_Button
+ * @brief Prefab for creating a UI text button.
+ *
+ * The Image_Button prefab configures its size,
+ * and attaches a click listener that executes a given action. The button is added to the ECS via a UIComponent.
+ *
+ * @param Text The text for the button.
+ * @param Style The style of the button.
+ * @param Position The screen position of the button.
+ * @param Scale The scale factor to adjust the button's size.
+ * @param Action A lambda function to execute when the button is clicked.
+ */
 public class Text_Button(Text: String, Style: TextButton.TextButtonStyle, Position:Vector2, Scale:Vector2, Action:()->Unit ) : Prefab()
 {
     var inText : String = Text
