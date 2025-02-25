@@ -106,7 +106,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
 
         //True for WASD
         //False for Tilt
-        val isDebugMode = true
+        val isDebugMode = false
         val particleTexture = createCircleTexture(360)
 
         // Configure ECS world
@@ -116,7 +116,7 @@ class Main(widthPix: Int, heightPix: Int) : ApplicationAdapter()
             .with(EnemySystem())
             .with(EnemyLineSystem())
             .with(EnemySpawnerSystem())
-            .with(EnemyManagerSystem(threshold = 10, interval = 5f))
+            .with(EnemyManagerSystem(threshold = 100, interval = 2f))
             .with(PowerUpMovementSystem())
             .with(PhysicsSystem())
             .with(BombSystem())
