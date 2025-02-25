@@ -1,3 +1,11 @@
+/**
+ * @file PlayerInputSystem.kt
+ * @brief Handles player movement based on accelerometer or debug (WASD) controls.
+ *
+ * This system reads player input, processes movement, applies acceleration and damping,
+ * and updates the player's velocity and rotation accordingly.
+ */
+
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -12,6 +20,16 @@ import com.csd3156.group11.enums.GameState
 import com.csd3156.group11.resources.Globals
 import javax.xml.crypto.dsig.Transform
 
+/**
+ * @class PlayerInputSystem
+ * @brief Processes player movement using accelerometer or debug controls.
+ *
+ * This system applies movement based on user input. In normal mode, it uses accelerometer
+ * values to determine movement direction. In debug mode, WASD keys are used for movement.
+ * Acceleration, velocity capping, and damping ensure smooth movement transitions.
+ *
+ * @param debugMode Enables or disables debug movement using WASD keys.
+ */
 class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSystem(Aspect.all(PlayerInputComponent::class.java, VelocityComponent::class.java)) {
 
     private lateinit var inputMapper: ComponentMapper<PlayerInputComponent>
@@ -25,7 +43,7 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
 
     // DEBUG MODE (WASD) Variables
     private val debugSpeed = 10f // Speed boost for WASD movement
-    
+
 
     // Calibration Variables
     var calibratedAccelY: Float
@@ -34,11 +52,17 @@ class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSyste
     var calibratedAccelX: Float
         get() = Globals.calibratedAccelX
         set(value) { Globals.calibratedAccelX = value }
+
+
     /**
-     * Sets the current accelerometer values as the "flat" reference.
+     * @brief Processes player input and applies movement logic.
+     *
+     * This method determines movement based on either accelerometer values (normal mode)
+     * or keyboard input (debug mode). It applies acceleration, velocity capping, damping,
+     * and updates the player's rotation based on movement direction.
+     *
+     * @param entityId The ID of the entity being processed.
      */
-
-
     override fun process(entityId: Int) {
         if (Globals.IsStarting) return
         if (Globals.deathScreen) return
