@@ -1,4 +1,7 @@
-
+/**
+ * @file PhysicsSystem.kt
+ * @brief Handles entity movement and collision with screen boundaries.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -9,6 +12,14 @@ import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.components.VelocityComponent
 import com.csd3156.group11.resources.Globals
 
+/**
+ * @class PhysicsSystem
+ * @brief Manages physics-based movement and collision handling for entities.
+ *
+ * This system updates the position of all entities that have `TransformComponent` and `VelocityComponent`
+ * based on their velocity. It also enforces screen boundaries by reversing velocity upon collision.
+ * Entities with an `EnemyComponent` do not reflect their velocity upon collision.
+ */
 class PhysicsSystem : IteratingSystem(Aspect.all(TransformComponent::class.java, VelocityComponent::class.java)) {
 
     private lateinit var transformMapper: ComponentMapper<TransformComponent>
@@ -18,6 +29,15 @@ class PhysicsSystem : IteratingSystem(Aspect.all(TransformComponent::class.java,
     private val screenWidth = 800f  // Set screen width
     private val screenHeight = 400f // Set screen height
 
+    /**
+     * @brief Processes physics updates for a given entity.
+     *
+     * Updates the entity's position based on its velocity. If the entity is an enemy,
+     * it does not reflect velocity upon hitting boundaries. Non-enemy entities reverse
+     * their velocity upon colliding with the screen edges.
+     *
+     * @param entityId The ID of the entity being processed.
+     */
     override fun process(entityId: Int) {
         if (Globals.IsStarting) return
         if (Globals.deathScreen) return

@@ -1,3 +1,7 @@
+/**
+ * @file MainSystem.kt
+ * @brief The main game entry point.
+ */
 package com.csd3156.group11
 
 import EmitterSystem

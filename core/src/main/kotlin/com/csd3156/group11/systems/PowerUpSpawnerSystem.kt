@@ -1,3 +1,7 @@
+/**
+ * @file PowerUpSpawnerSystem.kt
+ * @brief Manages the spawning of power-up entities in the game.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -11,6 +15,13 @@ import com.csd3156.group11.prefabs.*
 import com.csd3156.group11.resources.Globals
 import com.csd3156.group11.enums.GameState
 
+/**
+ * @class PowerUpSpawnerSystem
+ * @brief Handles the automatic spawning of power-ups during gameplay.
+ *
+ * Ensures that a maximum of 3 power-ups exist at any given time in the game.
+ * Power-ups are spawned randomly based on predefined types when there are fewer than 3 active.
+ */
 class PowerUpSpawnerSystem : BaseEntitySystem(
     Aspect.all(PowerUpComponent::class.java, TagComponent::class.java)
 ) {
@@ -19,6 +30,12 @@ class PowerUpSpawnerSystem : BaseEntitySystem(
 
     private val maxPowerUps = 3  // Max number of active power-ups on screen
 
+    /**
+     * @brief Processes the power-up spawning logic.
+     *
+     * Ensures that power-ups are only spawned when the game is active and not paused or in a death state.
+     * Counts the current number of active power-ups and spawns new ones if the count is below the maximum limit.
+     */
     override fun processSystem() {
         // Prevent spawning if game is not active
         if (Globals.IsStarting) return
@@ -45,6 +62,12 @@ class PowerUpSpawnerSystem : BaseEntitySystem(
         }
     }
 
+    /**
+     * @brief Spawns a random power-up in the game.
+     *
+     * Selects a random power-up type from Shield, Bomb, Lightning, and Slow Field,
+     * then creates and adds it to the world.
+     */
     private fun spawnRandomPowerUp() {
         // Generate a random number between 0 and 4 for random power-up type
         val randomPowerUp = MathUtils.random(0, 3)

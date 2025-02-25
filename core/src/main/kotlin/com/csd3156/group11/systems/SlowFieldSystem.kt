@@ -1,3 +1,7 @@
+/**
+ * @file SlowFieldSystem.kt
+ * @brief Handles the slow field power-up, applying a slow effect to enemies within range.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -7,6 +11,13 @@ import com.badlogic.gdx.math.Vector2
 import com.csd3156.group11.components.*
 import com.csd3156.group11.enums.PowerUpType
 
+/**
+ * @class SlowFieldSystem
+ * @brief Manages the movement and effect application of slow fields in the game.
+ *
+ * This system updates all active slow fields by moving them in their respective directions.
+ * It also detects enemy collisions, applying a slow effect that reduces enemy speed for a set duration.
+ */
 class SlowFieldSystem : BaseEntitySystem(
     Aspect.all(PowerUpComponent::class.java, TransformComponent::class.java)
 ) {
@@ -15,6 +26,14 @@ class SlowFieldSystem : BaseEntitySystem(
     private lateinit var enemyMapper: ComponentMapper<EnemyComponent>
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
 
+    /**
+     * @brief Processes slow field updates and applies effects to nearby enemies.
+     *
+     * - Moves active slow fields in their respective directions.
+     * - Checks for collisions between slow fields and enemies.
+     * - If an enemy enters a slow field's range, it applies a slow effect for 5 seconds.
+     * - Removes expired slow fields from the system.
+     */
     override fun processSystem() {
         val entities = subscription.entities
 

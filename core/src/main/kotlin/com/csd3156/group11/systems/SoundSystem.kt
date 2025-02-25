@@ -1,3 +1,7 @@
+/**
+ * @file SoundSystem.kt
+ * @brief Manages the sound being played in the game.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.BaseSystem

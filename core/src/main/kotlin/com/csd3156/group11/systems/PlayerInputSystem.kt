@@ -27,8 +27,6 @@ import javax.xml.crypto.dsig.Transform
  * This system applies movement based on user input. In normal mode, it uses accelerometer
  * values to determine movement direction. In debug mode, WASD keys are used for movement.
  * Acceleration, velocity capping, and damping ensure smooth movement transitions.
- *
- * @param debugMode Enables or disables debug movement using WASD keys.
  */
 class PlayerInputSystem(private val debugMode: Boolean = false) : IteratingSystem(Aspect.all(PlayerInputComponent::class.java, VelocityComponent::class.java)) {
 

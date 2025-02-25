@@ -1,3 +1,7 @@
+/**
+ * @file ShieldSystem.kt
+ * @brief Handles shield mechanics for the player, including collision detection and shield effects.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -10,6 +14,13 @@ import com.csd3156.group11.components.ColliderComponent
 import com.csd3156.group11.components.TransformComponent
 import com.badlogic.gdx.math.Vector2
 
+/**
+ * @class ShieldSystem
+ * @brief Manages the player's shield, detecting collisions with enemies and applying effects.
+ *
+ * This system ensures that when the player has an active shield, it absorbs enemy hits.
+ * Once the shield is broken, the player gains temporary invulnerability before being vulnerable again.
+ */
 class ShieldSystem : BaseEntitySystem(
     Aspect.all(PowerUpComponent::class.java, PlayerInputComponent::class.java, TransformComponent::class.java)
 ) {
@@ -18,6 +29,13 @@ class ShieldSystem : BaseEntitySystem(
     private lateinit var colliderMapper: ComponentMapper<ColliderComponent>
     private lateinit var enemyMapper: ComponentMapper<EnemyComponent>
 
+    /**
+     * @brief Processes shield mechanics for the player.
+     *
+     * If the player's shield is active, this function detects collisions with enemies.
+     * When a collision occurs, the shield breaks, a temporary invulnerability window is applied,
+     * and any shield visual effects are removed.
+     */
     override fun processSystem() {
         val playerEntities = subscription.entities
 
@@ -64,6 +82,17 @@ class ShieldSystem : BaseEntitySystem(
         }
     }
 
+    /**
+     * @brief Checks for collisions between the player and an enemy.
+     *
+     * Determines if the player and enemy are within a collision radius based on their respective colliders.
+     *
+     * @param playerTransform The transform component of the player.
+     * @param playerCollider The collider component of the player.
+     * @param enemyTransform The transform component of the enemy.
+     * @param enemyCollider The collider component of the enemy.
+     * @return `true` if the player and enemy are colliding, otherwise `false`.
+     */
     private fun isColliding(
         playerTransform: TransformComponent, playerCollider: ColliderComponent,
         enemyTransform: TransformComponent, enemyCollider: ColliderComponent

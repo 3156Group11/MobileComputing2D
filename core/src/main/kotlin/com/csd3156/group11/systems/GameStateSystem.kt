@@ -661,6 +661,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     /**
      * @brief Handles the logic of adding score to High Score board.
+     * @param newScore The score board number.
      */
     private fun addScore(newScore: Int) {
         highScores.add(newScore)
@@ -695,6 +696,7 @@ class GameStateSystem(inViewport: Viewport) : BaseEntitySystem(Aspect.all(Transf
 
     /**
      * @brief Handles the logic of adding score to High Score board when the game ends.
+     * @Param finalScore The score board number.
      */
     private fun onGameEnd(finalScore: Int) {
         addScore(finalScore)

@@ -1,3 +1,7 @@
+/**
+ * @file PowerUpMovementSystem.kt
+ * @brief Handles movement and rotation of power-up entities.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -7,6 +11,13 @@ import com.csd3156.group11.components.*
 import com.csd3156.group11.enums.Tag
 import com.csd3156.group11.resources.Globals
 
+/**
+ * @class PowerUpMovementSystem
+ * @brief Manages the motion and behavior of power-ups in the game.
+ *
+ * This system processes entities tagged as `POWERUP`, updating their position and rotation.
+ * The power-ups rotate continuously over time based on the world's delta time.
+ */
 class PowerUpMovementSystem : BaseEntitySystem(
     Aspect.all(PowerUpComponent::class.java, TransformComponent::class.java, VelocityComponent::class.java, TagComponent::class.java)
 ) {
@@ -14,6 +25,12 @@ class PowerUpMovementSystem : BaseEntitySystem(
     private lateinit var velocityMapper: ComponentMapper<VelocityComponent>
     private lateinit var tagMapper: ComponentMapper<TagComponent>
 
+    /**
+     * @brief Processes all power-up entities in the system.
+     *
+     * Iterates through all entities with the required components and applies rotation updates.
+     * Only entities tagged as `POWERUP` are processed.
+     */
     override fun processSystem() {
         val entities = subscription.entities
 

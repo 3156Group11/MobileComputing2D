@@ -1,3 +1,7 @@
+/**
+ * @file RenderSystem.kt
+ * @brief Handles rendering of all entities with sprite and transform components.
+ */
 package com.csd3156.group11.systems
 
 import com.artemis.Aspect
@@ -14,6 +18,14 @@ import com.csd3156.group11.components.SpriteComponent
 import com.csd3156.group11.components.TransformComponent
 import com.csd3156.group11.resources.Globals
 
+/**
+ * @class RenderSystem
+ * @brief Responsible for rendering entities in the game world.
+ *
+ * This system processes all entities that have `SpriteComponent` and `TransformComponent`.
+ * It sorts entities by their rendering layer and then renders them using a `SpriteBatch`.
+ * The rendering is scaled based on `Globals.UnitSize` to ensure consistency.
+ */
 @Wire
 class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: OrthographicCamera) : BaseEntitySystem(
     Aspect.all(SpriteComponent::class.java, TransformComponent::class.java)) {
@@ -21,6 +33,12 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
     private lateinit var spriteMapper: ComponentMapper<SpriteComponent>
     private lateinit var transformMapper: ComponentMapper<TransformComponent>
 
+    /**
+     * @brief Prepares the rendering process.
+     *
+     * Adjusts sprite sizes to scale with the camera and sets up the `SpriteBatch`
+     * with the appropriate projection matrix before drawing begins.
+     */
     override fun begin() {
         // Optionally adjust sprite sizes if you want them to scale with camera
         val entities = subscription.entities
@@ -36,6 +54,13 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
         spriteBatch.begin()
     }
 
+    /**
+     * @brief Renders all active entities with sprites.
+     *
+     * This function:
+     * - Sorts entities by layer to ensure correct draw order.
+     * - Draws each sprite at its transformed position, applying scaling and rotation.
+     */
     override fun processSystem() {
         val sortedEntities = mutableListOf<Int>()
         val entities = entityIds
@@ -73,6 +98,11 @@ class RenderSystem(private val spriteBatch: SpriteBatch, private val camera: Ort
         }
     }
 
+    /**
+     * @brief Finalizes the rendering process.
+     *
+     * Ends the `SpriteBatch` rendering process after all entities have been drawn.
+     */
     override fun end() {
         // Finish drawing sprites
         spriteBatch.end()
